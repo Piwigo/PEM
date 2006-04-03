@@ -1,0 +1,26 @@
+====
+ PEM
+====
+
+http://home.gna.org/pem
+
+PEM is an extension manager for a given software. PEM let software users
+contribute by sharing their extensions: template, language pack, MOD,
+tools... PEM works with PHP and MySQL.
+
+PEM originally stands for PhpWebGallery Extension Manager.
+
+Installation
+============
+
+1. extract files from the archive
+
+2. place de source files on your website in the directory of your choice
+   ("extensions" for example)
+
+TODO...
+
+How to start
+============
+
+TODO...

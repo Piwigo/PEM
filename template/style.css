@@ -1,0 +1,264 @@
+body 
+{
+  margin:0px;
+  padding:0px;
+  font-family:verdana, arial, helvetica, sans-serif;
+  color:#333;
+  background-color : #FFF;
+  font-size : 80%;
+}
+
+h1 
+{
+  margin:0px 0px 10px 0px;
+  padding:0px;
+  font-size:20px;
+  line-height:20px;
+  font-weight:900;
+  color:#666;
+}
+
+p 
+{
+  font:100%/120% verdana, arial, helvetica, sans-serif;
+  margin:5px 0px 5px 0px;
+  padding:0px;
+  text-align : justify;
+}
+
+#Header a
+{
+  color : #D26060;
+}
+
+#Header a:hover
+{
+  color : #DB0000;
+}
+
+#Content>p 
+{
+  text-align : justify;
+  margin-bottom : 10px;
+}
+
+span.small
+{
+  font-size : 80%;
+}
+
+a 
+{
+  color : #005e89;
+  text-decoration:none;
+  font-weight:600;
+}
+
+/*a:link {color:#005e89;}*/
+a:hover {color:#858460;}
+
+#Header 
+{
+  margin:10px 0px 10px 0px;
+  padding:0px 0px 0px 20px;
+  font-size : 8px;
+  /* For IE5/Win's benefit height = [correct height] + [top padding] + [top and bottom border widths] */
+  height:33px; /* 14px + 17px + 2px = 33px */
+  border-style:solid;
+  border-color:black;
+  border-width:1px 0px; /* top and bottom borders: 1px; left and right borders: 0px */
+  line-height:11px;
+  background-color:#eee;
+  background-image:url(images/bg.jpg);
+  background-repeat : repeat-x;
+
+/* Here is the ugly brilliant hack that protects IE5/Win from its own stupidity. 
+Thanks to Tantek Celik for the hack and to Eric Costello for publicizing it. 
+IE5/Win incorrectly parses the "\"}"" value, prematurely closing the style 
+declaration. The incorrect IE5/Win value is above, while the correct value is 
+below. See http://glish.com/css/hacks.asp for details. */
+  voice-family: "\"}\"";
+  voice-family:inherit;
+  height:33px; /* the correct height */
+}
+
+/* I've heard this called the "be nice to Opera 5" rule. Basically, it feeds correct 
+length values to user agents that exhibit the parsing error exploited above yet get 
+the CSS box model right and understand the CSS2 parent-child selector. ALWAYS include
+a "be nice to Opera 5" rule every time you use the Tantek Celik hack (above). */
+body>#Header {height:33px;}
+
+#Header p
+{
+  font-size : 10px;
+  line-height : 18px;
+}
+
+#Content 
+{
+  margin:0px 10px 10px 190px;
+  padding:10px;
+  border : 1px solid #275F98;
+  -moz-border-radius : 6px;
+  height : 400px;
+  background-color:#EEE;
+}
+
+#overall>#Content
+{
+  height : auto;
+  min-height : 400px;
+}
+
+#Menus
+{
+  position : absolute;
+  width : 172px;
+  left : 10px;
+}
+
+div.menu
+{
+  font-size : 100%;
+  left : 10px;
+  width:172px;
+  padding:10px;
+  margin-bottom : 5px;
+  background-color:#EEE;
+  border:1px dashed #275F98;
+  line-height:16px;
+  /* Again, the ugly brilliant hack. */
+  voice-family: "\"}\"";
+  voice-family:inherit;
+  width:150px;
+}
+
+div.menu h3
+{
+  font-size : 100%;
+  margin-top : 0;
+  margin-bottom : 5px;
+}
+
+ul
+{
+  list-style-image : url(images/puce.png);
+  margin : 5px 0 5px 5px;
+  padding : 0 0 0 25px;
+}
+
+li
+{
+  margin: 0;
+  padding:0;
+}
+
+/* Again, "be nice to Opera 5". */
+body>div.menu {width:150px;}
+
+#footer
+{
+  clear : both;
+  text-align : center;
+  margin-left : 190px;
+}
+
+div.row, div.row1, div.row2
+{
+  padding-top : 2px;
+  padding-bottom : 2px;
+}
+
+div.row1
+{
+  background-color : #F9F9F9;
+}
+
+div.row2
+{
+  background-color : #EEEEEE;
+}
+
+span.label, span.label_y
+{
+  width : 50%;
+  text-align : right;
+  float : left;
+  margin-right : 10px;
+}
+
+span.label_y
+{
+  font-weight : bold;
+}
+
+#overall
+{
+  float : left;
+  width : 100%;
+}
+
+img.header_image
+{
+  float:right;
+  margin-right : 10px;
+}
+
+div.row
+{
+  border : 1px solid #999999;
+  -moz-border-radius : 6px;
+  padding : 5px;
+  margin-bottom : 10px;
+  background-color : #FAFAFA;
+  text-align : justify;
+  clear : both;
+}
+
+div.nav_left
+{
+  float:left;
+  margin-bottom:10px;
+  padding-bottom:0;
+}
+
+div.nav_right
+{
+  float:right;
+  margin-bottom:10px;
+  padding-bottom:0;
+}
+
+/* PhpWebGallery specific */
+#pwgHeader {
+  font: 80% "Lucida Grande", Verdana, Lucida, Helvetica, Arial, sans-serif;
+  text-align:center;
+  margin-bottom: 1em;
+}
+
+#pwgHeader H1 {
+  font-size: 18px;
+}
+
+#pwgHeader .menu {
+  text-align:center;
+}
+
+#pwgHeader .menu a {
+   text-decoration:none;
+   font-weight:bold;
+   color:#005e89;
+   padding:2px;
+   border:1px solid gray;
+   background-color:white;
+}
+
+#pwgHeader .menu a:visited {
+  color:#895900;
+}
+
+#pwgHeader .menu a:hover {
+   background-color:gray;
+   color:white;
+   text-decoration:none;
+}
