@@ -22,38 +22,60 @@
 // +-----------------------------------------------------------------------+
 
 header('Content-Type: text/html; charset=iso-8859-1');
-  // Hacking attempt
-  if(!defined('INTERNAL'))
-    die('No right to do that, sorry. :)');
+// Hacking attempt
+if(!defined('INTERNAL'))
+{
+  die('No right to do that, sorry. :)');
+}
+
+session_name('pem_session_id');
+session_start();
     
-  session_start( );
-    
-  require_once($root_path . 'include/constants.inc.php');
-  require_once($root_path . 'include/mysql.inc.php');
-  require_once($root_path . 'include/config.inc.php');
-  require_once($root_path . 'include/templates.inc.php');
-  require_once($root_path . 'include/functions.inc.php');
-  // Intégration de punbb
-  require_once(PUN_ROOT . 'include/common.php');
+require_once($root_path . 'include/config.inc.php');
+require_once($root_path . 'include/constants.inc.php');
+require_once($root_path . 'include/templates.inc.php');
+require_once($root_path . 'include/functions.inc.php');
+require_once($root_path . 'include/functions_user.inc.php');
+require_once($root_path . 'include/dblayer/common_db.php');
+
+// user informations
+$user = array();
+
+// if (isset($_COOKIE[session_name()]))
+// {
+//   session_start();
+//   if (isset($_SESSION['user_id']))
+//   {
+//     $user = get_user_infos($_SESSION['user_id']);
+//   }
+// }
+
+$user = get_user_infos(
+  isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null
+  );
+
+// echo '<pre>cookie: '; print_r($_COOKIE); echo '</pre>';
+// echo '<pre>session: '; print_r($_SESSION); echo '</pre>';
+// echo '<pre>user: '; print_r($user); echo '</pre>';
+
+$template = new Template($root_path . 'template');
   
-  $template = new Template($root_path . 'template');
-  
-  // PWG Compatibility version set
-  if( isset( $_POST['compatibility_change'] ) )
+// PWG Compatibility version set
+if (isset($_POST['compatibility_change']))
+{
+  // Check if the field is valid
+  if (isset($_POST['pwg_version']) and is_numeric($_POST['pwg_version']))
   {
-    // Check if the field is valid
-    if( isset( $_POST['pwg_version'] ) and is_numeric( $_POST['pwg_version'] ) )
+    // If the field is empty, this means that the user wants to cancel the
+    // compatibility version setting
+    if (!empty($_POST['pwg_version']))
     {
-      // If the field is empty, this means that the user wants to cancel
-      // the compatibility version setting
-      if( !empty( $_POST['pwg_version'] ) )
-      {
-        $_SESSION['id_version'] = intval( $_POST['pwg_version'] );
-      }
-      else
-      {
-        unset( $_SESSION['id_version'] );
-      }
+      $_SESSION['id_version'] = intval($_POST['pwg_version']);
+    }
+    else
+    {
+      unset($_SESSION['id_version']);
     }
   }
+}
 ?>

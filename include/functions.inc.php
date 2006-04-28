@@ -32,7 +32,8 @@ function build_header( $parse = true )
 {  
   global $template;
   global $db;
-  global $pun_user;
+  global $user;
+  global $conf;
   
   // Get the extensions count
   $sql =  "SELECT COUNT(id_extension) AS extensions_count";
@@ -62,8 +63,10 @@ function build_header( $parse = true )
   {
     // This is not a main category
     if(!empty($cat['idx_parent']))
+    {
       continue;
-      
+    }
+    
     $has_sublevels = false;
     
     // Display sub-categories
@@ -71,9 +74,13 @@ function build_header( $parse = true )
     {
       if($cat_sublevel['idx_parent'] == $cat['id_category'])
       {
-        $template->set_var(array( 'L_CATEGORY_SUBLEVEL_ITEM_ID' => $cat_sublevel['id_category'],
-                                  'L_CATEGORY_SUBLEVEL_ITEM' => $cat_sublevel['name'],
-                                  'L_CATEGORY_SUBLEVEL_DESCRIPTION' => $cat_sublevel['description']));
+        $template->set_var(
+          array(
+            'L_CATEGORY_SUBLEVEL_ITEM_ID' => $cat_sublevel['id_category'],
+            'L_CATEGORY_SUBLEVEL_ITEM' => $cat_sublevel['name'],
+            'L_CATEGORY_SUBLEVEL_DESCRIPTION' => $cat_sublevel['description']
+            )
+          );
         $template->parse('t_category_sublevel_item', 'category_sublevel_item', true);
         $has_sublevels = true;
       }
@@ -89,12 +96,18 @@ function build_header( $parse = true )
       $cat_name = '<a href="extensions.php?id=' . $cat['id_category'] . '">' . $cat['name'] . '</a>';
     }
     
-    $template->set_var( array ( 'U_CATEGORY' => $cat_name,
-                                'L_CATEGORY_DESCRIPTION' => $cat['description'] ) );
+    $template->set_var(
+      array(
+        'U_CATEGORY' => $cat_name,
+        'L_CATEGORY_DESCRIPTION' => $cat['description']
+        )
+      );
                                 
     
     if( $has_sublevels )
+    {
       $template->parse( 't_category_sublevel', 'category_sublevel', true );
+    }
       
     $template->parse( 't_category', 'category', true );
     $template->clear_var( 't_category_sublevel' );
@@ -130,18 +143,31 @@ function build_header( $parse = true )
     $template->parse( 't_pwg_version', 'pwg_version', true );
   }
   
-  $template->set_var(array( 'L_EXTENSIONS_TOTAL_COUNT' => $extensions_count,
-                            'PUN_ROOT' => PUN_ROOT,
-                            'L_REQUEST_URI' => $_SERVER['REQUEST_URI'] ));
+  $template->set_var(
+    array(
+      'L_EXTENSIONS_TOTAL_COUNT' => $extensions_count,
+      'PAGE_TITLE' => $conf['page_title'],
+      'L_REQUEST_URI' => $_SERVER['REQUEST_URI']
+      )
+    );
   
   $template->set_block( 'header', 'user_not_logged_in', 't_user_not_logged_in' );
   $template->set_block( 'header', 'user_logged_in', 't_user_logged_in' );
   
   // Display the user menu
-  if( $pun_user['registered'] )
+  if (isset($user['id']))
+  {
+    $template->set_var(
+      array(
+        'USERNAME' => $user['username'],
+        )
+      );
     $template->parse( 't_user_logged_in', 'user_logged_in' );
+  }
   else
+  {
     $template->parse( 't_user_not_logged_in', 'user_not_logged_in' );
+  }
     
   if( $parse )
     $template->parse('output', 'header');
@@ -163,16 +189,25 @@ function message_success($message, $redirect = '', $title = 'Succès', $time_redi
   
   build_header(false);
   $template->set_file('message', 'message.tpl');
-  $template->set_var(array( 'L_MESSAGE_TITLE' => $title,
-                            'L_MESSAGE_TEXT' => $message,
-                            'L_META' => '<meta http-equiv="refresh" content="' . 
-                                        $time_redirect . ';' . $redirect . '">'));
+  $template->set_var(
+    array(
+      'L_MESSAGE_TITLE' => $title,
+      'L_MESSAGE_TEXT' => $message,
+      'L_META' =>
+        '<meta http-equiv="refresh"'
+        .' content="'.$time_redirect . ';' . $redirect . '">',
+      )
+    );
   $template->set_block('message', 'switch_redirect', 'Tswitch_redirect'); 
   $template->set_block('message', 'switch_goback', 'Tswitch_goback');     
-  if(!empty($redirect))
+  if (!empty($redirect))
   {
-    $template->set_var(array( 'L_TIME_REDIRECT' => $time_redirect,
-                              'U_REDIRECT' => $redirect));
+    $template->set_var(
+      array(
+        'L_TIME_REDIRECT' => $time_redirect,
+        'U_REDIRECT' => $redirect
+        )
+      );
     $template->parse('Tswitch_redirect', 'switch_redirect');
   }
   $template->parse('output', 'header');
@@ -186,8 +221,12 @@ function message_die($message, $title = 'Erreur', $go_back = true)
   
   build_header();
   $template->set_file('message', 'message.tpl');
-  $template->set_var(array( 'L_MESSAGE_TITLE' => $title,
-                            'L_MESSAGE_TEXT' => $message));
+  $template->set_var(
+    array(
+      'L_MESSAGE_TITLE' => $title,
+      'L_MESSAGE_TEXT' => $message
+      )
+    );
   $template->set_block('message', 'switch_redirect', 'Tswitch_redirect');
   $template->set_block('message', 'switch_goback', 'Tswitch_goback'); 
   
@@ -288,4 +327,57 @@ function isAdmin($user_id)
   return in_array($user_id, $conf['admin_users']);
 }
 
+function l10n($lang_key)
+{
+  return $lang_key;
+}
+
+/**
+ * inserts multiple lines in a table
+ *
+ * @param string table_name
+ * @param array dbfields
+ * @param array inserts
+ * @return void
+ */
+function mass_inserts($table_name, $dbfields, $datas)
+{
+  global $db;
+  
+  $query = '
+INSERT INTO '.$table_name.'
+  ('.implode(',', $dbfields).')
+   VALUES';
+  foreach ($datas as $insert_id => $insert)
+  {
+    $query.= '
+  ';
+    if ($insert_id > 0)
+    {
+      $query.= ',';
+    }
+    $query.= '(';
+    foreach ($dbfields as $field_id => $dbfield)
+    {
+      if ($field_id > 0)
+      {
+        $query.= ',';
+      }
+
+      if (!isset($insert[$dbfield]) or $insert[$dbfield] == '')
+      {
+        $query.= 'NULL';
+      }
+      else
+      {
+        $query.= "'".$insert[$dbfield]."'";
+      }
+    }
+    $query.=')';
+  }
+  $query.= '
+;';
+  
+  $db->query($query);
+}
 ?>

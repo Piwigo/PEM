@@ -21,54 +21,45 @@
 // | USA.                                                                  |
 // +-----------------------------------------------------------------------+
 
-$conf['admin_users'] = array(
-  2,    // z0rglub
-  1442, // chrisaga
-  865,  // Sephi
-  974,  // volcom
-  1227, // VDigital
-  );
+define('INTERNAL', true);
+$root_path = './';
+require_once($root_path.'include/common.inc.php');
 
-// +-----------------------------------------------------------------------+
-// | Database connection parameters                                        |
-// +-----------------------------------------------------------------------+
+$template->set_file('register', 'register.tpl');
 
-$conf['db_params'] = array(
-  'name' => 'pem',
-  'host' => 'localhost',
-  'user' => 'root',
-  'pass' => 'X8lqd3GE',
-  'type' => 'mysql',
-  'tables_prefix' => 'pwg_',
-  'persistent_connection' => true,
-  );
+if (isset($_POST['submit']))
+{
+  $errors = array();
+  
+  if ($_POST['password'] != $_POST['confirmation_password'])
+  {
+    array_push(
+      $errors,
+      l10n('confirmation password does not match')
+      );
+  }
 
-// user_manager: 'local'
-$conf['user_manager'] = 'local';
+  $register_errors = register_user(
+    $_POST['username'],
+    $_POST['password'],
+    $_POST['email']
+    );
 
-// users_table: table listing all users
-$conf['users_table'] = $conf['db_params']['tables_prefix'].'users';
+  $errors = array_merge($errors, $register_errors);
 
-// user_fields : mapping between generic field names and table specific
-// field names. For example, in PWG, the mail address is names
-// "mail_address" and in punbb, it's called "email".
-$conf['user_fields'] = array(
-  'id' => 'id',
-  'username' => 'username',
-  'password' => 'password',
-  'email' => 'email',
-  );
+  if (count($errors) == 0)
+  {
+    $user_id = get_userid($_POST['username']);
+    log_user($user_id);
+    message_success('Registration successful', 'index.php');
+  }
+  else
+  {
+    message_die($errors[0]);
+  }
+}
 
-// pass_convert : function to crypt or hash the clear user password to store
-// it in the database
-$conf['pass_convert'] = create_function('$s', 'return md5($s);');
-
-// session_length: in seconds
-$conf['session_length'] = 60 * 60 * 24 * 30; // 1 month by default
-
-// title: displayed on every page
-$conf['page_title'] = 'Extensions Manager';
-
-// default_language
-$conf['default_language'] = 'english';
+build_header();
+$template->parse('output', 'register', true);
+build_footer();
 ?>

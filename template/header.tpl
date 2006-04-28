@@ -12,23 +12,7 @@
 
 <body>
 
-<div id="pwgHeader">
-
-  <h1>PhpWebGallery Extensions</h1>
-
-  <p class="menu">
-   <a href="http://phpwebgallery.net">Home</a>
-   <a href="http://demo.phpwebgallery.net">Demo</a>
-   <a href="http://phpwebgallery.net/doc">Wiki</a>
-   <a href="http://download.gna.org/phpwebgallery">Downloads</a>
-   <a href="http://forum.phpwebgallery.net">Forum</a>
-   <a href="http://bugs.phpwebgallery.net">Bugs</a>
-   <a href="http://phpwebgallery.net/ext">Extensions</a>
-   <a href="http://stats.gna.org/download.gna.org/phpwebgallery">Statistics</a>
-   <a href="https://gna.org/projects/phpwebgallery">Gna!</a>
-  </p>
-
-</div> <!-- pwgHeader -->
+<h1><a href="index.php">{PAGE_TITLE}</a></h1>
 
 <!--
 <div id="Header">
@@ -69,16 +53,19 @@
     </div>
     
     <!-- BEGIN user_not_logged_in -->
-    <div class="menu">      
-      <a href="{PUN_ROOT}login.php">Se connecter</a>
+    <div class="menu">
+      <a href="identification.php">Se connecter</a>
     </div>
     <!-- END user_not_logged_in -->
     
     <!-- BEGIN user_logged_in -->
     <div class="menu">
-      <a href="extensions.php?action=add">Ajouter extension</a><br />
-      <a href="revisions.php?action=add">Ajouter révision</a><br />
-      <a href="contributions.php">Voir ses contributions</a><br />
+      <p>Hello {USERNAME}</p>
+      <ul>
+        <li><a href="identification.php?action=logout">Déconnexion</a></li>
+        <li><a href="my.php">Home</a></li>
+        <li><a href="extensions.php?action=add">Ajout</a></li>
+      </ul>
     </div>
     <!-- END user_logged_in -->
     

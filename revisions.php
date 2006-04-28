@@ -21,15 +21,29 @@
 // | USA.                                                                  |
 // +-----------------------------------------------------------------------+
 
-  // This file has no possible action, the only action used is the "add" one.
-  // The revisions modification is defined in the "contributions.php" file.
+// This file has no possible action, the only action used is the "add" one.
+// The revisions modification is defined in the "contributions.php" file.
   
-  define( 'INTERNAL', true );
-  $root_path = './';
-  require_once( $root_path . 'include/common.inc.php' );
+define( 'INTERNAL', true );
+$root_path = './';
+require_once( $root_path . 'include/common.inc.php' );
   
-  if( !$pun_user['registered'] )
-    message_die( 'Vous devez être connecté pour pouvoir accéder à cette section.' );
+if (!isset($user['id']))
+{
+  message_die( 'Vous devez être connecté pour pouvoir accéder à cette section.' );
+}
+
+$page['extension_id'] =
+  (isset($_GET['extension_id']) and is_numeric($_GET['extension_id']))
+  ? $_GET['extension_id']
+  : '';
+
+if (empty($page['extension_id']))
+{
+  message_die(l10n('Incorrect extension identifier'));
+}
+
+echo 'extension id: ', $page['extension_id'], '<br>';
     
   // The add form has ben submitted
   if( isset( $_POST['send'] ) )
@@ -62,8 +76,10 @@
     $_POST = escape_array( $_POST );
       
     // Moves the file to its final destination
-    move_uploaded_file( $_FILES['revision_file']['tmp_name'], EXTENSIONS_DIR . 
-                        $_FILES['revision_file']['name'] );
+    move_uploaded_file(
+      $_FILES['revision_file']['tmp_name'],
+      EXTENSIONS_DIR.$_FILES['revision_file']['name']
+      );
     
     // Inserts the revision
     $sql =  "INSERT INTO " . REV_TABLE . " (idx_extension, date, url, description, version)";
@@ -88,19 +104,43 @@
   }
   
   $template->set_file( 'revision_add', 'revision_add.tpl' );
+
+$query = '
+SELECT name
+  FROM '.EXT_TABLE.'
+  WHERE id_extension = '.$page['extension_id'].'
+;';
+$result = $db->query($query);
+
+if ($db->num_rows($result) == 0)
+{
+  message_die(l10n('Unknown extension'));
+}
+
+$data = $db->fetch_array($result);
+
+$template->set_var(
+  array(
+    'EXTENSION_NAME' => $data['name'],
+    )
+  );
   
   // Author's Extensions list
   $sql =  "SELECT id_extension, name";
   $sql .= " FROM " . EXT_TABLE;
-  $sql .= " WHERE idx_author = '" . $pun_user['id'] . "'";
+  $sql .= " WHERE idx_author = '" . $user['id'] . "'";
   $sql .= " ORDER BY name ASC";
   $req = $db->query( $sql );
   
   $template->set_block( 'revision_add', 'revision_extension', 'Trevision_extension' );
   while( $data = $db->fetch_assoc( $req ) )
   {
-    $template->set_var( array( 'L_REVISION_EXTENSION_VALUE' => $data['id_extension'],
-                               'L_REVISION_EXTENSION_NAME' => $data['name'] ) );
+    $template->set_var(
+      array(
+        'L_REVISION_EXTENSION_VALUE' => $data['id_extension'],
+        'L_REVISION_EXTENSION_NAME' => $data['name'],
+        )
+      );
     $template->parse( 'Trevision_extension', 'revision_extension', true );
   }
   
@@ -114,8 +154,12 @@
   $template->set_block('revision_add', 'revision_compatibility', 'Trevision_compatibility');
   while($data = $db->fetch_assoc($req))
   {
-    $template->set_var(array( 'L_REVISION_COMP_VALUE' => $data['id_version'],
-                              'L_REVISION_COMP_NAME' => $data['version']));
+    $template->set_var(
+      array(
+        'L_REVISION_COMP_VALUE' => $data['id_version'],
+        'L_REVISION_COMP_NAME' => $data['version'],
+        )
+      );
     $template->parse( 'Trevision_compatibility', 'revision_compatibility', true );
   }
   

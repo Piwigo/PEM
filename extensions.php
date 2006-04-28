@@ -21,95 +21,72 @@
 // | USA.                                                                  |
 // +-----------------------------------------------------------------------+
 
-  define('INTERNAL', true);
-  $root_path = './';
-  require_once($root_path . 'include/common.inc.php');
+define('INTERNAL', true);
+$root_path = './';
+require_once($root_path . 'include/common.inc.php');
 
-  $action = isset( $_GET['action'] ) ? $_GET['action'] : '';
-  $page = isset( $_GET['page'] ) ? abs(intval($_GET['page'])) : 1;
-  $page = ( $page <= 0 ) ? 1 : $page;
-  $id = isset( $_GET['id'] ) ? abs(intval($_GET['id'])) : '';
+$action = isset( $_GET['action'] ) ? $_GET['action'] : '';
+$page = isset( $_GET['page'] ) ? abs(intval($_GET['page'])) : 1;
+$page = ( $page <= 0 ) ? 1 : $page;
+$id = isset( $_GET['id'] ) ? abs(intval($_GET['id'])) : '';
 
-  // Action performed by the user
-  switch( $action )
+// Action performed by the user
+switch( $action )
+{
+  // Extension adding
+  case 'add':
   {
-    // Extension adding
-    case 'add':
-      if( !$pun_user['registered'] )
-        message_die( 'Vous devez être connecté pour pouvoir accéder à cette section.' );
-        
-      // Form submitted
-      if( isset( $_POST['send'] ) )
+    if (!isset($user['id']))
+    {
+      message_die( 'Vous devez être connecté pour pouvoir accéder à cette section.' );
+    }
+    
+    // Form submitted
+    if (isset($_POST['submit']))
+    {
+      // Checks that all the fields have been well filled
+      $required_fields = array(
+        'extension_name',
+        'extension_description',
+        'extension_category',
+        );
+      
+      foreach ($required_fields as $field)
       {
-echo '<pre>';
-print_r($_FILES);
-echo '</pre>';
-        // Check file extension
-        if( strtolower( substr( $_FILES['extension_file']['name'], -3) ) != 'zip' )
-        {
-          message_die( 'L\'extension du fichier n\'est pas correcte. Le fichier doit être un .zip !' );
-        }
-
-        // Check file existence
-        if(file_exists(EXTENSIONS_DIR . $_FILES['extension_file']['name']))
-          message_die( 'L\'extension proposée existe déjà.' );
-          
-        // Check file size
-        if($_FILES['extension_file']['error'] == UPLOAD_ERR_INI_SIZE)
-        {
-          message_die( 'Le fichier est trop gros. Sa taille ne doit pas excéder ' . 
-          ini_get( 'upload_max_filesize' ) . '.' );
-        }
-
-        // Checks that all the fields have been well filled
-        if(empty( $_POST['extension_name'] ) or empty( $_POST['extension_description'] ) or 
-           empty( $_POST['extension_version'] ) or empty( $_POST['extension_compatibility'] ) or 
-           empty( $_POST['extension_category'] ))
+        if (empty($_POST[$field]))
         {
           message_die( 'Vous n\'avez pas rempli tous les champs.' );
         }
-        
-        // Escapes the array by using the mysql_escape_array( ) function
-        $_POST = escape_array( $_POST );
-          
-        // Moves the file to its final destination
-        move_uploaded_file( $_FILES['extension_file']['tmp_name'], EXTENSIONS_DIR . 
-                            $_FILES['extension_file']['name'] );
-
-        // Inserts the extension (need to be done before the other includes, to
-        // retrieve the insert id
-        $sql =  "INSERT INTO " . EXT_TABLE . " (idx_author, name, description)";
-        $sql .= " VALUES ('" . $pun_user['id'] . "', '" . $_POST['extension_name'] . "', '";
-        $sql .= $_POST['extension_description'] . "')";
-        $db->query( $sql ) or message_die( 'Erreur durant l\'insertion de l\'extension. Contactez l\'administrateur' );
-        $ext_id = $db->insert_id();
-        
-        // Inserts the extensions <-> categories link
-        foreach( $_POST['extension_category'] as $category )
-        {
-          $sql =  "INSERT INTO " . EXT_CAT_TABLE . " (idx_category, idx_extension)";
-          $sql .= " VALUES ('" . $category . "', '" . $ext_id . "')";
-          $db->query( $sql ) or message_die( 'Erreur durant l\'insertion de l\'extension. Contactez l\'administrateur' );
-        }
-        
-        // Inserts the revision
-        $sql =  "INSERT INTO " . REV_TABLE . " (idx_extension, date, url, description, version)";
-        $sql .= " VALUES ('" . $ext_id . "', '" . mktime() . "', '" . $_FILES['extension_file']['name'];
-        $sql .= "', '', '" . $_POST['extension_version'] . "')";
-        $db->query( $sql ) or die('Erreur durant l\'insertion de l\'extension. Contactez l\'administrateur' );
-        $revision_id = $db->insert_id();
-        
-        // Inserts the revisions <-> compatibilities link
-        foreach($_POST['extension_compatibility'] as $compatibility)
-        {
-          $sql =  "INSERT INTO " . COMP_TABLE . " (idx_revision, idx_version)";
-          $sql .= " VALUES ('" . $revision_id . "', '" . $compatibility . "')";
-          $db->query( $sql ) or die( 'Erreur durant l\'insertion de l\'extension. Contactez l\'administrateur' );
-        }
-        
-        create_rss();
-        message_success( 'L\'extension a été ajoutée avec succès. Merci de votre participation.', 'index.php' );
       }
+        
+      // Escapes the array by using the mysql_escape_array( ) function
+      $_POST = escape_array( $_POST );
+      
+      // Inserts the extension (need to be done before the other includes,
+      // to retrieve the insert id
+      $query = '
+INSERT INTO '.EXT_TABLE.'
+  (idx_author, name, description)
+  VALUES
+  ('.$user['id'].', \''.$_POST['extension_name'].'\', \''.$_POST['extension_description'].'\')
+;';
+      $db->query($query) or message_die('Erreur durant l\'insertion de l\'extension. Contactez l\'administrateur');
+      $ext_id = $db->insert_id();
+        
+      // Inserts the extensions <-> categories link
+      foreach ($_POST['extension_category'] as $category)
+      {
+        $query = '
+INSERT INTO '.EXT_CAT_TABLE.'
+  (idx_category, idx_extension)
+  VALUES
+  ('.$category.', '.$ext_id.')
+;';
+        $db->query($query) or message_die('Erreur durant l\'insertion de l\'extension. Contactez l\'administrateur');
+      }
+      
+      message_success( 'L\'extension a été ajoutée avec succès. Merci de votre participation.', 'index.php' );
+    }
 
       // Display the element adding form
       $template->set_file('extension_add', 'extension_add.tpl');
@@ -125,8 +102,10 @@ echo '</pre>';
       $subcats = array();
       while($data = $db->fetch_assoc($req))
       {
-        if(!empty($data['idx_parent']))
+        if (!empty($data['idx_parent']))
+        {
           $subcats[] = $data['idx_parent'];
+        }
           
         $cats[] = $data;
       }
@@ -135,10 +114,14 @@ echo '</pre>';
       $template->set_block('extension_add', 'extension_category', 'Textension_category');
       foreach($cats as $cat)
       {
-        if(!in_array($cat['id_category'], $subcats))
+        if (!in_array($cat['id_category'], $subcats))
         {
-          $template->set_var(array( 'L_EXTENSION_CAT_NAME' => $cat['name'],
-                                    'L_EXTENSION_CAT_VALUE' => $cat['id_category']));
+          $template->set_var(
+            array(
+              'L_EXTENSION_CAT_NAME' => $cat['name'],
+              'L_EXTENSION_CAT_VALUE' => $cat['id_category']
+              )
+            );
           $template->parse('Textension_category', 'extension_category', true);
         }
       }
@@ -153,8 +136,12 @@ echo '</pre>';
       $template->set_block('extension_add', 'extension_compatibility', 'Textension_compatibility');
       while($data = $db->fetch_assoc($req))
       {
-        $template->set_var(array( 'L_EXTENSION_COMP_VALUE' => $data['id_version'],
-                                  'L_EXTENSION_COMP_NAME' => $data['version']));
+        $template->set_var(
+          array(
+            'L_EXTENSION_COMP_VALUE' => $data['id_version'],
+            'L_EXTENSION_COMP_NAME' => $data['version']
+            )
+          );
         $template->parse('Textension_compatibility', 'extension_compatibility', true);
       }
         
@@ -162,7 +149,8 @@ echo '</pre>';
       $template->parse('output', 'extension_add', true);
       build_footer();
       
-    break;
+      break;
+    }
   }
   
   // No action set, just display the extensions listing of the chosen category
@@ -220,24 +208,35 @@ echo '</pre>';
     $extensions_end = $page * EXTENSIONS_PER_PAGE;
   }
   
-  // FInally, get the extensions listing
-  $sql =  "SELECT e.name, u.username, e.description, MAX(r.version) AS version, r.id_revision,";
-  $sql .= " e.id_extension, e.idx_author";
-  $sql .= " FROM " . EXT_TABLE . " e";
-  $sql .= " LEFT JOIN " . REV_TABLE . " r ON r.idx_extension = e.id_extension";
-  $sql .= " INNER JOIN " . $db->prefix . "users u ON u.id = e.idx_author";
-  $sql .= " INNER JOIN " . EXT_CAT_TABLE . " ct ON ct.idx_extension = e.id_extension";
-  $sql .= " AND ct.idx_category = '" . $_GET['id'] . "'";
-  if( isset( $_SESSION['id_version'] ) )
-  {
-    $sql .= " INNER JOIN " . COMP_TABLE . " ON idx_version = '" . 
-            $_SESSION['id_version'] . "' AND idx_revision = r.id_revision";
-  }
-  $sql .= " GROUP BY e.id_extension";
-  $sql .= " ORDER BY e.id_extension DESC";
-  $sql .= " LIMIT " . ( ( $page - 1 ) * EXTENSIONS_PER_PAGE ) . "," . EXTENSIONS_PER_PAGE;
+// Finally, get the extensions listing
+$query = '
+SELECT e.name,
+       u.username,
+       e.description,
+       MAX(r.version) AS version,
+       r.id_revision,
+       e.id_extension,
+       e.idx_author
+  FROM '.EXT_TABLE.' e
+    LEFT JOIN '.REV_TABLE.' r ON r.idx_extension = e.id_extension
+    INNER JOIN '.USERS_TABLE.' u ON u.id = e.idx_author
+    INNER JOIN '.EXT_CAT_TABLE.' ct
+      ON ct.idx_extension = e.id_extension
+      AND ct.idx_category = \''.$_GET['id'].'\'';
+if (isset($_SESSION['id_version']))
+{
+  $query.= '
+    INNER JOIN '.COMP_TABLE.'
+      ON idx_version = \''.$_SESSION['id_version'].'\'
+      AND idx_revision = r.id_revision';
+}
+$query.= '
+  GROUP BY e.id_extension
+  ORDER BY e.id_extension DESC
+  LIMIT '. ( ( $page - 1 ) * EXTENSIONS_PER_PAGE ) .','. EXTENSIONS_PER_PAGE.'
+;';
 
-  $req = $db->query($sql);
+$req = $db->query($query);
   
   // Admin block used for admins and authors of the extension
   $template->set_block( 'extensions', 'switch_admin', 't_switch_admin' );
@@ -250,30 +249,38 @@ echo '</pre>';
     $comp_array = array();
 
     // Get the compatibility array (the compatibility for all the revisions of the extension)
-    $sql =  "SELECT v.version";
-    $sql .= " FROM " . REV_TABLE . " r";
-    $sql .= " INNER JOIN " . EXT_TABLE . " e ON r.idx_extension = e.id_extension";
-    $sql .= " INNER JOIN " . COMP_TABLE . " rc ON rc.idx_revision = r.id_revision";
-    $sql .= " INNER JOIN " . VER_TABLE . " v ON v.id_version = rc.idx_version";
-    $sql .= " WHERE e.id_extension = '" . $data['id_extension'] . "'";
-    $sql .= " GROUP BY v.id_version";
-    $sql .= " ORDER BY v.version ASC";
+    $query = '
+SELECT v.version
+  FROM '.REV_TABLE.' r
+    INNER JOIN '.EXT_TABLE.' e ON r.idx_extension = e.id_extension
+    INNER JOIN '.COMP_TABLE.' rc ON rc.idx_revision = r.id_revision
+    INNER JOIN '.VER_TABLE.' v ON v.id_version = rc.idx_version
+  WHERE e.id_extension = \''.$data['id_extension'].'\'
+  GROUP BY v.id_version
+  ORDER BY v.version ASC
+;';
     
-    $req_comp = $db->query($sql);
+    $req_comp = $db->query($query);
     
-    while($data_comp = $db->fetch_assoc($req_comp))
+    while ($data_comp = $db->fetch_assoc($req_comp))
+    {
       $comp_array[] = $data_comp['version'];
+    }
     
     $comp = implode(', ', $comp_array);
-    $template->set_var(array( 'L_EXTENSION_NAME' => htmlspecialchars( strip_tags ( $data['name'] ) ),
-                              'L_EXTENSION_VERSION' => htmlspecialchars( $data['version'] ),
-                              'L_EXTENSION_AUTHOR' => htmlspecialchars( $data['username'] ),
-                              'L_EXTENSION_DESCRIPTION' => nl2br( htmlspecialchars( strip_tags( $data['description'] ) ) ),
-                              'L_EXTENSION_COMPATIBILITY' => $comp,
-                              'L_EXTENSION_ID' => $data['id_extension'] ));
+    $template->set_var(
+      array(
+        'L_EXTENSION_NAME' => htmlspecialchars(strip_tags($data['name'])),
+        'L_EXTENSION_VERSION' => htmlspecialchars($data['version']),
+        'L_EXTENSION_AUTHOR' => htmlspecialchars($data['username']),
+        'L_EXTENSION_DESCRIPTION' => nl2br(htmlspecialchars(strip_tags($data['description']))),
+        'L_EXTENSION_COMPATIBILITY' => $comp,
+        'L_EXTENSION_ID' => $data['id_extension'],
+        )
+      );
                               
     // Used to display the "Modifier / Supprimer" links
-    if( isAdmin($pun_user['id']) || $pun_user['id'] == $data['idx_author'] )
+    if( isAdmin($user['id']) || $user['id'] == $data['idx_author'] )
     {
       $template->parse( 't_switch_admin', 'switch_admin' );
     }

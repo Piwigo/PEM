@@ -262,3 +262,32 @@ div.nav_right
    color:white;
    text-decoration:none;
 }
+
+.checkboxBox {
+  width: 500px;
+}
+
+TABLE.revisions {
+  border-collapse: collapse;
+  margin: 0 auto;
+}
+
+TABLE.revisions TD,
+TABLE.revisions TH
+{
+  text-align: center;
+  border: 1px solid black;
+  padding: 5px;
+}
+
+TABLE.revisions TH
+{
+  background-color: lightgray;
+}
+
+IMG.download
+{
+  display: block;
+  float: left;
+  border: none;
+}

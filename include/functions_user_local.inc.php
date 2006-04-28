@@ -1,0 +1,181 @@
+<?php
+// +-----------------------------------------------------------------------+
+// | PEM - a PHP based Extension Manager                                   |
+// | Copyright (C) 2005-2006 PEM Team - http://home.gna.org/pem            |
+// +-----------------------------------------------------------------------+
+// | last modifier : $Author: plg $
+// | revision      : $Revision: 2 $
+// +-----------------------------------------------------------------------+
+// | This program is free software; you can redistribute it and/or modify  |
+// | it under the terms of the GNU General Public License as published by  |
+// | the Free Software Foundation                                          |
+// |                                                                       |
+// | This program is distributed in the hope that it will be useful, but   |
+// | WITHOUT ANY WARRANTY; without even the implied warranty of            |
+// | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU      |
+// | General Public License for more details.                              |
+// |                                                                       |
+// | You should have received a copy of the GNU General Public License     |
+// | along with this program; if not, write to the Free Software           |
+// | Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, |
+// | USA.                                                                  |
+// +-----------------------------------------------------------------------+
+
+/**
+ */
+function check_user_password($username, $password)
+{
+  global $conf, $db;
+  
+  $username = mysql_escape_string($username);
+  
+  // retrieving the encrypted password of the login submitted
+  $query = '
+SELECT '.$conf['user_fields']['id'].' AS id,
+       '.$conf['user_fields']['password'].' AS password
+  FROM '.USERS_TABLE.'
+  WHERE '.$conf['user_fields']['username'].' = \''.$username.'\'
+;';
+
+  $row = $db->fetch_assoc($db->query($query));
+
+  if ($row['password'] == $conf['pass_convert']($password))
+  {
+    return $row['id'];;
+  }
+  else
+  {
+    return false;
+  }
+}
+
+function get_user_infos($user_id = null)
+{
+  global $db;
+  
+  $user = array();
+  
+  if (isset($user_id))
+  {
+    if (!is_numeric($user_id))
+    {
+      die('get_user_infos: user id should be numeric');
+    }
+    
+    $query = '
+SELECT u.*,
+       ui.*
+  FROM '.USERS_TABLE.' u
+    LEFT JOIN '.USER_INFOS_TABLE.' ui ON ui.user_id = u.id
+  WHERE u.id = '.$user_id.'
+;';
+    $user = $db->fetch_assoc($db->query($query));
+
+    if (!isset($user['language']))
+    {
+      create_user_infos($user['id']);
+    }
+  }
+
+  return $user;
+}
+
+function register_user($username, $password, $email)
+{
+  global $conf, $db;
+
+  $errors = array();
+
+  if (!preg_match('/^[a-zA-Z0-9_-]+$/', $username))
+  {
+    array_push(
+      $errors,
+      l10n('Incorrect username')
+      );
+  }
+  else if (get_userid($username))
+  {
+    array_push(
+      $errors,
+      l10n('Username already in use')
+      );
+  }
+
+  // if no error until here, registration of the user
+  if (count($errors) == 0)
+  {
+    $insert =
+      array(
+        $conf['user_fields']['username'] => mysql_escape_string($username),
+        $conf['user_fields']['password'] => $conf['pass_convert']($password),
+        $conf['user_fields']['email'] => $email
+        );
+
+    mass_inserts(
+      USERS_TABLE,
+      array_keys($insert),
+      array($insert)
+      );
+
+    create_user_infos($db->insert_id());
+  }
+
+  return $errors;
+}
+
+/**
+ * returns user identifier thanks to his name, false if not found
+ *
+ * @param string username
+ * @param int user identifier
+ */
+function get_userid($username)
+{
+  global $conf, $db;
+
+  $username = mysql_escape_string($username);
+
+  $query = '
+SELECT '.$conf['user_fields']['id'].'
+  FROM '.USERS_TABLE.'
+  WHERE '.$conf['user_fields']['username'].' = \''.$username.'\'
+;';
+  $result = $db->query($query);
+
+  if ($db->num_rows($result) == 0)
+  {
+    return false;
+  }
+  else
+  {
+    list($user_id) = $db->fetch_row($result);
+    return $user_id;
+  }
+}
+
+/**
+ * add user informations based on default values
+ *
+ * @param int user_id
+ */
+function create_user_infos($user_id)
+{
+  global $conf, $db;
+
+  list($dbnow) = $db->fetch_row(
+    $db->query('SELECT NOW();')
+    );
+
+  $insert = array(
+    'user_id' => $user_id,
+    'language' => $conf['default_language'],
+    'registration_date' => $dbnow,
+    );
+
+  mass_inserts(
+    USER_INFOS_TABLE,
+    array_keys($insert),
+    array($insert)
+    );
+}
+?>

@@ -21,21 +21,22 @@
 // | USA.                                                                  |
 // +-----------------------------------------------------------------------+
 
-  define( 'PUN_ROOT', $root_path . '../forum/' );
-  define( 'ROOT', '/pwg/mods/' );
+define( 'ROOT', '/pwg/mods/' );
   
-  define( 'EXT_TABLE', 'pwg_extensions' );
-  define( 'CAT_TABLE' , 'pwg_categories' );
-  define( 'VER_TABLE', 'pwg_versions' );
-  define( 'REV_TABLE', 'pwg_revisions' );
-  define( 'COMP_TABLE', 'pwg_revisions_compatibilities' );
-  define( 'EXT_CAT_TABLE', 'pwg_extensions_categories' );
+define( 'EXT_TABLE',     $conf['db_params']['tables_prefix'].'extensions' );
+define( 'CAT_TABLE' ,    $conf['db_params']['tables_prefix'].'categories' );
+define( 'VER_TABLE',     $conf['db_params']['tables_prefix'].'versions' );
+define( 'REV_TABLE',     $conf['db_params']['tables_prefix'].'revisions' );
+define( 'COMP_TABLE',    $conf['db_params']['tables_prefix'].'revisions_compatibilities' );
+define( 'EXT_CAT_TABLE', $conf['db_params']['tables_prefix'].'extensions_categories' );
+define( 'USER_INFOS_TABLE', $conf['db_params']['tables_prefix'].'user_infos' );
+
+define( 'USERS_TABLE', $conf['users_table'] );
+
   
-  define( 'EXTENSIONS_PER_PAGE', 3 );
-  define( 'LAST_ADDED_EXTS_COUNT', 5 );
-  
-  define( 'PUN_TURN_OFF_MAINT', 1 );
-  define( 'PUN_QUIET_VISIT', 1 );
-  
-  define( 'EXTENSIONS_DIR', 'upload/' );
+define( 'EXTENSIONS_PER_PAGE', 3 );
+define( 'LAST_ADDED_EXTS_COUNT', 5 );
+define( 'PUN_TURN_OFF_MAINT', 1 );
+define( 'PUN_QUIET_VISIT', 1 );
+define( 'EXTENSIONS_DIR', 'upload/' );
 ?>

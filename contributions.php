@@ -30,14 +30,17 @@
   $page = ( $page <= 0 ) ? 1 : $page;
   $id = isset( $_GET['id'] ) ? abs(intval($_GET['id'])) : '';
   
-  // Access allowed only for registered users
-  if( !$pun_user['registered'] )
-    message_die( 'Vous devez être connecté pour pouvoir accéder à cette section.' );
+// Access allowed only for registered users
+if (!isset($user['id']))
+{
+  message_die( 'Vous devez être connecté pour pouvoir accéder à cette section.' );
+}
     
   switch( $action )
   {
     // Extensions deleting
     case 'del_ext' :
+    {
       if( empty( $id ) )
         message_die( 'Identificateur non spécifié.' );
         
@@ -53,7 +56,7 @@
         message_die( 'L\'extension n\'a pas été trouvée. ');
       }
         
-      if( $data['idx_author'] != $pun_user['id'] && !isAdmin($pun_user['id']) )
+      if( $data['idx_author'] != $user['id'] && !isAdmin($user['id']) )
       {
         message_die( 'Vous ne pouvez supprimer que les extensions qui vous appartiennent !' );
       }
@@ -90,10 +93,11 @@
 
       message_success( 'L\'extension a été supprimée avec succès.', 'contributions.php' );
 
-    break;
-    
+      break;
+    }
     // Revision deleting
-    case 'del_rev' : 
+    case 'del_rev' :
+    {
       if( empty( $id ) )
         message_die( 'Identificateur non spécifié.' );
         
@@ -111,7 +115,7 @@
         message_die( 'La révision n\'a pas été trouvée. ');
       }
         
-      if( $data['idx_author'] != $pun_user['id'] && !isAdmin($pun_user['id']) )
+      if( $data['idx_author'] != $user['id'] && !isAdmin($user['id']) )
       {
         message_die( 'Vous ne pouvez supprimer que les révisions qui vous appartiennent !' );
       }
@@ -140,10 +144,11 @@
 
       message_success( 'La révision a été supprimée avec succès.', 'contributions.php' );
 
-    break;
-    
+      break;
+    }
     // Revision modification
     case 'mod_rev' :
+    {
       if( isset( $_POST['send'] ) )
       {
         $id = isset( $_POST['id'] ) ? intval( $_POST['id'] ) : '';
@@ -154,11 +159,11 @@
         $sql =  "SELECT 1 as is_author";
         $sql .= " FROM " . EXT_TABLE;
         $sql .= " INNER JOIN " . REV_TABLE . " ON id_revision = '" . $id . "'";
-        $sql .= " WHERE idx_author = '" . $pun_user['id'] . "'";
+        $sql .= " WHERE idx_author = '" . $user['id'] . "'";
         
         $req = $db->query( $sql );
         
-        if( $db->num_rows( $req ) == 0 && !isAdmin($pun_user['id']) )
+        if( $db->num_rows( $req ) == 0 && !isAdmin($user['id']) )
           message_die( 'Vous n\'êtes pas l\'auteur de cette révision.' );
         
         // Checks that all the fields have been well filled
@@ -232,13 +237,13 @@
       $sql =  "SELECT name, id_extension, id_revision";
       $sql .= " FROM " . EXT_TABLE;
       $sql .= " LEFT JOIN " . REV_TABLE . " ON idx_extension = id_extension AND id_revision = '" . $id . "'";
-      $sql .= " WHERE idx_author = '" . $pun_user['id'] . "'";
+      $sql .= " WHERE idx_author = '" . $user['id'] . "'";
       $sql .= " ORDER BY name ASC";
 
       $req = $db->query( $sql );
       
       // Checks if the user who wants to modify the revision is really its author
-      if( $db->num_rows( $req ) == 0 && !isAdmin($pun_user['id']) )
+      if( $db->num_rows( $req ) == 0 && !isAdmin($user['id']) )
         message_die( 'Vous ne pouvez modifier que vos révisions.' );
       
       $extensions_array = array();
@@ -311,11 +316,12 @@
       build_header();
       $template->parse( 'output', 'revision_mod', true );
       build_footer();
-      
-    
+
+      break;
+    }
     // Extension modification
     case 'mod_ext' :
-  
+    {
       if( isset( $_POST['extension_id'] ) )
       {
         $id = intval( $_POST['extension_id'] );
@@ -340,7 +346,7 @@
       if( empty( $data['idx_author'] ) )
         message_die( 'Extension non trouvée.' );
         
-      if( $data['idx_author'] != $pun_user['id'] && !isAdmin($pun_user['id']) )
+      if( $data['idx_author'] != $user['id'] && !isAdmin($user['id']) )
         message_die( 'Vous ne pouvez modifier que vos extensions.' );
         
       // The form has been sent
@@ -455,6 +461,9 @@
       build_header();
       $template->parse( 'output', 'extension_mod', true );
       build_footer();
+
+      break;
+    }
   }
   
   // Contributions listing
@@ -468,7 +477,7 @@
     $sql .= " INNER JOIN " . COMP_TABLE . " rc ON rc.idx_revision = r.id_revision";
     $sql .= " AND rc.idx_version = '" . $_SESSION['id_version'] . "'";
   }
-  $sql .= " WHERE e.idx_author = '" . $pun_user['id'] . "'";
+  $sql .= " WHERE e.idx_author = '" . $user['id'] . "'";
 
   $req = $db->query($sql);
   $data = $db->fetch_assoc($req);
@@ -498,8 +507,8 @@
   $sql =  "SELECT e.name, e.description, r.id_revision, e.id_extension";
   $sql .= " FROM pwg_revisions r ";
   $sql .= " INNER JOIN pwg_extensions e ON r.idx_extension = e.id_extension";
-  $sql .= " AND e.idx_author = '" . $pun_user['id'] . "'";
-  $sql .= " INNER JOIN " . $db->prefix . "users u ON u.id = e.idx_author";
+  $sql .= " AND e.idx_author = '" . $user['id'] . "'";
+  $sql .= " INNER JOIN " .USERS_TABLE." u ON u.id = e.idx_author";
   if( isset( $_SESSION['id_version'] ) )
   {
     $sql .= " INNER JOIN pwg_revisions_compatibilities rc ON rc.idx_revision = r.id_revision";
@@ -514,9 +523,13 @@
   $template->set_block('contributions', 'extension', 'Textension');
   while($data = $db->fetch_assoc($req))
   {            
-    $template->set_var(array( 'L_EXTENSION_NAME' => htmlspecialchars( strip_tags ( $data['name'] ) ),
-                              'L_EXTENSION_DESCRIPTION' => nl2br( htmlspecialchars( strip_tags( $data['description'] ) ) ),
-                              'L_EXTENSION_ID' => $data['id_extension'] ));
+    $template->set_var(
+      array(
+        'L_EXTENSION_NAME' => htmlspecialchars( strip_tags ( $data['name'] ) ),
+        'L_EXTENSION_DESCRIPTION' => nl2br( htmlspecialchars( strip_tags( $data['description'] ) ) ),
+        'L_EXTENSION_ID' => $data['id_extension']
+        )
+      );
     $template->parse('Textension', 'extension', true);
   }
   
@@ -539,13 +552,18 @@
     $u_next = '';
   }
   
-  $template->set_var(array( 'L_EXTENSIONS_COUNT' => $extensions_count,
-                            'L_EXTENSIONS_START' => $extensions_start,
-                            'L_EXTENSIONS_END' => $extensions_end,
-                            'L_PAGE_ID' => $page,
-                            'L_PAGE_COUNT' => $pages_count,
-                            'U_PREVIOUS' => $u_previous,
-                            'U_NEXT' => $u_next ));
+  $template->set_var(
+    array(
+      'L_EXTENSIONS_COUNT' => $extensions_count,
+      'L_EXTENSIONS_START' => $extensions_start,
+      'L_EXTENSIONS_END' => $extensions_end,
+      'L_PAGE_ID' => $page,
+      'L_PAGE_COUNT' => $pages_count,
+      'U_PREVIOUS' => $u_previous,
+      'U_NEXT' => $u_next,
+      )
+    );
+    
   build_header();
   $template->parse( 'output', 'contributions', true );
   build_footer();
