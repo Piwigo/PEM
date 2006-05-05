@@ -2,7 +2,7 @@
 
 </h1>
 
-<form method="post" action="revisions.php?action=add" enctype="multipart/form-data">
+<form method="post" action="{F_ACTION}" enctype="multipart/form-data">
   <fieldset>
     <legend>Add a revision</legend>
 
@@ -27,12 +27,12 @@
       </tr>
       <tr>
         <th>Notes de version</th>
-        <td><textarea cols="60" rows="15" name="revision_changelog"></textarea></td>
+        <td><textarea cols="80" rows="10" name="revision_changelog"></textarea></td>
       </tr>
     </table>
 
     <div>
-      <input type="submit" value="Envoyer" name="send" />
+      <input type="submit" value="Submit" name="submit" />
     </div>
   </fieldset>
 </form>

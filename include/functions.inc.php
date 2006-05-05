@@ -35,117 +35,74 @@ function build_header( $parse = true )
   global $user;
   global $conf;
   
-  // Get the extensions count
-  $sql =  "SELECT COUNT(id_extension) AS extensions_count";
-  $sql .= " FROM " . EXT_TABLE;
-  $req = $db->query( $sql );
-  $data = $db->fetch_assoc( $req );
-  $extensions_count = $data['extensions_count'];
-  
   // Get the left nav menu
-  $sql =  "SELECT id_category, idx_parent, name, description";
-  $sql .= " FROM " . CAT_TABLE;
-  $sql .= " ORDER BY idx_parent ASC, name ASC";
-  $req = $db->query( $sql );
+  $query = '
+SELECT id_category,
+       idx_parent,
+       name,
+       description
+  FROM '.CAT_TABLE.'
+  ORDER BY name ASC
+;';
+  $req = $db->query($query);
   
   $categories = array();
-  while( $data = $db->fetch_assoc( $req ) )
-    $categories[] = $data;
+  while ($data = $db->fetch_assoc($req))
+  {
+    array_push($categories, $data);
+  }
 
   $template->set_file( 'header', 'header.tpl' );
   
-  $template->set_block( 'header', 'category_sublevel_item', 't_category_sublevel_item' );
-  $template->set_block( 'header', 'category_sublevel', 't_category_sublevel' );
   $template->set_block( 'header', 'category', 't_category' );
   
   // Browse the categories and display them
   foreach($categories as $cat)
   {
-    // This is not a main category
-    if(!empty($cat['idx_parent']))
-    {
-      continue;
-    }
-    
-    $has_sublevels = false;
-    
-    // Display sub-categories
-    foreach($categories as $cat_sublevel)
-    {
-      if($cat_sublevel['idx_parent'] == $cat['id_category'])
-      {
-        $template->set_var(
-          array(
-            'L_CATEGORY_SUBLEVEL_ITEM_ID' => $cat_sublevel['id_category'],
-            'L_CATEGORY_SUBLEVEL_ITEM' => $cat_sublevel['name'],
-            'L_CATEGORY_SUBLEVEL_DESCRIPTION' => $cat_sublevel['description']
-            )
-          );
-        $template->parse('t_category_sublevel_item', 'category_sublevel_item', true);
-        $has_sublevels = true;
-      }
-    }
-    
-    // Doesn't display a link on the category if it has children
-    if($has_sublevels)
-    {
-      $cat_name = $cat['name'];
-    }
-    else 
-    {
-      $cat_name = '<a href="extensions.php?id=' . $cat['id_category'] . '">' . $cat['name'] . '</a>';
-    }
-    
     $template->set_var(
       array(
-        'U_CATEGORY' => $cat_name,
-        'L_CATEGORY_DESCRIPTION' => $cat['description']
+        'URL' => 'extensions.php?category='.$cat['id_category'],
+        'NAME' => $cat['name'],
         )
       );
-                                
-    
-    if( $has_sublevels )
-    {
-      $template->parse( 't_category_sublevel', 'category_sublevel', true );
-    }
       
-    $template->parse( 't_category', 'category', true );
-    $template->clear_var( 't_category_sublevel' );
-    $template->clear_var( 't_category_sublevel_item' );
+    $template->parse('t_category', 'category', true);
   }
   
   // Gets the list of the available PWG versions (allows users to filter)
-  $sql =  "SELECT id_version, version";
-  $sql .= " FROM " . VER_TABLE;
-  $sql .= " ORDER BY version DESC";
-  $req = $db->query($sql);
+  $query = '
+SELECT id_version,
+       version
+  FROM '.VER_TABLE.'
+  ORDER BY version DESC
+;';
+  $req = $db->query($query);
   
-  $template->set_block( 'header', 'pwg_version', 't_pwg_version' );
+  $template->set_block('header', 'pwg_version', 't_pwg_version');
   
   // Displays the versions
-  while( $data = $db->fetch_assoc( $req ) )
+  while ($data = $db->fetch_assoc($req))
   {
-    $template->set_var( array( 'L_PWG_VERSION_ID' => $data['id_version'],
-                               'L_PWG_VERSION_NAME' => $data['version'] ) );
+    $template->set_var(
+      array(
+        'L_PWG_VERSION_ID' => $data['id_version'],
+        'L_PWG_VERSION_NAME' => $data['version'],
+        )
+      );
                                
-    if( isset( $_SESSION['id_version'] ) )
+    if (isset($_SESSION['id_version']))
     {
-      if( $_SESSION['id_version'] == $data['id_version'] )
+      if ($_SESSION['id_version'] == $data['id_version'])
       {
-        $template->set_var( 'L_PWG_VERSION_SELECTED', 'selected' );
-      }
-      else 
-      {
-        $template->set_var( 'L_PWG_VERSION_SELECTED', '' );
+        $template->set_var('L_PWG_VERSION_SELECTED', 'selected="selected"');
       }
     }
     
-    $template->parse( 't_pwg_version', 'pwg_version', true );
+    $template->parse('t_pwg_version', 'pwg_version', true);
   }
   
   $template->set_var(
     array(
-      'L_EXTENSIONS_TOTAL_COUNT' => $extensions_count,
       'PAGE_TITLE' => $conf['page_title'],
       'L_REQUEST_URI' => $_SERVER['REQUEST_URI']
       )
@@ -169,17 +126,21 @@ function build_header( $parse = true )
     $template->parse( 't_user_not_logged_in', 'user_not_logged_in' );
   }
     
-  if( $parse )
+  if ($parse)
+  {
     $template->parse('output', 'header');
+  }
 }    
 
 function build_footer()
 {
-  global $template;
+  global $template, $t2;
   
   $template->set_file('footer', 'footer.tpl');
   $template->parse('output', 'footer', true);
   $template->p('output');
+
+  echo get_elapsed_time($t2, get_moment());
   exit();
 }
 
@@ -329,7 +290,7 @@ function isAdmin($user_id)
 
 function l10n($lang_key)
 {
-  return $lang_key;
+  return '{l10n}'.$lang_key;
 }
 
 /**
@@ -379,5 +340,422 @@ INSERT INTO '.$table_name.'
 ;';
   
   $db->query($query);
+}
+
+/**
+ * creates an array based on a query, this function is a very common pattern
+ * used here
+ *
+ * @param string $query
+ * @param string $fieldname
+ * @return array
+ */
+function array_from_query($query, $fieldname)
+{
+  global $db;
+  
+  $array = array();
+
+  $result = $db->query($query);
+  while ($row = $db->fetch_array($result))
+  {
+    array_push($array, $row[$fieldname]);
+  }
+
+  return $array;
+}
+
+function get_version_name_of()
+{
+  global $db;
+
+  $version_name_of = array();
+
+  $query = '
+SELECT id_version,
+       version
+  FROM '.VER_TABLE.'
+;';
+  $result = $db->query($query);
+
+  while ($row = $db->fetch_array($result))
+  {
+    $version_name_of[ $row['id_version'] ] = $row['version'];
+  }
+
+  return $version_name_of;
+}
+
+function get_versions_of_revision($revision_ids)
+{
+  $versions_of = array();
+  $version_ids_of = get_version_ids_of_revision($revision_ids);
+  $version_name_of = get_version_name_of();
+
+  foreach ($revision_ids as $revision_id)
+  {
+    $versions_of[$revision_id] = array();
+
+    foreach ($version_ids_of[$revision_id] as $version_id)
+    {
+      array_push(
+        $versions_of[$revision_id],
+        $version_name_of[$version_id]
+        );
+    }
+
+    natcasesort($versions_of[$revision_id]);
+  }
+
+  return $versions_of;
+}
+
+function get_version_ids_of_revision($revision_ids)
+{
+  global $db;
+
+    // Get list of compatibilities
+  $version_ids_of = array();
+  
+  $query = '
+SELECT idx_version,
+       idx_revision
+  FROM '.COMP_TABLE.'
+  WHERE idx_revision IN ('.implode(',', $revision_ids).')
+;';
+  
+  $result = $db->query($query);
+  
+  while ($row = $db->fetch_array($result))
+  {
+    if (!isset($version_ids_of[ $row['idx_revision'] ]))
+    {
+      $version_ids_of[ $row['idx_revision'] ] = array();
+    }
+    
+    array_push(
+      $version_ids_of[ $row['idx_revision'] ],
+      $row['idx_version']
+      );
+  }
+
+  return $version_ids_of;
+}
+
+function get_version_ids_of_extension($extension_ids)
+{
+  global $db;
+  
+  // first we find the revisions associated to each extension
+  $query = '
+SELECT id_revision,
+       idx_extension
+  FROM '.REV_TABLE.'
+  WHERE idx_extension IN ('.implode(',', $extension_ids).')
+;';
+
+  $revision_ids = array();
+  $revisions_of = array();
+
+  $result = $db->query($query);
+  while ($row = $db->fetch_array($result))
+  {
+    // add the revision id to the list of all revisions
+    array_push($revision_ids, $row['id_revision']);
+
+    // add the revision id to the list of revision to a particular extension.
+    if (!isset($revisions_of[ $row['idx_extension'] ]))
+    {
+      $revisions_of[ $row['idx_extension'] ] = array();
+    }
+    array_push(
+      $revisions_of[ $row['idx_extension'] ],
+      $row['id_revision']
+      );
+  }
+
+  $version_ids_of_revision = get_version_ids_of_revision($revision_ids);
+  $version_ids_of_extension = array();
+
+  foreach ($extension_ids as $extension_id)
+  {
+    $version_ids_of_extension[$extension_id] = array();
+
+    foreach ($revisions_of[$extension_id] as $revision_id)
+    {
+      $version_ids_of_extension[$extension_id] = array_merge(
+        $version_ids_of_extension[$extension_id],
+        $version_ids_of_revision[$revision_id]
+        );
+    }
+
+    $version_ids_of_extension[$extension_id] =
+      array_unique($version_ids_of_extension[$extension_id]);
+  }
+
+  return $version_ids_of_extension;
+}
+
+function get_versions_of_extension($extension_ids)
+{
+  $versions_of = array();
+  $version_ids_of = get_version_ids_of_extension($extension_ids);
+  $version_name_of = get_version_name_of();
+
+  foreach ($extension_ids as $extension_id)
+  {
+    $versions_of[$extension_id] = array();
+
+    foreach ($version_ids_of[$extension_id] as $version_id)
+    {
+      array_push(
+        $versions_of[$extension_id],
+        $version_name_of[$version_id]
+        );
+    }
+
+    natcasesort($versions_of[$extension_id]);
+  }
+
+  return $versions_of;
+}
+
+// The function get_elapsed_time returns the number of seconds (with 3
+// decimals precision) between the start time and the end time given.
+function get_elapsed_time( $start, $end )
+{
+  return number_format( $end - $start, 3, '.', ' ').' s';
+}
+
+// The function get_moment returns a float value coresponding to the number
+// of seconds since the unix epoch (1st January 1970) and the microseconds
+// are precised : e.g. 1052343429.89276600
+function get_moment()
+{
+  $t1 = explode( ' ', microtime() );
+  $t2 = explode( '.', $t1[0] );
+  $t2 = $t1[1].'.'.$t2[1];
+  return $t2;
+}
+
+function get_revision_infos_of($revision_ids)
+{
+  global $db;
+
+  $revision_infos_of = array();
+  
+  // retrieve revisions information
+  $query = '
+SELECT id_revision,
+       version,
+       date,
+       idx_extension,
+       description,
+       url
+  FROM '.REV_TABLE.'
+  WHERE id_revision IN ('.implode(',', $revision_ids).')
+;';
+  $result = $db->query($query);
+  while ($row = $db->fetch_array($result))
+  {
+    $revision_infos_of[ $row['id_revision'] ] = $row;
+  }
+
+  return $revision_infos_of;
+}
+
+function get_extension_infos_of($extension_ids)
+{
+  global $db;
+
+  $extension_infos_of = array();
+  
+  $query = '
+SELECT id_extension,
+       name,
+       idx_author,
+       description
+  FROM '.EXT_TABLE.'
+  WHERE id_extension IN ('.implode(',', $extension_ids).')
+;';
+  $result = $db->query($query);
+  while ($row = $db->fetch_assoc($result))
+  {
+    $extension_infos_of[ $row['id_extension'] ] = $row;
+  }
+
+  return $extension_infos_of;
+}
+
+function array_from_subfield($hash, $field)
+{
+  $array = array();
+  
+  foreach ($hash as $row)
+  {
+    array_push($array, $row[$field]);
+  }
+
+  return $array;
+}
+
+function create_pagination_bar(
+  $base_url, $nb_pages, $current_page, $param_name
+  )
+{
+  global $conf;
+
+  $url =
+    $base_url.
+    (preg_match('/\?/', $base_url) ? '&amp;' : '?').
+    $param_name.'='
+    ;
+
+  $pagination_bar = '';
+
+  // current page detection
+  if (!isset($current_page)
+      or !is_numeric($current_page)
+      or $current_page < 0)
+  {
+    $current_page = 1;
+  }
+
+  // navigation bar useful only if more than one page to display !
+  if ($nb_pages > 1)
+  {
+    // link to first page?
+    if ($current_page > 1)
+    {
+      $pagination_bar.=
+        "\n".'&nbsp;'
+        .'<a href="'.$url.'1" rel="start">'
+        .'&lt;&lt;'
+        .'</a>'
+        ;
+    }
+    else
+    {
+      $pagination_bar.=
+        "\n".'&nbsp;<span class="inactive">&lt;&lt;</span>';
+    }
+
+    // link on previous page ?
+    if ($current_page > 1)
+    {
+      $previous = $current_page - 1;
+      
+      $pagination_bar.=
+        "\n".'&nbsp;'
+        .'<a href="'.$url.$previous.'" rel="prev">'.'&lt;'.'</a>'
+        ;
+    }
+    else
+    {
+      $pagination_bar.=
+        "\n".'&nbsp;<span class="inactive">&lt;</span>';
+    }
+
+    $min_to_display = $current_page - $conf['paginate_pages_around'];
+    $max_to_display = $current_page + $conf['paginate_pages_around'];
+    $last_displayed_page = null;
+
+    for ($page_number = 1; $page_number <= $nb_pages; $page_number++)
+    {
+      if ($page_number == 1
+          or $page_number == $nb_pages
+          or ($page_number >= $min_to_display and $page_number <= $max_to_display)
+        )
+      {
+        if (isset($last_displayed_page)
+            and $last_displayed_page != $page_number - 1
+          )
+        {
+          $pagination_bar.=
+            "\n".'&nbsp;<span class="inactive">...</span>'
+            ;
+        }
+        
+        if ($page_number == $current_page)
+        {
+          $pagination_bar.=
+            "\n".'&nbsp;'
+            .'<span class="currentPage">'.$page_number.'</span>'
+            ;
+        }
+        else
+        {
+          $pagination_bar.=
+            "\n".'&nbsp;'
+            .'<a href="'.$url.$page_number.'">'.$page_number.'</a>'
+            ;
+        }
+        $last_displayed_page = $page_number;
+      }
+    }
+    
+    // link on next page?
+    if ($current_page < $nb_pages)
+    {
+      $next = $current_page + 1;
+      
+      $pagination_bar.=
+        "\n".'&nbsp;'.
+        '<a href="'.$url.$next.'" rel="next">&gt;</a>'
+        ;
+    }
+    else
+    {
+      $pagination_bar.=
+        "\n".'&nbsp;<span class="inactive">&gt;</span>'
+        ;
+    }
+
+    // link to last page?
+    if ($current_page != $nb_pages)
+    {
+      $pagination_bar.=
+        "\n".'&nbsp;'.
+        '<a href="'.$url.$nb_pages.'" rel="last">&gt;&gt;</a>'
+        ;
+    }
+    else
+    {
+      $pagination_bar.=
+        "\n".'&nbsp;<span class="inactive">&gt;&gt;</span>';
+    }
+  }
+  
+  return $pagination_bar;
+}
+
+function get_extension_ids_without_revision()
+{
+  $query = '
+SELECT id_extension
+  FROM '.EXT_TABLE.'
+;';
+  $all_extension_ids = array_from_query($query, 'id_extension');
+
+  $query = '
+SELECT DISTINCT idx_extension
+  FROM '.REV_TABLE.'
+;';
+  $non_empty_extension_ids = array_from_query($query, 'idx_extension');
+
+  return array_diff($all_extension_ids, $non_empty_extension_ids);
+}
+
+/**
+ * Returns the number of pages to display in a pagination bar, given the number
+ * of items and the number of items per page.
+ *
+ * @param int number of items
+ * @param int number of items per page
+ * @return int
+ */
+function get_nb_pages($nb_items, $nb_items_per_page)
+{
+  return intval(($nb_items - 1) / $nb_items_per_page) + 1;
 }
 ?>

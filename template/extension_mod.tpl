@@ -25,16 +25,3 @@
   </tr>
 </table>
 </form>
-
-<div class="row">
-<strong>Révisions</strong>
-<p>
-<!-- BEGIN revision -->
-{L_REVISION_VERSION} (  
-  <span class="small">
-    <a href="contributions.php?action=mod_rev&amp;id={L_REVISION_ID}">Modifier</a> / 
-    <a href="contributions.php?action=del_rev&amp;id={L_REVISION_ID}" onclick="return confirm_del();">Supprimer</a>
-  </span> )<br />
-<!-- END revision -->
-</p>
-</div>

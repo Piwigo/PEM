@@ -22,6 +22,7 @@
 // +-----------------------------------------------------------------------+
 
 $conf['admin_users'] = array(
+  1,    // pierrick
   2,    // z0rglub
   1442, // chrisaga
   865,  // Sephi
@@ -71,4 +72,14 @@ $conf['page_title'] = 'Extensions Manager';
 
 // default_language
 $conf['default_language'] = 'english';
+
+// nb_last_revs: how many revisions show on the index?
+$conf['nb_last_revs'] = 10;
+
+// extensions_per_page: how many extensions per page?
+$conf['extensions_per_page'] = 5;
+
+// paginate_pages_around: on paginate navigation bar, how many pages display
+// before and after the current page ?
+$conf['paginate_pages_around'] = 2;
 ?>

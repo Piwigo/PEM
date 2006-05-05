@@ -1,12 +1,20 @@
-<h1>{L_EXTENSION_NAME}</h1>
+<h2>{L_EXTENSION_NAME}</h2>
 
-<!-- BEGIN admin -->
-<div class="nav_right">
-  <a href="{U_MODIFY}">Modify extension</a>
-  | <a href="contributions.php?action=del_ext&amp;id={L_EXTENSION_ID}" onclick="return confirm_del();" >Delete extension</a>
-  | <a href="{U_ADD_REV}">Add revision</a>
-</div>
-<!-- END admin -->
+<ul class="actionLinks">
+  <!-- BEGIN show_full_cl -->
+  <li><a href="{U_SHOW_FULL_CL}">See full ChangeLog</a></li>
+  <!-- END show_full_cl -->
+
+  <!-- BEGIN hide_full_cl -->
+  <li><a href="{U_HIDE_FULL_CL}">Hide full ChangeLog</a></li>
+  <!-- END hide_full_cl -->
+
+  <!-- BEGIN admin -->
+  <li><a href="{U_MODIFY}">Modify extension</a></li>
+  <li><a href="contributions.php?action=del_ext&amp;id={L_EXTENSION_ID}" onclick="return confirm_del();" >Delete extension</a></li>
+  <li><a href="{U_ADD_REV}">Add revision</a></li>
+  <!-- END admin -->
+</ul>
 
 <span class="small">Par {L_EXTENSION_AUTHOR}</span>
 <p>{L_EXTENSION_DESCRIPTION}</p>
@@ -33,13 +41,6 @@ filter you set.</p>
 </table>
 
 <p>
-  <!-- BEGIN show_full_cl -->
-  <a href="{U_SHOW_FULL_CL}">See full ChangeLog</a>
-  <!-- END show_full_cl -->
-
-  <!-- BEGIN hide_full_cl -->
-  <a href="{U_HIDE_FULL_CL}">Hide full ChangeLog</a>
-  <!-- END hide_full_cl -->
 </p>
 
 <!-- BEGIN detailed_revision -->

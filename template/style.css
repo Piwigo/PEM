@@ -291,3 +291,37 @@ IMG.download
   float: left;
   border: none;
 }
+
+UL.actionLinks
+{
+  text-align: center;
+  margin: 0;
+  margin-bottom: 1em;
+  border: 1px solid gray;
+}
+
+UL.actionLinks LI
+{
+  display: inline;
+/*
+  border: 1px solid gray;
+*/
+  padding: 0 5px;
+  margin: 0;
+/*
+  background-color: lightgray;
+*/
+}
+
+H2
+{
+  text-align: center;
+  padding: 0;
+  margin: 0 0 0.5em 0;
+}
+
+H1
+{
+  text-align: center;
+  margin: 10px;
+}

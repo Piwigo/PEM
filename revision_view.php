@@ -25,48 +25,28 @@ define('INTERNAL', true);
 $root_path = './';
 require_once($root_path.'include/common.inc.php');
 
-$template->set_file('index', 'index.tpl');
+if (isset($_GET['id']) and is_numeric($_GET['id']))
+{
+  $page['revision_id'] = $_GET['id'];
+}
+else
+{
+  message_die(l10n('Incorrect revision identifier'));
+}
 
-$revision_ids = array();
-$revision_infos_of = array();
-$extension_ids = array();
-$extension_infos_of = array();
-$author_ids = array();
-$author_infos_of = array();
-
-// retrieve N last added revisions, filtered on the user version
 $query = '
-SELECT DISTINCT r.id_revision
-  FROM '.REV_TABLE.' r';
-if (isset($_SESSION['id_version']))
-{
-  $query.= '
-    INNER JOIN '.COMP_TABLE.' c ON c.idx_revision = r.id_revision
-  WHERE c.idx_version = '.$_SESSION['id_version'];
-}
-$query.= '
-  ORDER BY r.id_revision DESC
-  LIMIT 0, '.$conf['nb_last_revs'].'
+SELECT id_revision
+  FROM '.REV_TABLE.'
+  WHERE id_revision = '.$page['revision_id'].'
 ;';
+$result = $db->query($query);
 
-$revision_ids = array_from_query($query, 'id_revision');
-
-if (count($revision_ids) == 0)
+if ($db->num_rows($result) == 0)
 {
-  message_die(
-    l10n('No extension match your filter'),
-    sprintf(
-      l10n('%d last revisions added'),
-      $conf['nb_last_revs']
-      ),
-    false
-    );
+  message_die(l10n('Unknown revision'));
 }
 
-$versions_of = get_versions_of_revision($revision_ids);
-
-// retrieve revisions information
-$revision_infos_of = get_revision_infos_of($revision_ids);
+$revision_infos_of = get_revision_infos_of(array($page['revision_id']));
 $extension_ids = array_unique(
   array_from_subfield(
     $revision_infos_of,
@@ -82,35 +62,48 @@ $author_ids = array_unique(
     )
   );
 
+$versions_of = get_versions_of_revision(array($page['revision_id']));
+
 $author_infos_of = get_author_infos_of($author_ids);
 
-// $template->set_block( 'index', 'switch_admin', 't_switch_admin' );
-$template->set_block('index', 'revision', 'Trevision');
+$extension_id = $revision_infos_of[ $page['revision_id'] ]['idx_extension'];
+$author_id = $extension_infos_of[$extension_id]['idx_author'];
 
-foreach ($revision_ids as $revision_id)
-{
-  $extension_id = $revision_infos_of[$revision_id]['idx_extension'];
-  $author_id = $extension_infos_of[$extension_id]['idx_author'];
-  
-  $template->set_var(
+$template->set_file('revision_view', 'revision_view.tpl' );
+
+$template->set_var(
     array(
-      'ID' => $revision_id,
-      'EXTENSION_NAME' => $extension_infos_of[$extension_id]['name'],
       'AUTHOR' => $author_infos_of[$author_id]['username'],
-      'REVISION_NAME' => $revision_infos_of[$revision_id]['version'],
-      'COMPATIBLE_VERSIONS' => implode(', ', $versions_of[$revision_id]),
-      'REVISION_DESCRIPTION' => nl2br(
+      'EXTENSION_NAME' => $extension_infos_of[$extension_id]['name'],
+      'EXTENSION_DESCRIPTION' => nl2br(
         htmlspecialchars(
-          strip_tags($revision_infos_of[$revision_id]['description'])
+          strip_tags($extension_infos_of[$extension_id]['description'])
           )
         ),
-      'DATE' => date('Y-m-d', $revision_infos_of[$revision_id]['date']),
+      'U_EXTENSION' => 'extension_view.php?id='.$extension_id,
+      'U_DOWNLOAD' =>
+        EXTENSIONS_DIR
+        .'extension-'.$extension_id
+        .'/revision-'.$page['revision_id']
+        .'/'.$revision_infos_of[ $page['revision_id'] ]['url'],
+      'REVISION' => $revision_infos_of[ $page['revision_id'] ]['version'],
+      'DATE' => date(
+        'Y-m-d',
+        $revision_infos_of[ $page['revision_id'] ]['date']
+        ),
+      'VERSIONS_COMPATIBLE' => implode(
+        ', ',
+        $versions_of[ $page['revision_id'] ]
+        ),
+      'REVISION_DESCRIPTION' => nl2br(
+        htmlspecialchars(
+          strip_tags($revision_infos_of[ $page['revision_id'] ]['description'])
+          )
+        ),
       )
-    );
-  $template->parse('Trevision', 'revision', true);
-}
-  
+  );
+
 build_header();
-$template->parse('output', 'index', true);
+$template->parse('output', 'revision_view', true);
 build_footer();
 ?>

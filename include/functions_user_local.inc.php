@@ -178,4 +178,28 @@ function create_user_infos($user_id)
     array($insert)
     );
 }
+
+/**
+ */
+function get_author_infos_of($author_ids)
+{
+  global $db, $conf;
+
+  $author_infos_of = array();
+  
+  $query = '
+SELECT '.$conf['user_fields']['id'].' AS id,
+       '.$conf['user_fields']['username'].' AS username,
+       '.$conf['user_fields']['email'].' AS email
+  FROM '.USERS_TABLE.'
+  WHERE '.$conf['user_fields']['id'].' IN ('.implode(',', $author_ids).')
+;';
+  $result = $db->query($query);
+  while ($row = $db->fetch_array($result))
+  {
+    $author_infos_of[ $row['id'] ] = $row;
+  }
+
+  return $author_infos_of;
+}
 ?>

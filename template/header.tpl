@@ -4,7 +4,7 @@
   <meta http-equiv="content-type" content="text/html; charset=iso-8859-1">
   {L_META}
   
-  <title>Extensions PhpWebGallery</title>
+  <title>Extensions manager</title>
   <style type="text/css" media="all">@import "template/style.css";</style>
   <link rel="alternate" type="application/rss+xml" href="extensions.rss" title="Extensions" />
   <script type="text/javascript" src="template/functions.js"></script>
@@ -14,29 +14,13 @@
 
 <h1><a href="index.php">{PAGE_TITLE}</a></h1>
 
-<!--
-<div id="Header">
-  <img src="template/images/kcontrol.png" class="header_image" />
-  <p style="margin : 9px 0 0 0;">
-    Extensions PhpWebGallery ({L_EXTENSIONS_TOTAL_COUNT})
-  </p>
-</div>
--->
-
 <div id="overall">
   <div id="Menus">
     <div class="menu">
-<!--      <h3 title="Retour à l'accueil"><a href="index.php">Accueil</a></h3> -->
-      <!-- BEGIN category -->
-      <h3 title="{L_CATEGORY_DESCRIPTION}">{U_CATEGORY}</h3>
-      <!-- BEGIN category_sublevel -->
       <ul>
-        <!-- BEGIN category_sublevel_item -->
-        <li><a href="extensions.php?id={L_CATEGORY_SUBLEVEL_ITEM_ID}" title="{L_CATEGORY_SUBLEVEL_DESCRIPTION}">{L_CATEGORY_SUBLEVEL_ITEM}</a></li>
-        <!-- END category_sublevel_item -->
-      </ul>
-      <!-- END category_sublevel -->
-      <!-- END category -->
+        <!-- BEGIN category -->
+        <li><a href="{URL}">{NAME}</a></li>
+        <!-- END category -->
     </div>
 
     <div class="menu">
@@ -64,7 +48,7 @@
       <ul>
         <li><a href="identification.php?action=logout">Déconnexion</a></li>
         <li><a href="my.php">Home</a></li>
-        <li><a href="extensions.php?action=add">Ajout</a></li>
+        <li><a href="extension_add.php">Ajout</a></li>
       </ul>
     </div>
     <!-- END user_logged_in -->

@@ -21,21 +21,22 @@
 // | USA.                                                                  |
 // +-----------------------------------------------------------------------+
 
-define( 'ROOT', '/pwg/mods/' );
-  
-define( 'EXT_TABLE',     $conf['db_params']['tables_prefix'].'extensions' );
-define( 'CAT_TABLE' ,    $conf['db_params']['tables_prefix'].'categories' );
-define( 'VER_TABLE',     $conf['db_params']['tables_prefix'].'versions' );
-define( 'REV_TABLE',     $conf['db_params']['tables_prefix'].'revisions' );
-define( 'COMP_TABLE',    $conf['db_params']['tables_prefix'].'revisions_compatibilities' );
-define( 'EXT_CAT_TABLE', $conf['db_params']['tables_prefix'].'extensions_categories' );
-define( 'USER_INFOS_TABLE', $conf['db_params']['tables_prefix'].'user_infos' );
+define( 'INTERNAL', true );
+$root_path = './';
+require_once( $root_path . 'include/common.inc.php' );
 
-define( 'USERS_TABLE', $conf['users_table'] );
+if (isset($_POST['extension_id']))
+{
+  $page['extension_id'] = intval($_POST['extension_id']);
+}
+else if (isset($_GET['id']))
+{
+  $page['extension_id'] = intval($_GET['id']);
+}
+else
+{
+  message_die(l10n('undefined extension identifier'));
+}
 
-  
-define( 'EXTENSIONS_PER_PAGE', 3 );
-define( 'PUN_TURN_OFF_MAINT', 1 );
-define( 'PUN_QUIET_VISIT', 1 );
-define( 'EXTENSIONS_DIR', 'upload/' );
+include($root_path.'extension_add.php');
 ?>

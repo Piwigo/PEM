@@ -34,7 +34,7 @@ if (isset($_POST['submit']))
     log_user($user_id);
     message_success(
       l10n('Identification successful'),
-      'index.php'
+      'my.php'
       );
   }
   else
