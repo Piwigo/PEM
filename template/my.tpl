@@ -14,7 +14,7 @@
 <!-- BEGIN extensions -->
 <ul>
   <!-- BEGIN extension -->
-  <li><a href="extension_view.php?id={ID}">{NAME}</a></li>
+  <li><a href="extension_view.php?eid={ID}">{NAME}</a></li>
   <!-- END extension -->
 </ul>
 <!-- END extensions -->

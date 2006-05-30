@@ -41,4 +41,29 @@ function log_user($user_id)
   
   $_SESSION['user_id'] = $user_id;
 }
+
+/**
+ */
+function get_user_infos_of($user_ids)
+{
+  global $db;
+
+  $user_infos_of = get_user_basic_infos_of($user_ids);
+
+  $query = '
+SELECT *
+  FROM '.USER_INFOS_TABLE.'
+  WHERE idx_user IN ('.implode(',', $user_ids).')
+;';
+  $result = $db->query($query);
+  while ($row = $db->fetch_array($result))
+  {
+    $user_infos_of[ $row['idx_user'] ] = array_merge(
+      $user_infos_of[ $row['idx_user'] ],
+      $row
+      );
+  }
+
+  return $user_infos_of;
+}
 ?>

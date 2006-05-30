@@ -263,8 +263,14 @@ div.nav_right
    text-decoration:none;
 }
 
-.checkboxBox {
+.checkboxBox
+{
   width: 500px;
+}
+
+.checkboxBox label
+{
+  white-space: nowrap;
 }
 
 TABLE.revisions {
@@ -295,8 +301,11 @@ IMG.download
 UL.actionLinks
 {
   text-align: center;
-  margin: 0;
+  margin: 0 auto;
+  padding: 0;
   margin-bottom: 1em;
+  width: 150px;
+  background-color: #d3d3d3;
   border: 1px solid gray;
 }
 
@@ -304,13 +313,21 @@ UL.actionLinks LI
 {
   display: inline;
 /*
-  border: 1px solid gray;
-*/
   padding: 0 5px;
-  margin: 0;
-/*
-  background-color: lightgray;
 */
+  margin: 0;
+}
+
+UL.actionLinks LI IMG
+{
+  border: none;
+  padding: 5px 0;
+}
+
+H1
+{
+  text-align: center;
+  margin: 10px;
 }
 
 H2
@@ -320,8 +337,32 @@ H2
   margin: 0 0 0.5em 0;
 }
 
-H1
+H3
 {
   text-align: center;
-  margin: 10px;
+}
+
+UL.linkManagement
+{
+  margin: 0;
+  padding: 0;
+}
+
+UL.linkManagement LI
+{
+  display: block;
+  border: 1px solid gray;
+  margin-bottom: 1em;
+  padding: 0.5em;
+}
+
+A.linkAction
+{
+  display: block;
+  float: right;
+}
+
+A.linkAction IMG
+{
+  border: none;
 }

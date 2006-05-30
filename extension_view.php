@@ -25,17 +25,19 @@ define( 'INTERNAL', true );
 $root_path = './';
 require_once( $root_path . 'include/common.inc.php' );
   
-$page['extension_id'] = isset($_GET['id']) ? abs(intval($_GET['id'])) : null;
+$page['extension_id'] = isset($_GET['eid']) ? abs(intval($_GET['eid'])) : null;
+if (!isset($page['extension_id']))
+{
+  message_die(l10n('eid URL parameter is missing'), 'Error', false );
+}
 
 // Gets extension informations
 $query = '
 SELECT description,
-       username,
        name,
-       idx_author,
+       idx_user,
        id_extension
   FROM '.EXT_TABLE.'
-    INNER JOIN '.USERS_TABLE.' ON id = idx_author
   WHERE id_extension = '.$page['extension_id'].'
 ;';
 $data = $db->fetch_assoc($db->query($query));
@@ -45,24 +47,59 @@ if (!isset($data['id_extension']))
   message_die(l10n('Unknown extension'), 'Error', false );
 }
 
+$user_infos_of = get_user_infos_of(array($data['idx_user']));
+$author = $user_infos_of[ $data['idx_user'] ]['username'];
+
 $template->set_file( 'extension_view', 'extension_view.tpl' );
 $template->set_block( 'extension_view', 'admin', 't_admin');
 
 $template->set_var(
   array(
     'L_EXTENSION_NAME' => htmlspecialchars ( strip_tags ( $data['name'] ) ),
-    'L_EXTENSION_DESCRIPTION' => nl2br( htmlspecialchars ( strip_tags ( $data['description'] ) ) ),
-    'L_EXTENSION_AUTHOR' => htmlspecialchars( $data['username'] ),
+    'L_EXTENSION_DESCRIPTION' => nl2br(
+      htmlspecialchars(
+        strip_tags($data['description'])
+        )
+      ),
+    'L_EXTENSION_AUTHOR' => $author,
     'L_EXTENSION_ID' => $id,
-    'U_ADD_REV' => 'revision_add.php?extension_id='.$page['extension_id'],
-    'U_MODIFY' => 'extension_mod.php?id='.$page['extension_id'],
-    'U_SHOW_FULL_CL' => 'extension_view.php?id='.$page['extension_id'].'&amp;full_cl=1',
+    'U_ADD_REV' => 'revision_add.php?eid='.$page['extension_id'],
+    'U_MODIFY' => 'extension_mod.php?eid='.$page['extension_id'],
+    'U_DELETE' => 'extension_del.php?eid='.$page['extension_id'],
+    'U_LINKS' => 'extension_links.php?eid='.$page['extension_id'],
+    'U_SHOW_FULL_CL' =>
+      'extension_view.php?eid='.$page['extension_id'].'&amp;full_cl=1',
     )
   );
   
-if (isAdmin($user['id']) or $user['id'] == $data['idx_author'])
+if (isAdmin($user['id']) or $user['id'] == $data['idx_user'])
 {
   $template->parse( 't_admin', 'admin' );
+}
+
+// Links associated to the current extension
+$template->set_block('extension_view', 'link', 'Tlink');
+
+$query = '
+SELECT name,
+       url,
+       description
+  FROM '.LINKS_TABLE.'
+  WHERE idx_extension = '.$page['extension_id'].'
+  ORDER BY rank ASC
+;';
+$result = $db->query($query);
+while ($row = $db->fetch_array($result))
+{
+  $template->set_var(
+    array(
+      'LINK_NAME' => $row['name'],
+      'LINK_URL' => $row['url'],
+      'LINK_DESCRIPTION' => $row['description'],
+      )
+    );
+  
+  $template->parse('Tlink', 'link', true);
 }
 
 // which revisions to display?
@@ -83,13 +120,7 @@ if (isset($_SESSION['id_version']))
   
 $query.= '
 ;';
-
-$result = $db->query($query);
-
-while ($row = $db->fetch_array($result))
-{
-  array_push($revision_ids, $row['id_revision']);
-}
+$revision_ids = array_from_query($query, 'id_revision');
 
 $template->set_block( 'extension_view', 'revision', 'Trevision' );
 $template->set_block( 'extension_view', 'show_full_cl', 'Tshow_full_cl' );
@@ -125,8 +156,11 @@ SELECT id_revision,
     $template->set_var(
       array(
         'REVISION' => $revision['version'],
-        'U_GOTO' => 'revision_view.php?id='.$revision['id_revision'],
-        'VERSIONS_COMPATIBLE' => implode(', ', $versions_of[ $revision['id_revision'] ]),
+        'U_GOTO' => 'revision_view.php?rid='.$revision['id_revision'],
+        'VERSIONS_COMPATIBLE' => implode(
+          ', ',
+          $versions_of[ $revision['id_revision'] ]
+          ),
         'DATE' => date('Y-m-d', $revision['date']),
         )
       );
@@ -138,7 +172,7 @@ SELECT id_revision,
   {
     $template->set_var(
       array(
-        'U_HIDE_FULL_CL' => 'extension_view.php?id='.$data['id_extension'],
+        'U_HIDE_FULL_CL' => 'extension_view.php?eid='.$data['id_extension'],
         )
       );
     
@@ -149,14 +183,22 @@ SELECT id_revision,
       $template->set_var(
         array(
           'REVISION' => $revision['version'],
-          'U_GOTO' => 'revision_view.php?id='.$revision['id_revision'],
-          'U_DOWNLOAD' =>
-            EXTENSIONS_DIR
-            .'extension-'.$page['extension_id']
-            .'/revision-'.$revision['id_revision']
-            .'/'.$revision['url'],
-          'VERSIONS_COMPATIBLE' => implode(', ', $versions_of[ $revision['id_revision'] ]),
+          
+          'U_GOTO' => 'revision_view.php?rid='.$revision['id_revision'],
+
+          'U_DOWNLOAD' => get_revision_src(
+            $page['extension_id'],
+            $revision['id_revision'],
+            $revision['url']
+            ),
+
+          'VERSIONS_COMPATIBLE' => implode(
+            ', ',
+            $versions_of[ $revision['id_revision'] ]
+            ),
+
           'DATE' => date('Y-m-d', $revision['date']),
+
           'DESCRIPTION' => nl2br(
             htmlspecialchars($revision['description'])
             ),
@@ -170,10 +212,31 @@ SELECT id_revision,
   {
     $template->parse('Tshow_full_cl', 'show_full_cl');
   }
+
+  $template->set_var(
+    array(
+      'EXTENSION_FIRST_REVISION_DATE' => date(
+        'Y-m-d',
+        $revisions[ count($revisions) - 1 ]['date']
+        ),
+      
+      'EXTENSION_LAST_REVISION_DATE'  => date(
+        'Y-m-d',
+        $revisions[0]['date']
+        ),
+      )
+    );
 }
 else
 {
   $template->parse( 'Tswitch_no_rev', 'switch_no_rev' );
+
+  $template->set_var(
+    array(
+      'EXTENSION_FIRST_REVISION_DATE' => l10n('no revision yet'),
+      'EXTENSION_LAST_REVISION_DATE'  => l10n('no revision yet'),
+      )
+    );
 }
 
 build_header(); 

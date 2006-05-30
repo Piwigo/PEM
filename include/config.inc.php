@@ -54,7 +54,7 @@ $conf['users_table'] = $conf['db_params']['tables_prefix'].'users';
 // field names. For example, in PWG, the mail address is names
 // "mail_address" and in punbb, it's called "email".
 $conf['user_fields'] = array(
-  'id' => 'id',
+  'id' => 'id_user',
   'username' => 'username',
   'password' => 'password',
   'email' => 'email',
@@ -82,4 +82,7 @@ $conf['extensions_per_page'] = 5;
 // paginate_pages_around: on paginate navigation bar, how many pages display
 // before and after the current page ?
 $conf['paginate_pages_around'] = 2;
+
+// die_on_sql_error: should the application break when a SQL error happens?
+$conf['die_on_sql_error'] = true;
 ?>

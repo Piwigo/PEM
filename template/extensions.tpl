@@ -6,7 +6,7 @@
 
 <!-- BEGIN extension -->
 <div class="row">
-  <p><strong><a href="extension_view.php?id={ID}">{NAME}</a></strong></p>
+  <p><strong><a href="extension_view.php?eid={ID}">{NAME}</a></strong></p>
   <ul class="revisionInfos">
     <li>Author: {AUTHOR}</li>
     <li>Compatible with: {COMPATIBLE_VERSIONS}</li>

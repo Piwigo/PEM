@@ -140,11 +140,13 @@ function build_footer()
   $template->parse('output', 'footer', true);
   $template->p('output');
 
-  echo get_elapsed_time($t2, get_moment());
+  // echo get_elapsed_time($t2, get_moment());
   exit();
 }
 
-function message_success($message, $redirect = '', $title = 'Succès', $time_redirect = '5')
+function message_success(
+  $message, $redirect = '', $title = 'Success', $time_redirect = '5'
+  )
 {
   global $template;
   
@@ -211,67 +213,64 @@ function escape_array($array_to_escape)
   return $array_to_escape;
 }
 
-/***************************************************************************************************
-* @descr :  Returns the version (format xx.yy.zz) calculated from a 6 bits integer
-* @param :  int $version
-* @return : string
-* @author : Sephi
-* @deprecated
-***************************************************************************************************/
-function getVersion($version)
-{
-  $major = ($version & 0xFF0000) >> 16;
-  $prior = ($version & 0x00FF00) >> 8;
-  $rev = ($version & 0x0000FF);
-  
-  return $major . '.' . $prior . '.' . $rev;
-}
-
-/***************************************************************************************************
-* @descr :  Returns the version in a 6 bits integer, calculated from a string (xx.yy.zz) 
-* @param :  string $version
-* @return : int
-* @author : Sephi
-* @deprecated
-***************************************************************************************************/
-function buildVersion($version)
-{
-  $tblVersion = explode('.', $version);
-  $major = str_pad(dechex($tblVersion[0]), 2, 0, STR_PAD_LEFT);
-  $prior = str_pad(dechex($tblVersion[1]), 2, 0, STR_PAD_LEFT);
-  $rev = str_pad(dechex($tblVersion[2]), 2, 0, STR_PAD_LEFT);
-  return hexdec($major . $prior . $rev);
-}
-
 function create_rss()
 {
   global $template;
   global $root_path;
   global $db;
+  global $conf;
   
-  // Gets the lastest X (defined in constants.inc.php) mods information
-  $sql =  "SELECT e.name, u.username, e.description, r.version AS version, r.id_revision,";
-  $sql .= " e.id_extension, e.idx_author";
-  $sql .= " FROM " . REV_TABLE . " r";
-  $sql .= " INNER JOIN " . EXT_TABLE . " e ON r.idx_extension = e.id_extension";
-  $sql .= " INNER JOIN " . $db->prefix . "users u ON u.id = e.idx_author";
-  $sql .= " ORDER BY r.id_revision DESC";
-  $sql .= " LIMIT 0," . LAST_ADDED_EXTS_COUNT;
+  // Gets the latest X (defined in constants.inc.php) mods information
+  $query = '
+SELECT version
+       id_revision,
+       idx_extension
+  FROM '.REV_TABLE.'
+  ORDER BY id_revision DESC
+  LIMIT 0, '.$conf['nb_last_revs'].'
+;';
   
-  $req = $db->query( $sql );
+  $req = $db->query($query);
   
-  $template->set_file( 'rss_extensions', 'rss_extensions.tpl' );
-  $template->set_block( 'rss_extensions', 'extension', 't_extension' );
-  while( $data = $db->fetch_assoc( $req ) )
+  $template->set_file('rss_extensions', 'rss_extensions.tpl');
+  $template->set_block('rss_extensions', 'extension', 't_extension');
+
+  $revisions = array();
+  $extension_ids = array();
+  $user_ids = array();
+  
+  while ($data = $db->fetch_assoc($req))
   {
-    $path = pathinfo( $root_path . 'index.php' );
+    array_push($revisions, $data);
+    array_push($extension_ids, $data['idx_extension']);
+  }
+
+  $extension_infos_of = get_extension_infos_of($extension_ids);
+
+  foreach ($extension_ids as $extension_id)
+  {
+    array_push($user_ids, $extension_infos_of[$extension_id]['idx_user']);
+  }
+
+  $author_infos_of = get_user_basic_infos_of($user_ids);
+
+  foreach ($revisions as $revision)
+  {
+    $extension = $extension_infos_of[ $revision['idx_extension'] ];
+    $author = $author_infos_of[ $extension['idx_user'] ];
     
-    $template->set_var( array( 'L_EXTENSION_NAME' => $data['name'],
-                               'U_EXTENSION' => 'http://' . $_SERVER['SERVER_NAME'] . ROOT . 
-                                                'view_extension.php?id=' . $data['id_extension'],
-                               'L_EXTENSION_AUTHOR' => $data['username'],
-                               'L_EXTENSION_VERSION' => $data['version'],
-                               'L_EXTENSION_DESCRIPTION' => $data['description'] ) );
+    $template->set_var(
+      array(
+        'EXTENSION_NAME' => $extension['name'],
+        'REVISION_NAME' => $revision['version'],
+        'URL' =>
+          'http://'.$_SERVER['SERVER_NAME'].ROOT. 
+          'revision_view.php?rid='.$revision['id_revision'],
+        'EXTENSION_AUTHOR' => $author['username'],
+        'EXTENSION_DESCRIPTION' => $revision['description'],
+        'REVISION_DESCRIPTION' => $revision['description'],
+        )
+      );
     $template->parse( 't_extension', 'extension', true );
   }
   
@@ -340,6 +339,134 @@ INSERT INTO '.$table_name.'
 ;';
   
   $db->query($query);
+}
+
+/**
+ * updates multiple lines in a table
+ *
+ * @param string table_name
+ * @param array dbfields
+ * @param array datas
+ * @return void
+ */
+function mass_updates($tablename, $dbfields, $datas)
+{
+  global $db;
+  
+  // depending on the MySQL version, we use the multi table update or N
+  // update queries
+  $query = 'SELECT VERSION() AS version;';
+  list($mysql_version) = mysql_fetch_array($db->query($query));
+  if (count($datas) < 10 or version_compare($mysql_version, '4.0.4') < 0)
+  {
+    // MySQL is prior to version 4.0.4, multi table update feature is not
+    // available
+    foreach ($datas as $data)
+    {
+      $query = '
+UPDATE '.$tablename.'
+  SET ';
+      $is_first = true;
+      foreach ($dbfields['update'] as $num => $key)
+      {
+        if (!$is_first)
+        {
+          $query.= ",\n      ";
+        }
+        $query.= $key.' = ';
+        if (isset($data[$key]) and $data[$key] != '')
+        {
+          $query.= '\''.$data[$key].'\'';
+        }
+        else
+        {
+          $query.= 'NULL';
+        }
+        $is_first = false;
+      }
+      $query.= '
+  WHERE ';
+      foreach ($dbfields['primary'] as $num => $key)
+      {
+        if ($num > 1)
+        {
+          $query.= ' AND ';
+        }
+        $query.= $key.' = \''.$data[$key].'\'';
+      }
+      $query.= '
+;';
+      $db->query($query);
+    }
+  }
+  else
+  {
+    // creation of the temporary table
+    $query = '
+SHOW FULL COLUMNS FROM '.$tablename.'
+;';
+    $result = $db->query($query);
+    $columns = array();
+    $all_fields = array_merge($dbfields['primary'], $dbfields['update']);
+    while ($row = mysql_fetch_array($result))
+    {
+      if (in_array($row['Field'], $all_fields))
+      {
+        $column = $row['Field'];
+        $column.= ' '.$row['Type'];
+        if (!isset($row['Null']) or $row['Null'] == '')
+        {
+          $column.= ' NOT NULL';
+        }
+        if (isset($row['Default']))
+        {
+          $column.= " default '".$row['Default']."'";
+        }
+        if (isset($row['Collation']) and $row['Collation'] != 'NULL')
+        {
+          $column.= " collate '".$row['Collation']."'";
+        }
+        array_push($columns, $column);
+      }
+    }
+
+    $temporary_tablename = $tablename.'_'.micro_seconds();
+
+    $query = '
+CREATE TABLE '.$temporary_tablename.'
+(
+'.implode(",\n", $columns).',
+PRIMARY KEY ('.implode(',', $dbfields['primary']).')
+)
+;';
+    $db->query($query);
+    mass_inserts($temporary_tablename, $all_fields, $datas);
+    // update of images table by joining with temporary table
+    $query = '
+UPDATE '.$tablename.' AS t1, '.$temporary_tablename.' AS t2
+  SET '.
+      implode(
+        "\n    , ",
+        array_map(
+          create_function('$s', 'return "t1.$s = t2.$s";'),
+          $dbfields['update']
+          )
+        ).'
+  WHERE '.
+      implode(
+        "\n    AND ",
+        array_map(
+          create_function('$s', 'return "t1.$s = t2.$s";'),
+          $dbfields['primary']
+          )
+        ).'
+;';
+    $db->query($query);
+    $query = '
+DROP TABLE '.$temporary_tablename.'
+;';
+    $db->query($query);
+  }
 }
 
 /**
@@ -573,7 +700,7 @@ function get_extension_infos_of($extension_ids)
   $query = '
 SELECT id_extension,
        name,
-       idx_author,
+       idx_user,
        description
   FROM '.EXT_TABLE.'
   WHERE id_extension IN ('.implode(',', $extension_ids).')
@@ -757,5 +884,57 @@ SELECT DISTINCT idx_extension
 function get_nb_pages($nb_items, $nb_items_per_page)
 {
   return intval(($nb_items - 1) / $nb_items_per_page) + 1;
+}
+
+/**
+ * delete revisions and associated informations (version compatibilities)
+ *
+ * @param array of revision ids
+ * @return void
+ */
+function delete_revisions($revision_ids)
+{
+  global $db;
+
+  if (count($revision_ids) == 0)
+  {
+    return false;
+  }
+
+  $revision_infos_of = get_revision_infos_of($revision_ids);
+
+  foreach ($revision_ids as $revision_id)
+  {
+    unlink(
+      get_revision_src(
+        $revision_infos_of[$revision_id]['idx_extension'],
+        $revision_id,
+        $revision_infos_of[$revision_id]['url']
+        )
+      );
+  }
+
+  $query = '
+DELETE
+  FROM '.COMP_TABLE.'
+  WHERE idx_revision IN ('.implode(',', $revision_ids).')
+;';
+  $db->query($query);
+
+  $query = '
+DELETE
+  FROM '.REV_TABLE.'
+  WHERE id_revision IN ('.implode(',', $revision_ids).')
+;';
+  $db->query($query);
+}
+
+function get_revision_src($extension_id, $revision_id, $url)
+{
+  return EXTENSIONS_DIR
+    .'extension-'.$extension_id
+    .'/revision-'.$revision_id
+    .'/'.$url
+    ;
 }
 ?>

@@ -30,6 +30,7 @@ define( 'REV_TABLE',     $conf['db_params']['tables_prefix'].'revisions' );
 define( 'COMP_TABLE',    $conf['db_params']['tables_prefix'].'revisions_compatibilities' );
 define( 'EXT_CAT_TABLE', $conf['db_params']['tables_prefix'].'extensions_categories' );
 define( 'USER_INFOS_TABLE', $conf['db_params']['tables_prefix'].'user_infos' );
+define( 'LINKS_TABLE', $conf['db_params']['tables_prefix'].'links' );
 
 define( 'USERS_TABLE', $conf['users_table'] );
 

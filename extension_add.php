@@ -74,12 +74,12 @@ DELETE
     // Inserts the extension (need to be done before the other includes, to
     // retrieve the insert id
     $insert = array(
-      'idx_author'   => $user['id'],
+      'idx_user'   => $user['id'],
       'name'         => $_POST['extension_name'],
       'description'  => $_POST['extension_description'],
       );
     mass_inserts(EXT_TABLE, array_keys($insert), array($insert));
-    $ext_id = $db->insert_id();
+    $page['extension_id'] = $db->insert_id();
   }
   
   // Inserts the extensions <-> categories link
@@ -90,15 +90,15 @@ DELETE
       $inserts,
       array(
         'idx_category'   => $category,
-        'idx_extension'  => $ext_id,
+        'idx_extension'  => $page['extension_id'],
         )
       );
   }
   mass_inserts(EXT_CAT_TABLE, array_keys($inserts[0]), $inserts);
-      
+  
   message_success(
     l10n('Extension successfuly added. Thank you.'),
-    'index.php'
+    'extension_view.php?eid='.$page['extension_id']
     );
 }
 
@@ -174,8 +174,8 @@ else
 
 $template->set_var(
   array(
-    'NAME' => $name,
-    'DESCRIPTION' => $description,
+    'EXTENSION_NAME' => $name,
+    'EXTENSION_DESCRIPTION' => $description,
     )
   );
 
@@ -187,8 +187,8 @@ foreach($cats as $cat)
   {
     $template->set_var(
       array(
-        'L_EXTENSION_CAT_NAME' => $cat['name'],
-        'L_EXTENSION_CAT_VALUE' => $cat['id_category'],
+        'EXTENSION_CAT_NAME' => $cat['name'],
+        'EXTENSION_CAT_VALUE' => $cat['id_category'],
         'CHECKED' =>
           in_array($cat['id_category'], $selected_categories)
           ? 'checked="checked"'
@@ -203,7 +203,7 @@ if (basename($_SERVER['SCRIPT_FILENAME']) == 'extension_mod.php')
 {
   $template->set_var(
     array(
-      'F_ACTION' => 'extension_mod.php?id='.$page['extension_id'],
+      'F_ACTION' => 'extension_mod.php?eid='.$page['extension_id'],
       )
     );
 }

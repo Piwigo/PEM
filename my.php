@@ -32,7 +32,7 @@ $query = '
 SELECT id_extension,
        name
   FROM '.EXT_TABLE.'
-  WHERE idx_author = \''.$user['id'].'\'
+  WHERE idx_user = \''.$user['id'].'\'
   ORDER BY name DESC
 ;';
 $req = $db->query($query);

@@ -27,7 +27,7 @@ if(!defined('INTERNAL'))
   die('No right to do that, sorry. :)');
 }
 
-if (!isAdmin($pun_user['id']))
+if (!isAdmin($user['id']))
 {
   die ('Go away :-)');
 }

@@ -25,9 +25,9 @@ define('INTERNAL', true);
 $root_path = './';
 require_once($root_path.'include/common.inc.php');
 
-if (isset($_GET['id']) and is_numeric($_GET['id']))
+if (isset($_GET['rid']) and is_numeric($_GET['rid']))
 {
-  $page['revision_id'] = $_GET['id'];
+  $page['revision_id'] = $_GET['rid'];
 }
 else
 {
@@ -58,43 +58,55 @@ $extension_infos_of = get_extension_infos_of($extension_ids);
 $author_ids = array_unique(
   array_from_subfield(
     $extension_infos_of,
-    'idx_author'
+    'idx_user'
     )
   );
 
 $versions_of = get_versions_of_revision(array($page['revision_id']));
 
-$author_infos_of = get_author_infos_of($author_ids);
+$author_infos_of = get_user_infos_of($author_ids);
 
 $extension_id = $revision_infos_of[ $page['revision_id'] ]['idx_extension'];
-$author_id = $extension_infos_of[$extension_id]['idx_author'];
+$author_id = $extension_infos_of[$extension_id]['idx_user'];
 
 $template->set_file('revision_view', 'revision_view.tpl' );
 
 $template->set_var(
     array(
       'AUTHOR' => $author_infos_of[$author_id]['username'],
+      
       'EXTENSION_NAME' => $extension_infos_of[$extension_id]['name'],
+
       'EXTENSION_DESCRIPTION' => nl2br(
         htmlspecialchars(
           strip_tags($extension_infos_of[$extension_id]['description'])
           )
         ),
-      'U_EXTENSION' => 'extension_view.php?id='.$extension_id,
-      'U_DOWNLOAD' =>
-        EXTENSIONS_DIR
-        .'extension-'.$extension_id
-        .'/revision-'.$page['revision_id']
-        .'/'.$revision_infos_of[ $page['revision_id'] ]['url'],
+
+      'U_EXTENSION' => 'extension_view.php?eid='.$extension_id,
+
+      'U_MODIFY' => 'revision_mod.php?rid='.$page['revision_id'],
+
+      'U_DELETE' => 'revision_del.php?rid='.$page['revision_id'],
+
+      'U_DOWNLOAD' => get_revision_src(
+        $extension_id,
+        $page['revision_id'],
+        $revision_infos_of[ $page['revision_id'] ]['url']
+        ),
+
       'REVISION' => $revision_infos_of[ $page['revision_id'] ]['version'],
+
       'DATE' => date(
         'Y-m-d',
         $revision_infos_of[ $page['revision_id'] ]['date']
         ),
+
       'VERSIONS_COMPATIBLE' => implode(
         ', ',
         $versions_of[ $page['revision_id'] ]
         ),
+
       'REVISION_DESCRIPTION' => nl2br(
         htmlspecialchars(
           strip_tags($revision_infos_of[ $page['revision_id'] ]['description'])

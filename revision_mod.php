@@ -25,18 +25,18 @@ define( 'INTERNAL', true );
 $root_path = './';
 require_once( $root_path . 'include/common.inc.php' );
 
-if (isset($_POST['extension_id']))
+if (isset($_POST['revision_id']))
 {
-  $page['extension_id'] = intval($_POST['extension_id']);
+  $page['revision_id'] = intval($_POST['revision_id']);
 }
-else if (isset($_GET['eid']))
+else if (isset($_GET['rid']))
 {
-  $page['extension_id'] = intval($_GET['eid']);
+  $page['revision_id'] = intval($_GET['rid']);
 }
 else
 {
-  message_die(l10n('undefined extension identifier'));
+  message_die(l10n('undefined revision identifier'));
 }
 
-include($root_path.'extension_add.php');
+include($root_path.'revision_add.php');
 ?>

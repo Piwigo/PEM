@@ -2,7 +2,7 @@
 
 <!-- BEGIN revision -->
 <div class="row">
-  <p><strong><a href="revision_view.php?id={ID}">{EXTENSION_NAME}, revision {REVISION_NAME}</a></strong></p>
+  <p><strong><a href="revision_view.php?rid={ID}">{EXTENSION_NAME}, revision {REVISION_NAME}</a></strong></p>
   <ul class="revisionInfos">
     <li>Author: {AUTHOR}</li>
     <li>Released on: {DATE}</li>

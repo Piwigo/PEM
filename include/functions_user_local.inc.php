@@ -49,37 +49,6 @@ SELECT '.$conf['user_fields']['id'].' AS id,
   }
 }
 
-function get_user_infos($user_id = null)
-{
-  global $db;
-  
-  $user = array();
-  
-  if (isset($user_id))
-  {
-    if (!is_numeric($user_id))
-    {
-      die('get_user_infos: user id should be numeric');
-    }
-    
-    $query = '
-SELECT u.*,
-       ui.*
-  FROM '.USERS_TABLE.' u
-    LEFT JOIN '.USER_INFOS_TABLE.' ui ON ui.user_id = u.id
-  WHERE u.id = '.$user_id.'
-;';
-    $user = $db->fetch_assoc($db->query($query));
-
-    if (!isset($user['language']))
-    {
-      create_user_infos($user['id']);
-    }
-  }
-
-  return $user;
-}
-
 function register_user($username, $password, $email)
 {
   global $conf, $db;
@@ -181,11 +150,11 @@ function create_user_infos($user_id)
 
 /**
  */
-function get_author_infos_of($author_ids)
+function get_user_basic_infos_of($author_ids)
 {
   global $db, $conf;
 
-  $author_infos_of = array();
+  $user_basic_infos_of = array();
   
   $query = '
 SELECT '.$conf['user_fields']['id'].' AS id,
@@ -197,9 +166,9 @@ SELECT '.$conf['user_fields']['id'].' AS id,
   $result = $db->query($query);
   while ($row = $db->fetch_array($result))
   {
-    $author_infos_of[ $row['id'] ] = $row;
+    $user_basic_infos_of[ $row['id'] ] = $row;
   }
 
-  return $author_infos_of;
+  return $user_basic_infos_of;
 }
 ?>

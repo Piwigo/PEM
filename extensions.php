@@ -112,10 +112,10 @@ $extension_infos_of = get_extension_infos_of($page_extension_ids);
 $author_ids = array_unique(
   array_from_subfield(
     $extension_infos_of,
-    'idx_author'
+    'idx_user'
     )
   );
-$author_infos_of = get_author_infos_of($author_ids);
+$author_infos_of = get_user_infos_of($author_ids);
 
 // Admin block used for admins and authors of the extension
 $template->set_block('extensions', 'extension', 'Textension');
@@ -123,7 +123,7 @@ $template->set_block('extensions', 'extension', 'Textension');
 // Display the extensions
 foreach ($page_extension_ids as $extension_id)
 {
-  $author_id = $extension_infos_of[$extension_id]['idx_author'];
+  $author_id = $extension_infos_of[$extension_id]['idx_user'];
   
   $template->set_var(
     array(

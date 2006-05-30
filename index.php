@@ -78,11 +78,11 @@ $extension_infos_of = get_extension_infos_of($extension_ids);
 $author_ids = array_unique(
   array_from_subfield(
     $extension_infos_of,
-    'idx_author'
+    'idx_user'
     )
   );
 
-$author_infos_of = get_author_infos_of($author_ids);
+$author_infos_of = get_user_infos_of($author_ids);
 
 // $template->set_block( 'index', 'switch_admin', 't_switch_admin' );
 $template->set_block('index', 'revision', 'Trevision');
@@ -90,7 +90,7 @@ $template->set_block('index', 'revision', 'Trevision');
 foreach ($revision_ids as $revision_id)
 {
   $extension_id = $revision_infos_of[$revision_id]['idx_extension'];
-  $author_id = $extension_infos_of[$extension_id]['idx_author'];
+  $author_id = $extension_infos_of[$extension_id]['idx_user'];
   
   $template->set_var(
     array(

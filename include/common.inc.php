@@ -46,18 +46,11 @@ require_once($root_path . 'include/dblayer/common_db.php');
 // user informations
 $user = array();
 
-// if (isset($_COOKIE[session_name()]))
-// {
-//   session_start();
-//   if (isset($_SESSION['user_id']))
-//   {
-//     $user = get_user_infos($_SESSION['user_id']);
-//   }
-// }
-
-$user = get_user_infos(
-  isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null
-  );
+if (isset($_SESSION['user_id']))
+{
+  $user_infos_of = get_user_infos_of(array($_SESSION['user_id']));
+  $user = $user_infos_of[ $_SESSION['user_id'] ];
+}
 
 // echo '<pre>cookie: '; print_r($_COOKIE); echo '</pre>';
 // echo '<pre>session: '; print_r($_SESSION); echo '</pre>';

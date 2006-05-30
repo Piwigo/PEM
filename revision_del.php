@@ -21,22 +21,44 @@
 // | USA.                                                                  |
 // +-----------------------------------------------------------------------+
 
-define( 'INTERNAL', true );
+define('INTERNAL', true);
 $root_path = './';
-require_once( $root_path . 'include/common.inc.php' );
+require_once($root_path.'include/common.inc.php');
 
-if (isset($_POST['extension_id']))
+if (isset($_GET['rid']) and is_numeric($_GET['rid']))
 {
-  $page['extension_id'] = intval($_POST['extension_id']);
-}
-else if (isset($_GET['eid']))
-{
-  $page['extension_id'] = intval($_GET['eid']);
+  $page['revision_id'] = $_GET['rid'];
 }
 else
 {
-  message_die(l10n('undefined extension identifier'));
+  message_die(l10n('Incorrect revision identifier'));
 }
 
-include($root_path.'extension_add.php');
+// Checks if the user who wants to delete the revision is really its author
+$query = '
+SELECT idx_user,
+       url,
+       idx_extension
+  FROM '. REV_TABLE.'
+  WHERE id_revision = '.$page['revision_id'].'
+;';
+$req = $db->query($query);
+$row = $db->fetch_assoc($req);
+
+if (empty($row['idx_user']))
+{
+  message_die(l10n('Unknown extension'));
+}
+
+if ($row['idx_user'] != $user['id'] and !isAdmin($user['id']))
+{
+  message_die(l10n('Deletion forbidden'));
+}
+
+delete_revisions(array($page['revision_id']));
+
+message_success(
+  l10n('Revision successfuly deleted'),
+  'extension_view.php?eid='.$row['ids_extension']
+  );
 ?>
