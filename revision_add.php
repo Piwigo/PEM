@@ -138,18 +138,18 @@ if (isset($_POST['submit']))
   }
   else
   {
+    $insert = array(
+      'version'        => $_POST['revision_version'],
+      'idx_extension'  => $page['extension_id'],
+      'date'           => mktime(),
+      'description'    => $_POST['revision_changelog'],
+      'url'            => $_FILES['revision_file']['name'],
+      );
+    
     mass_inserts(
       REV_TABLE,
       array_keys($insert),
-      array(
-        array(
-          'version'        => $_POST['revision_version'],
-          'idx_extension'  => $page['extension_id'],
-          'date'           => mktime(),
-          'description'    => $_POST['revision_changelog'],
-          'url'            => $_FILES['revision_file']['name'],
-          ),
-        )
+      array($insert)
       );
 
     $page['revision_id'] = $db->insert_id();
