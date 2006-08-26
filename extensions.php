@@ -145,11 +145,7 @@ foreach ($page_extension_ids as $extension_id)
 $template->set_var(
   array(
     'L_CATEGORY_NAME' => $cat_name,
-    'L_EXTENSIONS_COUNT' => $extensions_count,
-    'L_EXTENSIONS_START' => $extensions_start,
-    'L_EXTENSIONS_END' => $extensions_end,
     'L_PAGE_ID' => $page['page'],
-    'L_PAGE_COUNT' => $pages_count,
     'PAGINATION_BAR' => create_pagination_bar(
       'extensions.php?category='.$page['category_id'],
       get_nb_pages(
