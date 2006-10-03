@@ -21,6 +21,12 @@
 // | USA.                                                                  |
 // +-----------------------------------------------------------------------+
 
+function versort ($array)
+{
+  usort($array, 'version_compare');
+
+  return $array;
+}
 
 /***************************************************************************************************
 * @descr :  Builds the page header, with the menu
@@ -74,25 +80,26 @@ SELECT id_category,
 SELECT id_version,
        version
   FROM '.VER_TABLE.'
-  ORDER BY version DESC
 ;';
-  $req = $db->query($query);
+  $versions = simple_hash_from_query($query, 'id_version', 'version');
+  versort($versions);
+  $versions = array_reverse($versions, true);
   
   $template->set_block('header', 'pwg_version', 't_pwg_version');
   
   // Displays the versions
-  while ($data = $db->fetch_assoc($req))
+  foreach ($versions as $version_id => $version_name)
   {
     $template->set_var(
       array(
-        'L_PWG_VERSION_ID' => $data['id_version'],
-        'L_PWG_VERSION_NAME' => $data['version'],
+        'L_PWG_VERSION_ID' => $version_id,
+        'L_PWG_VERSION_NAME' => $version_name,
         )
       );
                                
     if (isset($_SESSION['id_version']))
     {
-      if ($_SESSION['id_version'] == $data['id_version'])
+      if ($_SESSION['id_version'] == $version_id)
       {
         $template->set_var('L_PWG_VERSION_SELECTED', 'selected="selected"');
       }
@@ -492,6 +499,21 @@ function array_from_query($query, $fieldname)
   return $array;
 }
 
+function simple_hash_from_query($query, $keyname, $valuename)
+{
+  global $db;
+  
+  $array = array();
+
+  $result = $db->query($query);
+  while ($row = $db->fetch_array($result))
+  {
+    $array[ $row[$keyname] ] = $row[$valuename];
+  }
+
+  return $array;
+}
+
 function get_version_name_of()
 {
   global $db;
@@ -531,7 +553,7 @@ function get_versions_of_revision($revision_ids)
         );
     }
 
-    natcasesort($versions_of[$revision_id]);
+    versort($versions_of[$revision_id]);
   }
 
   return $versions_of;
