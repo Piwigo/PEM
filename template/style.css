@@ -215,6 +215,12 @@ div.row
   clear : both;
 }
 
+A.screenshot {
+  display: block;
+  float: right;
+  margin-left: 3em;
+}
+
 div.nav_left
 {
   float:left;
@@ -304,7 +310,7 @@ UL.actionLinks
   margin: 0 auto;
   padding: 0;
   margin-bottom: 1em;
-  width: 150px;
+  width: 200px;
   background-color: #d3d3d3;
   border: 1px solid gray;
 }

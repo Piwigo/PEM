@@ -1,0 +1,281 @@
+<?php
+// +-----------------------------------------------------------------------+
+// | PEM - a PHP based Extension Manager                                   |
+// | Copyright (C) 2005-2006 PEM Team - http://home.gna.org/pem            |
+// +-----------------------------------------------------------------------+
+// | last modifier : $Author: plg $
+// | revision      : $Revision: 2 $
+// +-----------------------------------------------------------------------+
+// | This program is free software; you can redistribute it and/or modify  |
+// | it under the terms of the GNU General Public License as published by  |
+// | the Free Software Foundation                                          |
+// |                                                                       |
+// | This program is distributed in the hope that it will be useful, but   |
+// | WITHOUT ANY WARRANTY; without even the implied warranty of            |
+// | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU      |
+// | General Public License for more details.                              |
+// |                                                                       |
+// | You should have received a copy of the GNU General Public License     |
+// | along with this program; if not, write to the Free Software           |
+// | Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, |
+// | USA.                                                                  |
+// +-----------------------------------------------------------------------+
+
+define('INTERNAL', true);
+$root_path = './';
+require_once($root_path.'include/common.inc.php');
+
+// +-----------------------------------------------------------------------+
+// |                             Functions                                 |
+// +-----------------------------------------------------------------------+
+
+function get_picture_size(
+  $original_width,
+  $original_height,
+  $max_width,
+  $max_height
+  )
+{
+  $width = $original_width;
+  $height = $original_height;
+
+  if ($width > $max_width)
+  {
+    $width = $max_width;
+    $height = floor(($width * $original_height) / $original_width);
+  }
+
+  if ($height > $max_height)
+  {
+    $height = $max_height;
+    $width = floor(($height * $original_width) / $original_height);
+  }
+  
+  return array('width' => $width, 'height' => $height);
+}
+
+// $dimensions = array(
+//   array('width' => 750, 'height' => 500),
+//   array('width' => 850, 'height' => 500),
+//   array('width' => 750, 'height' => 700),
+//   array('width' => 800, 'height' => 600),
+//   array('width' => 900, 'height' => 900),
+//   array('width' => 763, 'height' => 687),
+//   );
+// foreach ($dimensions as $dim)
+// {
+//   echo "<br />";
+//   $new_dim = get_picture_size($dim['width'], $dim['height'], 800, 600);
+//   echo implode('x', array($dim['width'], $dim['height']));
+//   echo ' => ';
+//   echo implode('x', array($new_dim['width'], $new_dim['height']));
+//   echo '<br />';
+// }
+// exit();
+
+function resize_picture(
+  $original_filename,
+  $destination_filename,
+  $destination_dimensions
+  )
+{
+  list($original_width, $original_height, $type) =
+    getimagesize($original_filename);
+
+  // $type == 2 means JPG
+  // $type == 3 means PNG
+  switch ($type) {
+    case 2:
+    {
+      $source_image = imagecreatefromjpeg($original_filename);
+      break;
+    }
+    case 3 :
+    {
+      $source_image = imagecreatefrompng($original_filename);
+      break;
+    }
+    default:
+    {
+      message_die(l10n('Can only resize PNG and JPEG files'));
+    }
+  }
+
+  $destination_image = imagecreatetruecolor(
+    $destination_dimensions['width'],
+    $destination_dimensions['height']
+    );
+  
+  imagecopyresampled(
+    $destination_image,
+    $source_image,
+    0, 0, 0, 0,
+    $destination_dimensions['width'],
+    $destination_dimensions['height'],
+    $original_width,
+    $original_height
+    );
+
+  imagejpeg($destination_image, $destination_filename);
+  
+  // freeing memory ressources
+  imagedestroy($source_image);
+  imagedestroy($destination_image);
+}
+
+// resize_picture(
+//   '/home/z0rglub/temp/resize/forum.png',
+//   '/home/z0rglub/temp/resize/forum_resized.jpg',
+//   array('width' => 666, 'height' => 600)
+//   );
+// exit();
+
+// +-----------------------------------------------------------------------+
+// |                           Initialization                              |
+// +-----------------------------------------------------------------------+
+
+if (!isset($user['id']))
+{
+  message_die(l10n('You must be connected to reach this page'));
+}
+
+// We need a valid extension
+$page['extension_id'] =
+  (isset($_GET['eid']) and is_numeric($_GET['eid']))
+  ? $_GET['eid']
+  : '';
+
+if (empty($page['extension_id']))
+{
+  message_die(l10n('Incorrect extension identifier'));
+}
+
+$query = '
+SELECT name
+  FROM '.EXT_TABLE.'
+  WHERE id_extension = '.$page['extension_id'].'
+;';
+$result = $db->query($query);
+
+if ($db->num_rows($result) == 0)
+{
+  message_die(l10n('Unknown extension'));
+}
+list($page['extension_name']) = $db->fetch_array($result);
+
+// +-----------------------------------------------------------------------+
+// |                           Form submission                             |
+// +-----------------------------------------------------------------------+
+
+if (isset($_POST['submit_add']))
+{
+  $_POST = escape_array($_POST);
+
+  if (!isset($_FILES['picture']))
+  {
+    message_die(l10n("You did not upload anything!"));
+  }
+
+  $temp_name = get_extension_dir($page['extension_id']).'/screenshot.tmp';
+  if (!move_uploaded_file($_FILES['picture']['tmp_name'], $temp_name))
+  {
+    message_die(l10n('Problem during upload'));
+  }
+
+  list($width, $height, $type) = getimagesize($temp_name);
+  
+  // $type == 2 means JPG
+  // $type == 3 means PNG
+  if (!in_array($type, array(2, 3)))
+  {
+    message_die(l10n('You can only upload PNG and JPEG files as screenshot'));
+    unlink($temp_name);
+  }
+
+  $screenshot_filename =
+    get_extension_dir($page['extension_id'])
+    .'/screenshot.'
+    .($type == 2 ? 'png' : 'jpg')
+    ;
+
+  // does the upload screenshot needs a resize?
+  $new_dimensions = get_picture_size(
+    $width,
+    $height,
+    $conf['screenshot_maxwidth'],
+    $conf['screenshot_maxheight']
+    );
+  
+  if ($width != $new_dimensions['width']
+      or $height > $new_dimensions['height'])
+  {
+    resize_picture(
+      $temp_name,
+      $screenshot_filename,
+      $new_dimensions
+      );
+    
+    $width  = $new_dimensions['width'];
+    $height = $new_dimensions['height'];
+
+    unlink($temp_name);
+  }
+  else
+  {
+    rename($temp_name, $screenshot_filename);
+  }
+
+  // create the thumbnail
+  $thumbnail_filename = get_extension_thumbnail_src($page['extension_id']);
+
+  resize_picture(
+    $screenshot_filename,
+    $thumbnail_filename,
+    get_picture_size(
+      $width,
+      $height,
+      $conf['thumbnail_maxwidth'],
+      $conf['thumbnail_maxheight']
+      )
+    );
+}
+
+if (isset($_POST['submit_delete']))
+{
+  $_POST = escape_array($_POST);
+}
+
+// +-----------------------------------------------------------------------+
+// |                            Form display                               |
+// +-----------------------------------------------------------------------+
+
+$template->set_file('extension_screenshot', 'extension_screenshot.tpl');
+
+$action = 'extension_screenshot.php?eid='.$page['extension_id'];
+
+$template->set_var(
+  array(
+    'U_EXTENSION' => 'extension_view.php?eid='.$page['extension_id'],
+    'F_ACTION' => $action,
+    'EXTENSION_NAME' => $page['extension_name'],
+    )
+  );
+
+$template->set_block('extension_screenshot', 'delete', 'Tdelete');
+
+if ($screenshot_infos = get_extension_screenshot_infos($page['extension_id']))
+{
+  $template->set_var(
+    array(
+      'F_ACTION'      => $action,
+      'THUMBNAIL_SRC' => $screenshot_infos['thumbnail_src'],
+      'U_SCREENSHOT'  => $screenshot_infos['screenshot_url'],
+      )
+    );
+  $template->parse('Tdelete', 'delete');
+}
+
+build_header();
+$template->parse('output', 'extension_screenshot', true);
+build_footer();
+?>

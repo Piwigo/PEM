@@ -85,4 +85,10 @@ $conf['paginate_pages_around'] = 2;
 
 // die_on_sql_error: should the application break when a SQL error happens?
 $conf['die_on_sql_error'] = true;
+
+// screenshot and associated thumbnails parameters
+$conf['screenshot_maxwidth']  = 800;
+$conf['screenshot_maxheight'] = 800;
+$conf['thumbnail_maxheight']  = 150;
+$conf['thumbnail_maxwidth']   = 150;
 ?>

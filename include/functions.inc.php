@@ -929,12 +929,48 @@ DELETE
   $db->query($query);
 }
 
+function get_extension_dir($extension_id)
+{
+  return EXTENSIONS_DIR.'extension-'.$extension_id;
+}
+
 function get_revision_src($extension_id, $revision_id, $url)
 {
-  return EXTENSIONS_DIR
-    .'extension-'.$extension_id
+  return get_extension_dir($extension_id)
     .'/revision-'.$revision_id
     .'/'.$url
-    ;
+  ;
+}
+
+function get_extension_thumbnail_src($extension_id)
+{
+  return get_extension_dir($extension_id).'/thumbnail.jpg';
+}
+
+function get_extension_screenshot_src($extension_id)
+{
+  return get_extension_dir($extension_id).'/screenshot.jpg';
+}
+
+function get_extension_screenshot_infos($extension_id)
+{
+  $thumbnail_src  = get_extension_thumbnail_src($extension_id);
+  $screenshot_src = get_extension_screenshot_src($extension_id);
+  
+  if (is_file($thumbnail_src) and is_file($screenshot_src))
+  {
+    return array(
+      'thumbnail_src'  => $thumbnail_src,
+      'screenshot_url' => $screenshot_src,
+      );
+  }
+  else
+  {
+//     return array(
+//       'thumbnail_src'  => './default_thumbnail.jpg',
+//       'screenshot_url' => 'http://le-gall.net/pierrick',
+//       );
+   return false;
+  }
 }
 ?>

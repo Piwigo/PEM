@@ -13,9 +13,14 @@
   <li><a href="{U_MODIFY}" title="Modify extension"><img src="template/images/modify.png" alt="Modify extension"></a></li>
   <li><a href="{U_DELETE}" onclick="return confirm_del();" title="Delete extension"><img src="template/images/delete.png" alt="Delete extension"></a></li>
   <li><a href="{U_LINKS}" title="Manage links"><img src="template/images/links.png" alt="links"></a></li>
+  <li><a href="{U_SCREENSHOT}" title="Manage screenshot"><img src="template/images/screenshot.png" alt="screenshot"></a></li> 
   <li><a href="{U_ADD_REV}" title="Add revision"><img src="template/images/add_revision.png" alt="Add revision"></a></li>
   <!-- END admin -->
 </ul>
+
+<!-- BEGIN thumbnail -->
+<a class="screenshot" href="{URL}"><img src="{SRC}"/></a>
+<!-- END thumbnail -->
 
 <ul class="extensionInfos">
   <li>Author: {L_EXTENSION_AUTHOR}</li>

@@ -62,19 +62,34 @@ $template->set_var(
         )
       ),
     'L_EXTENSION_AUTHOR' => $author,
-    'L_EXTENSION_ID' => $id,
     'U_ADD_REV' => 'revision_add.php?eid='.$page['extension_id'],
     'U_MODIFY' => 'extension_mod.php?eid='.$page['extension_id'],
     'U_DELETE' => 'extension_del.php?eid='.$page['extension_id'],
     'U_LINKS' => 'extension_links.php?eid='.$page['extension_id'],
+    'U_SCREENSHOT' => 'extension_screenshot.php?eid='.$page['extension_id'],
     'U_SHOW_FULL_CL' =>
       'extension_view.php?eid='.$page['extension_id'].'&amp;full_cl=1',
     )
   );
   
-if (isAdmin($user['id']) or $user['id'] == $data['idx_user'])
+if (isset($user['id'])
+    and (isAdmin($user['id'])
+         or $user['id'] == $data['idx_user'])
+  )
 {
   $template->parse( 't_admin', 'admin' );
+}
+
+$template->set_block( 'extension_view', 'thumbnail', 'Tthumbnail' );
+if ($screenshot_infos = get_extension_screenshot_infos($page['extension_id']))
+{
+  $template->set_var(
+    array(
+      'SRC' => $screenshot_infos['thumbnail_src'],
+      'URL' => $screenshot_infos['screenshot_url'],
+      )
+    );
+  $template->parse( 'Tthumbnail', 'thumbnail' );
 }
 
 // Links associated to the current extension
