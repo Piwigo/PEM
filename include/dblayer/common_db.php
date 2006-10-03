@@ -74,6 +74,6 @@ $db = new DBLayer(
   $conf['db_params']['user'],
   $conf['db_params']['pass'],
   $conf['db_params']['name'],
-  $conf['db_params']['prefix'],
+  $conf['db_params']['tables_prefix'],
   $conf['db_params']['persistent_connection']
   );
