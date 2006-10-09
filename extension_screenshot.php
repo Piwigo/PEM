@@ -192,11 +192,7 @@ if (isset($_POST['submit_add']))
     unlink($temp_name);
   }
 
-  $screenshot_filename =
-    get_extension_dir($page['extension_id'])
-    .'/screenshot.'
-    .($type == 2 ? 'png' : 'jpg')
-    ;
+  $screenshot_filename = get_extension_screenshot_src($page['extension_id']);
 
   // does the upload screenshot needs a resize?
   $new_dimensions = get_picture_size(
