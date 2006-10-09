@@ -37,9 +37,9 @@ else
 // Checks if the user who wants to delete the revision is really its author
 $query = '
 SELECT idx_user,
-       url,
        idx_extension
   FROM '. REV_TABLE.'
+    INNER JOIN '.EXT_TABLE.' ON idx_extension = id_extension
   WHERE id_revision = '.$page['revision_id'].'
 ;';
 $req = $db->query($query);
@@ -59,6 +59,6 @@ delete_revisions(array($page['revision_id']));
 
 message_success(
   l10n('Revision successfuly deleted'),
-  'extension_view.php?eid='.$row['ids_extension']
+  'extension_view.php?eid='.$row['idx_extension']
   );
 ?>
