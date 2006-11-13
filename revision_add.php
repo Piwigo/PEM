@@ -166,7 +166,10 @@ if (isset($_POST['submit']))
     if (!is_dir($extension_dir))
     {
       umask(0000);
-      mkdir($extension_dir, 0777);
+      if (!mkdir($extension_dir, 0777))
+      {
+        die("problem during ".$extension_dir." creation");
+      }
     }
     
     umask(0000);
