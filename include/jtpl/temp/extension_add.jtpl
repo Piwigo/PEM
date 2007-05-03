@@ -1,0 +1,40 @@
+<?php 
+function template_meta_9226e227fd40d2852d1620ffdcd3e2c9($t){
+
+return $t->_meta;
+}
+function template_9226e227fd40d2852d1620ffdcd3e2c9($t){
+?><h2>Add/Modify an extension</h2>
+
+<form method="post" action="<?php echo $t->_vars['f_action']; ?>" enctype="multipart/form-data">
+  <fieldset>
+    <legend>Extension informations</legend>
+
+    <table>
+      <tr>
+        <th>Name</th>
+        <td><input type="text" name="extension_name" size="35" maxlength="255" value="<?php echo $t->_vars['extension_name']; ?>" /></td>
+      </tr>
+      <tr>
+        <th>Categories</th>
+        <td>
+          <div class="checkboxBox">
+<?php foreach($t->_vars['extension_categories'] as $t->_vars['cat']):?>
+            <label><input type="checkbox" name="extension_category[]" value="<?php echo $t->_vars['cat'][value]; ?>" <?php echo $t->_vars['cat'][checked]; ?> /> <?php echo $t->_vars['cat'][name]; ?></label>
+<?php endforeach;?>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <th>Description</th>
+        <td><textarea cols="80" rows="10" name="extension_description"><?php echo $t->_vars['extension_description']; ?></textarea></td>
+      </tr>
+    </table>
+
+    <div>
+      <input type="submit" value="Submit" name="submit" />
+    </div>
+  </fieldset>
+</form><?php 
+}
+?>

@@ -1,0 +1,58 @@
+<?php 
+function template_meta_7c3a2ad5e6dad1f071792bda8c66e22e($t){
+
+return $t->_meta;
+}
+function template_7c3a2ad5e6dad1f071792bda8c66e22e($t){
+?><h2><?php echo $t->_vars['extension_name']; ?></h2>
+
+<h3>Manage extension screenshot</h3>
+
+<ul class="actionLinks">
+  <li><a href="<?php echo $t->_vars['u_extension']; ?>" title="See extension"><img src="template/images/see_extension.png"></a></li>
+</ul>
+
+<form method="post" action="<?php echo $t->_vars['f_action']; ?>" enctype="multipart/form-data">
+  <fieldset>
+    <legend>Add or replace screenshot</legend>
+
+    <table>
+      <tr>
+        <th><strong>File *</strong></th>
+        <td>
+          <input
+            type="file"
+            name="picture"
+            maxlength="50"
+            value="<?php echo $t->_vars['f_picture_name']; ?>"
+          />
+        </td>
+      </tr>
+    </table>
+
+    <div>
+      <input type="submit" value="Submit" name="submit_add" />
+    </div>
+  </fieldset>
+</form>
+
+<?php if(isset($t->_vars['current'])):?>
+<form method="post" action="<?php echo $t->_vars['f_action']; ?>" enctype="multipart/form-data">
+  <fieldset>
+    <legend>Delete screenshot</legend>
+
+    <table>
+      <tr>
+        <td>
+          <a class="screenshot" href="<?php echo $t->_vars['current']['u_screenshot']; ?>"><img src="<?php echo $t->_vars['current']['thumbnail_src']; ?>"/></a>
+        </td>
+        <td valign="middle">
+          <input type="submit" value="Submit" name="submit_delete" />
+        </td>
+      </tr>
+    </table>
+  </fieldset>
+</form>
+<?php endif; 
+}
+?>

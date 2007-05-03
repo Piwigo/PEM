@@ -1,0 +1,50 @@
+<h2>{$extension_name}</h2>
+
+<form method="post" action="{$f_action}" enctype="multipart/form-data">
+  <fieldset>
+    <legend>Add a revision</legend>
+
+    <table>
+      <tr>
+        <th>Version</th>
+        <td>
+          <input
+            type="text"
+            name="revision_version"
+            size="10"
+            maxlength="10"
+            value="{$name}"
+          />
+        </td>
+      </tr>
+      <tr>
+        <th>File</th>
+        <td>
+          <input type="file" name="revision_file" size="35" />
+        </td>
+      </tr>
+      <tr>
+        <th>Compatibility</th>
+        <td>
+          <div class="checkboxBox">
+{foreach $versions as $version}
+            <label>
+              <input type="checkbox" name="compatible_versions[]" value="{$version['id_version']}" {$version['checked']} />{$version['name']}
+            </label>
+{/foreach}
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <th>Notes</th>
+        <td>
+          <textarea cols="80" rows="10" name="revision_changelog">{$description}</textarea>
+        </td>
+      </tr>
+    </table>
+
+    <div>
+      <input type="submit" value="Submit" name="submit" />
+    </div>
+  </fieldset>
+</form>

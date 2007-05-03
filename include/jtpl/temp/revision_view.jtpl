@@ -1,0 +1,35 @@
+<?php 
+function template_meta_b1795527f50dcdd62566ff4a9fa95e45($t){
+
+return $t->_meta;
+}
+function template_b1795527f50dcdd62566ff4a9fa95e45($t){
+?><h2><?php echo $t->_vars['extension_name']; ?>, revision <?php echo $t->_vars['revision']; ?></h2>
+
+<ul class="actionLinks">
+  <li><a href="<?php echo $t->_vars['u_extension']; ?>" title="See extension"><img src="template/images/see_extension.png"></a></li>
+
+  <li><a href="<?php echo $t->_vars['u_modify']; ?>" title="Modify revision"><img src="template/images/modify.png"></a></li>
+  <li><a href="<?php echo $t->_vars['u_delete']; ?>" onclick="return confirm_del();" title="Delete revision"><img src="template/images/delete.png"></a></li>
+</ul>
+
+<div class="row">
+  <ul class="extensionInfos">
+    <li>Author: <?php echo $t->_vars['author']; ?></li>
+  </ul>
+  <blockquote><p><?php echo $t->_vars['extension_description']; ?></p></blockquote>
+</div>
+
+<div class="row">
+  <a href="<?php echo $t->_vars['u_download']; ?>" title="Download revision <?php echo $t->_vars['revision']; ?>"><img class="download" src="template/images/download.png" /></a>
+  <p>Revision: <?php echo $t->_vars['revision']; ?></p>
+  <p>Released on: <?php echo $t->_vars['date']; ?></p>
+  <p>Compatible with: <?php echo $t->_vars['versions_compatible']; ?></p>
+
+  <blockquote>
+    <p><?php echo $t->_vars['revision_description']; ?></p>
+  </blockquote>
+</div>
+<?php 
+}
+?>

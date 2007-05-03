@@ -1,0 +1,23 @@
+<?php 
+function template_meta_b0aa162ddcea67f1b9a3a767f3ee6423($t){
+
+return $t->_meta;
+}
+function template_b0aa162ddcea67f1b9a3a767f3ee6423($t){
+?><h2>My personnal homepage</h2>
+
+<!-- Used to fix a margin bug with IE... -->
+<br />
+
+<p>My extensions:</p>
+<?php if(count($t->_vars['extensions']) > 0):?>
+<ul>
+  <?php foreach($t->_vars['extensions'] as $t->_vars['extension']):?>
+  <li><a href="extension_view.php?eid=<?php echo $t->_vars['extension'][id]; ?>"><?php echo $t->_vars['extension'][name]; ?></a></li>
+  <?php endforeach;?>
+</ul>
+<?php endif;?>
+
+<div style="clear : both;"></div><?php 
+}
+?>

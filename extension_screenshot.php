@@ -151,7 +151,8 @@ if (empty($page['extension_id']))
 }
 
 $query = '
-SELECT name
+SELECT
+    name
   FROM '.EXT_TABLE.'
   WHERE id_extension = '.$page['extension_id'].'
 ;';
@@ -245,33 +246,33 @@ if (isset($_POST['submit_delete']))
 // |                            Form display                               |
 // +-----------------------------------------------------------------------+
 
-$template->set_file('extension_screenshot', 'extension_screenshot.tpl');
-
 $action = 'extension_screenshot.php?eid='.$page['extension_id'];
 
-$template->set_var(
+$tpl->assign(
   array(
-    'U_EXTENSION' => 'extension_view.php?eid='.$page['extension_id'],
-    'F_ACTION' => $action,
-    'EXTENSION_NAME' => $page['extension_name'],
+    'u_extension' => 'extension_view.php?eid='.$page['extension_id'],
+    'f_action' => $action,
+    'extension_name' => $page['extension_name'],
     )
   );
 
-$template->set_block('extension_screenshot', 'delete', 'Tdelete');
-
 if ($screenshot_infos = get_extension_screenshot_infos($page['extension_id']))
 {
-  $template->set_var(
+  $tpl->assign(
+    'current',
     array(
-      'F_ACTION'      => $action,
-      'THUMBNAIL_SRC' => $screenshot_infos['thumbnail_src'],
-      'U_SCREENSHOT'  => $screenshot_infos['screenshot_url'],
+      'thumbnail_src' => $screenshot_infos['thumbnail_src'],
+      'u_screenshot'  => $screenshot_infos['screenshot_url'],
       )
     );
-  $template->parse('Tdelete', 'delete');
 }
 
-build_header();
-$template->parse('output', 'extension_screenshot', true);
-build_footer();
+// +-----------------------------------------------------------------------+
+// |                           html code display                           |
+// +-----------------------------------------------------------------------+
+
+$tpl->assign('main_content', 'extension_screenshot.jtpl');
+include($root_path.'include/header.inc.php');
+include($root_path.'include/footer.inc.php');
+$tpl->display('page.jtpl');
 ?>

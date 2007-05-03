@@ -27,7 +27,12 @@ require_once($root_path.'include/common.inc.php');
   
 if (!isset($user['id']))
 {
-  message_die(l10n('You must be connected to reach this page'));
+  $page['message']['is_success'] = false;
+  $page['message']['message'] = l10n(
+    'You must be connected to add, modify or delete an extension'
+    );
+  $page['message']['go_back'] = true;
+  include($root_path.'include/message.inc.php');
 }
 
 $page['extension_id'] =
@@ -37,7 +42,12 @@ $page['extension_id'] =
 
 if (empty($page['extension_id']))
 {
-  message_die(l10n('Incorrect extension identifier'));
+  $page['message']['is_success'] = false;
+  $page['message']['message'] = l10n(
+    'Incorrect extension identifier'
+    );
+  $page['message']['go_back'] = true;
+  include($root_path.'include/message.inc.php');
 }
 
 // Checks if the user who wants to delete the extension is really its author
@@ -51,12 +61,22 @@ $row = $db->fetch_assoc($req);
 
 if (empty($row['idx_user']))
 {
-  message_die(l10n('Unknown extension'));
+  $page['message']['is_success'] = false;
+  $page['message']['message'] = l10n(
+    'Unknown extension'
+    );
+  $page['message']['go_back'] = true;
+  include($root_path.'include/message.inc.php');
 }
 
 if ($row['idx_user'] != $user['id'] and !isAdmin($user['id']))
 {
-  message_die(l10n('Deletion forbidden'));
+  $page['message'] = array(
+    'is_success' => false,
+    'message' => l10n('Deletion forbidden'),
+    'go_back' => true
+    );
+  include($root_path.'include/message.inc.php');
 }
 
 // Delete all the revisions for the given extension
@@ -84,9 +104,10 @@ DELETE
 ;';
 $db->query($query);
 
-message_success(
-  l10n('extension successfuly deleted'),
-  'index.php'
+$page['message']['is_success'] = true;
+$page['message']['message'] = l10n(
+  'extension successfuly deleted'
   );
-
+$page['message']['redirect'] = 'index.php';
+include($root_path.'include/message.inc.php');
 ?>

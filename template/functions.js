@@ -14,5 +14,5 @@ function display_changelog( revision_id )
 
 function confirm_del()
 {
-  return confirm( 'Êtes-vous sûr de vouloir supprimer cet élément ?' );
+  return confirm( 'Are you sure you want to delete this item?' );
 }

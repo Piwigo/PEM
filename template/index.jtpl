@@ -1,0 +1,13 @@
+<h2>Last added revisions</h2>
+
+{foreach $revisions as $revision}
+<div class="row">
+  <p><strong><a href="revision_view.php?rid={$revision[id]}">{$revision[extension_name]}, revision {$revision[name]}</a></strong></p>
+  <ul class="revisionInfos">
+    <li>Author: {$revision[author]}</li>
+    <li>Released on: {$revision[date]}</li>
+    <li>Compatible with: {$revision[compatible_versions]}</li>
+  </ul>
+  <blockquote>{$revision[description]}</blockquote>
+</div>
+{/foreach}

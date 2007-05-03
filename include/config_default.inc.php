@@ -91,4 +91,9 @@ $conf['screenshot_maxwidth']  = 800;
 $conf['screenshot_maxheight'] = 800;
 $conf['thumbnail_maxheight']  = 150;
 $conf['thumbnail_maxwidth']   = 150;
+
+$conf['website_url'] = 'http://phpwebgallery.net/ext';
+$conf['website_description'] = 'PhpWebGallery extensions';
+$conf['website_language'] = 'en';
+$conf['webmaster_email'] = 'team phpwebgallery.net';
 ?>

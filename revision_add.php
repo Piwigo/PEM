@@ -219,11 +219,9 @@ DELETE
 // |                            Form display                               |
 // +-----------------------------------------------------------------------+
 
-$template->set_file('revision_add', 'revision_add.tpl');
-
-$template->set_var(
+$tpl->assign(
   array(
-    'EXTENSION_NAME' => $page['extension_name'],
+    'extension_name' => $page['extension_name'],
     )
   );
 
@@ -250,14 +248,17 @@ else
   $selected_versions = array();
 }
 
-$template->set_var(
+// echo '<pre>'; print_r($version); echo '</pre>';
+// echo '<pre>'; echo "#".$version."#"; echo '</pre>';
+
+$tpl->assign(
   array(
-    'REVISION_VERSION' => $version,
-    'REVISION_DESCRIPTION' => $description,
+    'name' => $version,
+    'description' => $description,
     )
   );
   
-// Get the PWG versions listing
+// Get the main application versions listing
 $query = '
 SELECT version,
        id_version
@@ -267,33 +268,31 @@ SELECT version,
 $req = $db->query($query);
   
 // Displays the available versions
-$template->set_block(
-  'revision_add',
-  'compatible_version',
-  'Tcompatible_version'
-  );
+$tpl_versions = array();
 
 while ($data = $db->fetch_assoc($req))
 {
-  $template->set_var(
+  array_push(
+    $tpl_versions,
     array(
-      'VALUE' => $data['id_version'],
-      'NAME' => $data['version'],
-      'CHECKED' =>
+      'id_version' => $data['id_version'],
+      'name' => $data['version'],
+      'checked' =>
         in_array($data['id_version'], $selected_versions)
         ? 'checked="checked"'
         : '',
       )
     );
-  
-  $template->parse(
-    'Tcompatible_version',
-    'compatible_version',
-    true
-    );
 }
 
-build_header();
-$template->parse( 'output', 'revision_add', true );
-build_footer();
+$tpl->assign('versions', $tpl_versions);
+
+// +-----------------------------------------------------------------------+
+// |                           html code display                           |
+// +-----------------------------------------------------------------------+
+
+$tpl->assign('main_content', 'revision_add.jtpl');
+include($root_path.'include/header.inc.php');
+include($root_path.'include/footer.inc.php');
+$tpl->display('page.jtpl');
 ?>

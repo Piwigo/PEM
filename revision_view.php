@@ -69,53 +69,60 @@ $author_infos_of = get_user_infos_of($author_ids);
 $extension_id = $revision_infos_of[ $page['revision_id'] ]['idx_extension'];
 $author_id = $extension_infos_of[$extension_id]['idx_user'];
 
-$template->set_file('revision_view', 'revision_view.tpl' );
-
-$template->set_var(
-    array(
-      'AUTHOR' => $author_infos_of[$author_id]['username'],
-      
-      'EXTENSION_NAME' => $extension_infos_of[$extension_id]['name'],
-
-      'EXTENSION_DESCRIPTION' => nl2br(
-        htmlspecialchars(
-          strip_tags($extension_infos_of[$extension_id]['description'])
-          )
-        ),
-
-      'U_EXTENSION' => 'extension_view.php?eid='.$extension_id,
-
-      'U_MODIFY' => 'revision_mod.php?rid='.$page['revision_id'],
-
-      'U_DELETE' => 'revision_del.php?rid='.$page['revision_id'],
-
-      'U_DOWNLOAD' => get_revision_src(
-        $extension_id,
-        $page['revision_id'],
-        $revision_infos_of[ $page['revision_id'] ]['url']
-        ),
-
-      'REVISION' => $revision_infos_of[ $page['revision_id'] ]['version'],
-
-      'DATE' => date(
-        'Y-m-d',
-        $revision_infos_of[ $page['revision_id'] ]['date']
-        ),
-
-      'VERSIONS_COMPATIBLE' => implode(
-        ', ',
-        $versions_of[ $page['revision_id'] ]
-        ),
-
-      'REVISION_DESCRIPTION' => nl2br(
-        htmlspecialchars(
-          strip_tags($revision_infos_of[ $page['revision_id'] ]['description'])
-          )
-        ),
+$tpl->assign('author', $author_infos_of[$author_id]['username']);
+$tpl->assign('extension_name', $extension_infos_of[$extension_id]['name']);
+$tpl->assign(
+  'extension_description',
+  nl2br(
+    htmlspecialchars(
+      strip_tags($extension_infos_of[$extension_id]['description'])
       )
+    )
+  );
+$tpl->assign('u_extension', 'extension_view.php?eid='.$extension_id);
+$tpl->assign('u_modify', 'revision_mod.php?rid='.$page['revision_id']);
+$tpl->assign('u_delete', 'revision_del.php?rid='.$page['revision_id']);
+$tpl->assign(
+  'u_download',
+  get_revision_src(
+    $extension_id,
+    $page['revision_id'],
+    $revision_infos_of[ $page['revision_id'] ]['url']
+    )
+  );
+$tpl->assign(
+  'revision',
+  $revision_infos_of[ $page['revision_id'] ]['version']
+  );
+$tpl->assign(
+  'date',
+  date(
+    'Y-m-d',
+    $revision_infos_of[ $page['revision_id'] ]['date']
+    )
+  );
+$tpl->assign(
+  'versions_compatible',
+  implode(
+    ', ',
+    $versions_of[ $page['revision_id'] ]
+    )
+  );
+$tpl->assign(
+  'revision_description',
+  nl2br(
+    htmlspecialchars(
+      strip_tags($revision_infos_of[ $page['revision_id'] ]['description'])
+      )
+    )
   );
 
-build_header();
-$template->parse('output', 'revision_view', true);
-build_footer();
+// +-----------------------------------------------------------------------+
+// |                           html code display                           |
+// +-----------------------------------------------------------------------+
+
+$tpl->assign('main_content', 'revision_view.jtpl');
+include($root_path.'include/header.inc.php');
+include($root_path.'include/footer.inc.php');
+$tpl->display('page.jtpl');
 ?>

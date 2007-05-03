@@ -1,0 +1,71 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=iso-8859-1">
+    {$meta}
+    <title>Extensions manager</title>
+    <style type="text/css" media="all">@import "template/style.css";</style>
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      href="extensions.rss"
+      title="Extensions"
+    />
+    <script type="text/javascript" src="template/functions.js"></script>
+  </head>
+  
+  <body> 
+    <h1><a href="index.php">{$title}</a></h1>
+    
+    <div id="overall">
+      <div id="Menus">
+        <div class="menu">
+          <ul>
+{foreach $categories as $category}
+            <li><a href="{$category[url]}">{$category[name]}</a></li>
+{/foreach}
+          </ul>
+        </div>
+    
+        <div class="menu">
+          <form method="post" action="{$action}" style="margin:0;padding:0;">
+          Version filter<br />
+          <select name="pwg_version" style="width:100px;">
+            <option value="0">&lt; None &gt;</option>
+{foreach $menu_versions as $version}
+            <option value="{$version[id]}" {$version[selected]}>{$version[name]}</option>
+{/foreach}
+          </select>
+          <input type="submit" value="OK" name="compatibility_change" />
+          </form>
+        </div>
+    
+        <div class="menu">
+{if !$user_is_logged}
+          <a href="identification.php">Login</a>
+{else}
+          <p>Hello {$username}</p>
+          <ul>
+            <li><a href="identification.php?action=logout">Disconnect</a></li>
+            <li><a href="my.php">Home</a></li>
+            <li><a href="extension_add.php">Add extension</a></li>
+  {if $user_is_admin}
+            <li><a href="admin/index.php">Administration</a></li>
+  {/if}
+          </ul>
+{/if}
+        </div>        
+      </div> <!-- Menus -->
+    
+      <div id="Content">
+      {include $main_content}
+      </div>
+    </div> <!-- overall -->
+    
+    <div id="footer">
+      Page generated in {$generation_time}
+      <a href="rss.php" title="RSS feed"><img src="template/images/rss_extensions.gif" border="0" /></a>
+    </div> <!-- footer -->
+  </body>
+</html>

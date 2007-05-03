@@ -3,9 +3,6 @@
 // | PEM - a PHP based Extension Manager                                   |
 // | Copyright (C) 2005-2006 PEM Team - http://home.gna.org/pem            |
 // +-----------------------------------------------------------------------+
-// | last modifier : $Author: plg $
-// | revision      : $Revision: 2 $
-// +-----------------------------------------------------------------------+
 // | This program is free software; you can redistribute it and/or modify  |
 // | it under the terms of the GNU General Public License as published by  |
 // | the Free Software Foundation                                          |
@@ -75,7 +72,9 @@ function save_order_links($sorted_link_ids)
 
 if (!isset($user['id']))
 {
-  message_die(l10n('You must be connected to reach this page'));
+  message_die(
+    l10n('You must be connected to add, modify or delete an extension')
+    );
 }
 
 // We need a valid extension
@@ -98,7 +97,7 @@ $result = $db->query($query);
 
 if ($db->num_rows($result) == 0)
 {
-  message_die(l10n('Unknown extension'));
+  message_die(l10n('Incorrect extension identifier'));
 }
 list($page['extension_name']) = $db->fetch_array($result);
 
@@ -171,24 +170,23 @@ DELETE
 // |                            Form display                               |
 // +-----------------------------------------------------------------------+
 
-$template->set_file('extension_links', 'extension_links.tpl');
-
-$template->set_var(
+$tpl->assign(
   array(
-    'U_EXTENSION' => 'extension_view.php?eid='.$page['extension_id'],
-    'F_ACTION' => 'extension_links.php?eid='.$page['extension_id'],
-    'EXTENSION_NAME' => $page['extension_name'],
+    'u_extension' => 'extension_view.php?eid='.$page['extension_id'],
+    'f_action' => 'extension_links.php?eid='.$page['extension_id'],
+    'extension_name' => $page['extension_name'],
     )
   );
 
-$template->set_block( 'extension_links', 'link', 'Tlink' );
-
+$tpl_links =array();
+  
 $query = '
-SELECT id_link,
-       name,
-       url,
-       description,
-       rank
+SELECT
+    id_link,
+    name,
+    url,
+    description,
+    rank
   FROM '.LINKS_TABLE.'
   WHERE idx_extension = '.$page['extension_id'].'
   ORDER BY rank ASC
@@ -209,24 +207,30 @@ while ($row = $db->fetch_array($result))
       $description = $row['description'];
     }
   }
-  
-  $template->set_var(
+
+  array_push(
+    $tpl_links,
     array(
-      'LINK_ID' => $row['id_link'],
-      'LINK_NAME' => $row['name'],
-      'LINK_RANK' => $row['rank'] * 10,
-      'LINK_DESCRIPTION' => $description,
-      'LINK_URL' => $row['url'],
-      'LINK_U_DELETE' =>
+      'id' => $row['id_link'],
+      'name' => $row['name'],
+      'rank' => $row['rank'] * 10,
+      'description' => $description,
+      'url' => $row['url'],
+      'u_delete' =>
         'extension_links.php?eid='.$page['extension_id'].
         '&amp;delete='.$row['id_link'],
       )
     );
-  
-  $template->parse('Tlink', 'link', true);
 }
 
-build_header();
-$template->parse('output', 'extension_links', true);
-build_footer();
+$tpl->assign('links', $tpl_links);
+
+// +-----------------------------------------------------------------------+
+// |                           html code display                           |
+// +-----------------------------------------------------------------------+
+
+$tpl->assign('main_content', 'extension_links.jtpl');
+include($root_path.'include/header.inc.php');
+include($root_path.'include/footer.inc.php');
+$tpl->display('page.jtpl');
 ?>

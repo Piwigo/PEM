@@ -1,0 +1,27 @@
+<h2>{$category_name}</h2>
+<div class="nav_right">{$pagination_bar}</div>
+
+<!-- Used to fix a margin bug with IE... -->
+<br />
+
+{foreach $extensions as $extension}
+<div class="row">
+  <p>
+    <strong>
+      <a
+        href="extension_view.php?eid={$extension[id]}"
+      >{$extension[name]}</a>
+    </strong>
+  </p>
+
+  <ul class="revisionInfos">
+    <li>Author: {$extension[author]}</li>
+    <li>Compatible with: {$extensions[compatible_versions]}</li>
+  </ul>
+  <blockquote><p>{$extension[description]}</p></blockquote>
+</div>
+{/foreach}
+
+<div class="nav_right">{$pagination_bar}</div>
+
+<div style="clear : both;"></div>

@@ -1,0 +1,80 @@
+<?php 
+ require_once('/home/pierrick/public_html/pem/trunk/include/jtpl/plugins/common/function.include.php');
+function template_meta_b1b6d7f8ecfdf5fa9d72b4676b3a7651($t){
+
+return $t->_meta;
+}
+function template_b1b6d7f8ecfdf5fa9d72b4676b3a7651($t){
+?><!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=iso-8859-1">
+    <?php echo $t->_vars['meta']; ?>
+    <title>Extensions manager</title>
+    <style type="text/css" media="all">@import "template/style.css";</style>
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      href="extensions.rss"
+      title="Extensions"
+    />
+    <script type="text/javascript" src="template/functions.js"></script>
+  </head>
+  
+  <body> 
+    <h1><a href="index.php"><?php echo $t->_vars['title']; ?></a></h1>
+    
+    <div id="overall">
+      <div id="Menus">
+        <div class="menu">
+          <ul>
+<?php foreach($t->_vars['categories'] as $t->_vars['category']):?>
+            <li><a href="<?php echo $t->_vars['category'][url]; ?>"><?php echo $t->_vars['category'][name]; ?></a></li>
+<?php endforeach;?>
+          </ul>
+        </div>
+    
+        <div class="menu">
+          <form method="post" action="<?php echo $t->_vars['action']; ?>" style="margin:0;padding:0;">
+          Version filter<br />
+          <select name="pwg_version" style="width:100px;">
+            <option value="0">&lt; None &gt;</option>
+<?php foreach($t->_vars['menu_versions'] as $t->_vars['version']):?>
+            <option value="<?php echo $t->_vars['version'][id]; ?>" <?php echo $t->_vars['version'][selected]; ?>><?php echo $t->_vars['version'][name]; ?></option>
+<?php endforeach;?>
+          </select>
+          <input type="submit" value="OK" name="compatibility_change" />
+          </form>
+        </div>
+    
+        <div class="menu">
+<?php if(!$t->_vars['user_is_logged']):?>
+          <a href="identification.php">Login</a>
+<?php else:?>
+          <p>Hello <?php echo $t->_vars['username']; ?></p>
+          <ul>
+            <li><a href="identification.php?action=logout">Disconnect</a></li>
+            <li><a href="my.php">Home</a></li>
+            <li><a href="extension_add.php">Add extension</a></li>
+  <?php if($t->_vars['user_is_admin']):?>
+            <li><a href="admin/index.php">Administration</a></li>
+  <?php endif;?>
+          </ul>
+<?php endif;?>
+        </div>        
+      </div> <!-- Menus -->
+    
+      <div id="Content">
+      <?php jtpl_function_include( $t,$t->_vars['main_content']);?>
+      </div>
+    </div> <!-- overall -->
+    
+    <div id="footer">
+      Page generated in <?php echo $t->_vars['generation_time']; ?>
+      <a href="rss.php" title="RSS feed"><img src="template/images/rss_extensions.gif" border="0" /></a>
+    </div> <!-- footer -->
+  </body>
+</html><?php 
+}
+?>

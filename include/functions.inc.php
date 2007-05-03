@@ -28,187 +28,6 @@ function versort ($array)
   return $array;
 }
 
-/***************************************************************************************************
-* @descr :  Builds the page header, with the menu
-* @param :  $parse boolean
-* @return : -
-* @author : Sephi
-***************************************************************************************************/
-function build_header( $parse = true )
-{  
-  global $template;
-  global $db;
-  global $user;
-  global $conf;
-  
-  // Get the left nav menu
-  $query = '
-SELECT id_category,
-       idx_parent,
-       name,
-       description
-  FROM '.CAT_TABLE.'
-  ORDER BY name ASC
-;';
-  $req = $db->query($query);
-  
-  $categories = array();
-  while ($data = $db->fetch_assoc($req))
-  {
-    array_push($categories, $data);
-  }
-
-  $template->set_file( 'header', 'header.tpl' );
-  
-  $template->set_block( 'header', 'category', 't_category' );
-  
-  // Browse the categories and display them
-  foreach($categories as $cat)
-  {
-    $template->set_var(
-      array(
-        'URL' => 'extensions.php?category='.$cat['id_category'],
-        'NAME' => $cat['name'],
-        )
-      );
-      
-    $template->parse('t_category', 'category', true);
-  }
-  
-  // Gets the list of the available PWG versions (allows users to filter)
-  $query = '
-SELECT id_version,
-       version
-  FROM '.VER_TABLE.'
-;';
-  $versions = simple_hash_from_query($query, 'id_version', 'version');
-  versort($versions);
-  $versions = array_reverse($versions, true);
-  
-  $template->set_block('header', 'pwg_version', 't_pwg_version');
-  
-  // Displays the versions
-  foreach ($versions as $version_id => $version_name)
-  {
-    $template->set_var(
-      array(
-        'L_PWG_VERSION_ID' => $version_id,
-        'L_PWG_VERSION_NAME' => $version_name,
-        )
-      );
-                               
-    if (isset($_SESSION['id_version']))
-    {
-      if ($_SESSION['id_version'] == $version_id)
-      {
-        $template->set_var('L_PWG_VERSION_SELECTED', 'selected="selected"');
-      }
-    }
-    
-    $template->parse('t_pwg_version', 'pwg_version', true);
-  }
-  
-  $template->set_var(
-    array(
-      'PAGE_TITLE' => $conf['page_title'],
-      'L_REQUEST_URI' => $_SERVER['REQUEST_URI']
-      )
-    );
-  
-  $template->set_block( 'header', 'user_not_logged_in', 't_user_not_logged_in' );
-  $template->set_block( 'header', 'user_logged_in', 't_user_logged_in' );
-  
-  // Display the user menu
-  if (isset($user['id']))
-  {
-    $template->set_var(
-      array(
-        'USERNAME' => $user['username'],
-        )
-      );
-    $template->parse( 't_user_logged_in', 'user_logged_in' );
-  }
-  else
-  {
-    $template->parse( 't_user_not_logged_in', 'user_not_logged_in' );
-  }
-    
-  if ($parse)
-  {
-    $template->parse('output', 'header');
-  }
-}    
-
-function build_footer()
-{
-  global $template, $t2;
-  
-  $template->set_file('footer', 'footer.tpl');
-  $template->parse('output', 'footer', true);
-  $template->p('output');
-
-  // echo get_elapsed_time($t2, get_moment());
-  exit();
-}
-
-function message_success(
-  $message, $redirect = '', $title = 'Success', $time_redirect = '5'
-  )
-{
-  global $template;
-  
-  build_header(false);
-  $template->set_file('message', 'message.tpl');
-  $template->set_var(
-    array(
-      'L_MESSAGE_TITLE' => $title,
-      'L_MESSAGE_TEXT' => $message,
-      'L_META' =>
-        '<meta http-equiv="refresh"'
-        .' content="'.$time_redirect . ';' . $redirect . '">',
-      )
-    );
-  $template->set_block('message', 'switch_redirect', 'Tswitch_redirect'); 
-  $template->set_block('message', 'switch_goback', 'Tswitch_goback');     
-  if (!empty($redirect))
-  {
-    $template->set_var(
-      array(
-        'L_TIME_REDIRECT' => $time_redirect,
-        'U_REDIRECT' => $redirect
-        )
-      );
-    $template->parse('Tswitch_redirect', 'switch_redirect');
-  }
-  $template->parse('output', 'header');
-  $template->parse('output', 'message', true);
-  build_footer();
-}
-
-function message_die($message, $title = 'Erreur', $go_back = true)
-{
-  global $template;
-  
-  build_header();
-  $template->set_file('message', 'message.tpl');
-  $template->set_var(
-    array(
-      'L_MESSAGE_TITLE' => $title,
-      'L_MESSAGE_TEXT' => $message
-      )
-    );
-  $template->set_block('message', 'switch_redirect', 'Tswitch_redirect');
-  $template->set_block('message', 'switch_goback', 'Tswitch_goback'); 
-  
-  if( $go_back )
-  {
-    $template->parse('Tswitch_goback', 'switch_goback');
-  }
-  
-  $template->parse('output', 'message', true);
-  build_footer();
-}
-
 function escape_array($array_to_escape)
 {
   foreach($array_to_escape as $key => $element)
@@ -218,6 +37,34 @@ function escape_array($array_to_escape)
   }
   
   return $array_to_escape;
+}
+
+function message_die($message, $title = 'Error', $go_back = true)
+{
+  global $root_path, $tpl, $db, $user;
+  
+  $page['message'] = array(
+    'title' => $title,
+    'is_success' => false,
+    'message' => $message,
+    'go_back' => $go_back
+    );
+  include($root_path.'include/message.inc.php');
+}
+
+function message_success(
+  $message,
+  $redirect,
+  $title = 'Success',
+  $time_redirect = '5'
+  )
+{
+  global $root_path, $tpl, $db, $user;
+  
+  $page['message']['is_success'] = true;
+  $page['message']['message'] = $message;
+  $page['message']['redirect'] = $redirect;
+  include($root_path.'include/message.inc.php');
 }
 
 function create_rss()

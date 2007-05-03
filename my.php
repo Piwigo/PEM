@@ -25,31 +25,36 @@ define('INTERNAL', true);
 $root_path = './';
 require_once($root_path.'include/common.inc.php');
 
-$template->set_file('my', 'my.tpl');
-
 // Gets the total information about the extensions
 $query = '
-SELECT id_extension,
-       name
+SELECT
+    id_extension,
+    name
   FROM '.EXT_TABLE.'
   WHERE idx_user = \''.$user['id'].'\'
   ORDER BY name DESC
 ;';
 $req = $db->query($query);
 
-$template->set_block('my', 'extension', 'Textension');
+$tpl_extensions = array();
 while ($data = $db->fetch_assoc($req))
 {
-  $template->set_var(
+  array_push(
+    $tpl_extensions,
     array(
-      'NAME' => htmlspecialchars(strip_tags($data['name'])),
-      'ID' => $data['id_extension']
+      'name' => htmlspecialchars(strip_tags($data['name'])),
+      'id' => $data['id_extension']
       )
     );
-  $template->parse('Textension', 'extension', true);
 }
+$tpl->assign('extensions', $tpl_extensions);
 
-build_header();
-$template->parse('output', 'my', true);
-build_footer();
+// +-----------------------------------------------------------------------+
+// |                           html code display                           |
+// +-----------------------------------------------------------------------+
+
+$tpl->assign('main_content', 'my.jtpl');
+include($root_path.'include/header.inc.php');
+include($root_path.'include/footer.inc.php');
+$tpl->display('page.jtpl');
 ?>

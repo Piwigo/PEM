@@ -21,10 +21,10 @@
 // | USA.                                                                  |
 // +-----------------------------------------------------------------------+
 
+define('JTPL_TEMPLATES_PATH', $root_path.'template/');
+
 // determine the initial instant to indicate the generation time of this page
-$t1 = explode( ' ', microtime() );
-$t2 = explode( '.', $t1[0] );
-$t2 = $t1[1].'.'.$t2[1];
+$t1 = intval(microtime(true) * 1000);
 
 header('Content-Type: text/html; charset=iso-8859-1');
 // Hacking attempt
@@ -43,6 +43,7 @@ require_once($root_path . 'include/templates.inc.php');
 require_once($root_path . 'include/functions.inc.php');
 require_once($root_path . 'include/functions_user.inc.php');
 require_once($root_path . 'include/dblayer/common_db.php');
+require_once($root_path . 'include/jtpl/jtpl_standalone_prepend.php');
 
 // user informations
 $user = array();
@@ -58,6 +59,7 @@ if (isset($_SESSION['user_id']))
 // echo '<pre>user: '; print_r($user); echo '</pre>';
 
 $template = new Template($root_path . 'template');
+$tpl = new jTPL();
   
 // PWG Compatibility version set
 if (isset($_POST['compatibility_change']))

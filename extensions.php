@@ -31,7 +31,6 @@ $page['category_id'] = isset($_GET['category']) ? abs(intval($_GET['category']))
 
 
 // No action set, just display the extensions listing of the chosen category
-$template->set_file('extensions', 'extensions.tpl');
   
 // Get the category name
 $query = '
@@ -117,48 +116,48 @@ $author_ids = array_unique(
   );
 $author_infos_of = get_user_infos_of($author_ids);
 
-// Admin block used for admins and authors of the extension
-$template->set_block('extensions', 'extension', 'Textension');
-  
+$tpl_extensions = array();
 // Display the extensions
 foreach ($page_extension_ids as $extension_id)
 {
   $author_id = $extension_infos_of[$extension_id]['idx_user'];
-  
-  $template->set_var(
+
+  array_push(
+    $tpl_extensions,
     array(
-      'ID' => $extension_id,
-      'NAME' => $extension_infos_of[$extension_id]['name'],
-      'AUTHOR' => $author_infos_of[$author_id]['username'],
-      'DESCRIPTION' => nl2br(
+      'id' => $extension_id,
+      'name' => $extension_infos_of[$extension_id]['name'],
+      'author' => $author_infos_of[$author_id]['username'],
+      'description' => nl2br(
         $extension_infos_of[$extension_id]['description']
         ),
-      'COMPATIBLE_VERSIONS' => implode(
+      'compatible_versions' => implode(
         ', ',
         $versions_of_extension[$extension_id]),
       )
     );
-  
-  $template->parse('Textension', 'extension', true);
 }
-  
-$template->set_var(
-  array(
-    'L_CATEGORY_NAME' => $cat_name,
-    'L_PAGE_ID' => $page['page'],
-    'PAGINATION_BAR' => create_pagination_bar(
-      'extensions.php?category='.$page['category_id'],
-      get_nb_pages(
-        count($extension_ids),
-        $conf['extensions_per_page']
-        ),
-      $page['page'],
-      'page'
-      )
+$tpl->assign('extensions', $tpl_extensions);
+$tpl->assign('category_name', $cat_name);
+$tpl->assign(
+  'pagination_bar',
+  create_pagination_bar(
+    'extensions.php?category='.$page['category_id'],
+    get_nb_pages(
+      count($extension_ids),
+      $conf['extensions_per_page']
+      ),
+    $page['page'],
+    'page'
     )
   );
+  
+// +-----------------------------------------------------------------------+
+// |                           html code display                           |
+// +-----------------------------------------------------------------------+
 
-build_header();
-$template->parse('output', 'extensions', true);
-build_footer();
+$tpl->assign('main_content', 'extensions.jtpl');
+include($root_path.'include/header.inc.php');
+include($root_path.'include/footer.inc.php');
+$tpl->display('page.jtpl');
 ?>

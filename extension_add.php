@@ -27,7 +27,12 @@ require_once( $root_path . 'include/common.inc.php' );
   
 if (!isset($user['id']))
 {
-  message_die(l10n('You must be connected to add an extension'));
+  $page['message']['is_success'] = false;
+  $page['message']['message'] = l10n(
+    'You must be connected to add or modify an extension'
+    );
+  $page['message']['go_back'] = true;
+  include($root_path.'include/message.inc.php');
 }
   
 // Form submitted
@@ -44,7 +49,12 @@ if (isset($_POST['submit']))
   {
     if (empty($_POST[$field]))
     {
-      message_die( 'Vous n\'avez pas rempli tous les champs.' );
+      $page['message']['is_success'] = false;
+      $page['message']['message'] = l10n(
+        'Some fields are missing'
+        );
+      $page['message']['go_back'] = true;
+      include($root_path.'include/message.inc.php');
     }
   }
     
@@ -96,14 +106,14 @@ DELETE
   }
   mass_inserts(EXT_CAT_TABLE, array_keys($inserts[0]), $inserts);
   
-  message_success(
-    l10n('Extension successfuly added. Thank you.'),
-    'extension_view.php?eid='.$page['extension_id']
+  $page['message']['is_success'] = true;
+  $page['message']['message'] = l10n(
+    'Extension successfuly added. Thank you.'
     );
+  $page['message']['redirect'] =
+    'extension_view.php?eid='.$page['extension_id'];
+  include($root_path.'include/message.inc.php');
 }
-
-// Display the element adding form
-$template->set_file('extension_add', 'extension_add.tpl');
 
 // Get the category listing
 $query = '
@@ -172,52 +182,51 @@ else
   $selected_categories = array();
 }
 
-$template->set_var(
+$tpl->assign(
   array(
-    'EXTENSION_NAME' => $name,
-    'EXTENSION_DESCRIPTION' => $description,
+    'extension_name' => $name,
+    'extension_description' => $description,
     )
   );
 
 // Display the cats
-$template->set_block('extension_add', 'extension_category', 'Textension_category');
+$tpl_extension_categories = array();
 foreach($cats as $cat)
 {
   if (!in_array($cat['id_category'], $subcats))
   {
-    $template->set_var(
+    array_push(
+      $tpl_extension_categories,
       array(
-        'EXTENSION_CAT_NAME' => $cat['name'],
-        'EXTENSION_CAT_VALUE' => $cat['id_category'],
-        'CHECKED' =>
+        'name' => $cat['name'],
+        'value' => $cat['id_category'],
+        'checked' =>
           in_array($cat['id_category'], $selected_categories)
           ? 'checked="checked"'
           : '',
         )
       );
-    $template->parse('Textension_category', 'extension_category', true);
   }
 }
+$tpl->assign('extension_categories', $tpl_extension_categories);
 
 if (basename($_SERVER['SCRIPT_FILENAME']) == 'extension_mod.php')
 {
-  $template->set_var(
-    array(
-      'F_ACTION' => 'extension_mod.php?eid='.$page['extension_id'],
-      )
-    );
+  $f_action = 'extension_mod.php?eid='.$page['extension_id'];
 }
 else
 {
-  $template->set_var(
-    array(
-      'F_ACTION' => 'extension_add.php',
-      )
-    );
+  $f_action = 'extension_add.php';
 }
 
-build_header();
-$template->parse('output', 'extension_add', true);
-build_footer();
+$tpl->assign('f_action', $f_action);
+  
+// +-----------------------------------------------------------------------+
+// |                           html code display                           |
+// +-----------------------------------------------------------------------+
 
+$tpl->assign('main_content', 'extension_add.jtpl');
+include($root_path.'include/header.inc.php');
+include($root_path.'include/footer.inc.php');
+$tpl->display('page.jtpl');
 ?>

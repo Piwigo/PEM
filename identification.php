@@ -25,21 +25,23 @@ define('INTERNAL', true);
 $root_path = './';
 require_once($root_path.'include/common.inc.php');
 
-$template->set_file('identification', 'identification.tpl');
-
 if (isset($_POST['submit']))
 {
   if ($user_id = check_user_password($_POST['username'], $_POST['password']))
   {
     log_user($user_id);
-    message_success(
-      l10n('Identification successful'),
-      'my.php'
-      );
+
+    $page['message']['is_success'] = true;
+    $page['message']['message'] = l10n('Identification successful');
+    $page['message']['redirect'] = 'my.php';
+    include($root_path.'include/message.inc.php');
   }
   else
   {
-    die('incorrect username/password');
+    $page['message']['is_success'] = false;
+    $page['message']['message'] = l10n('Incorrect username/password');
+    $page['message']['go_back'] = true;
+    include($root_path.'include/message.inc.php');
   }
 }
 
@@ -59,24 +61,26 @@ if (isset($_GET['action']))
         ini_get('session.cookie_path'),
         ini_get('session.cookie_domain')
         );
+
       // redirect to index
-      message_success(
-        l10n('Deconnection successful'),
-        'index.php'
-        );
+      $page['message']['is_success'] = true;
+      $page['message']['message'] = l10n('Logout successful');
+      $page['message']['redirect'] = 'index.php';
+      include($root_path.'include/message.inc.php');
 
       break;
     }
   }
 }
 
-$template->set_var(
-  array(
-    'U_REGISTER' => 'register.php',
-    )
-  );
+$tpl->assign('u_register', 'register.php');
 
-build_header();
-$template->parse('output', 'identification', true);
-build_footer();
+// +-----------------------------------------------------------------------+
+// |                           html code display                           |
+// +-----------------------------------------------------------------------+
+
+$tpl->assign('main_content', 'identification.jtpl');
+include($root_path.'include/header.inc.php');
+include($root_path.'include/footer.inc.php');
+$tpl->display('page.jtpl');
 ?>

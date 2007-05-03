@@ -25,8 +25,6 @@ define('INTERNAL', true);
 $root_path = './';
 require_once($root_path.'include/common.inc.php');
 
-$template->set_file('index', 'index.tpl');
-
 $revision_ids = array();
 $revision_infos_of = array();
 $extension_ids = array();
@@ -84,33 +82,37 @@ $author_ids = array_unique(
 
 $author_infos_of = get_user_infos_of($author_ids);
 
-// $template->set_block( 'index', 'switch_admin', 't_switch_admin' );
-$template->set_block('index', 'revision', 'Trevision');
-
+$revisions = array();
 foreach ($revision_ids as $revision_id)
 {
   $extension_id = $revision_infos_of[$revision_id]['idx_extension'];
   $author_id = $extension_infos_of[$extension_id]['idx_user'];
   
-  $template->set_var(
+  array_push(
+    $revisions,
     array(
-      'ID' => $revision_id,
-      'EXTENSION_NAME' => $extension_infos_of[$extension_id]['name'],
-      'AUTHOR' => $author_infos_of[$author_id]['username'],
-      'REVISION_NAME' => $revision_infos_of[$revision_id]['version'],
-      'COMPATIBLE_VERSIONS' => implode(', ', $versions_of[$revision_id]),
-      'REVISION_DESCRIPTION' => nl2br(
+      'id' => $revision_id,
+      'extension_name' => $extension_infos_of[$extension_id]['name'],
+      'author' => $author_infos_of[$author_id]['username'],
+      'name' => $revision_infos_of[$revision_id]['version'],
+      'compatible_versions' => implode(', ', $versions_of[$revision_id]),
+      'description' => nl2br(
         htmlspecialchars(
           strip_tags($revision_infos_of[$revision_id]['description'])
           )
         ),
-      'DATE' => date('Y-m-d', $revision_infos_of[$revision_id]['date']),
+      'date' => date('Y-m-d', $revision_infos_of[$revision_id]['date']),
       )
     );
-  $template->parse('Trevision', 'revision', true);
 }
-  
-build_header();
-$template->parse('output', 'index', true);
-build_footer();
+$tpl->assign('revisions', $revisions);
+
+// +-----------------------------------------------------------------------+
+// |                           html code display                           |
+// +-----------------------------------------------------------------------+
+
+$tpl->assign('main_content', 'index.jtpl');
+include($root_path.'include/header.inc.php');
+include($root_path.'include/footer.inc.php');
+$tpl->display('page.jtpl');
 ?>
