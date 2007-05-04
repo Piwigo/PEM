@@ -96,11 +96,7 @@ if (isset($user['id']))
 {
   $tpl->assign('user_is_logged', true);
   $tpl->assign('username', $user['username']);
-
-  if (in_array($user['id'], $conf['admin_users']))
-  {
-    $tpl->assign('user_is_admin', true);
-  }
+  $tpl->assign('user_is_admin', isAdmin($user['id']));
 }
 else
 {
