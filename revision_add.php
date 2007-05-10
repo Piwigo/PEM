@@ -205,10 +205,7 @@ DELETE
     array_keys($inserts[0]),
     $inserts
     );
-  
-  // Updates the RSS
-  create_rss();
-    
+      
   message_success(
     l10n('revision successfuly added. Thank you.'),
     'revision_view.php?rid='.$page['revision_id']
