@@ -41,7 +41,7 @@ function escape_array($array_to_escape)
 
 function message_die($message, $title = 'Error', $go_back = true)
 {
-  global $root_path, $tpl, $db, $user;
+  global $root_path, $tpl, $db, $user, $page, $conf;
   
   $page['message'] = array(
     'title' => $title,
@@ -59,7 +59,7 @@ function message_success(
   $time_redirect = '5'
   )
 {
-  global $root_path, $tpl, $db, $user;
+  global $root_path, $tpl, $db, $user, $page, $conf;
   
   $page['message']['is_success'] = true;
   $page['message']['message'] = $message;

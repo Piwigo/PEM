@@ -24,7 +24,7 @@
 define('JTPL_TEMPLATES_PATH', $root_path.'template/');
 
 // determine the initial instant to indicate the generation time of this page
-$t1 = intval(microtime(true) * 1000);
+$page['start'] = intval(microtime(true) * 1000);
 
 header('Content-Type: text/html; charset=iso-8859-1');
 // Hacking attempt

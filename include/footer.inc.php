@@ -25,6 +25,6 @@ if (!defined('INTERNAL'))
 
 $tpl->assign(
   'generation_time',
-  (intval(microtime(true) * 1000) - $t1).' ms'
+  (intval(microtime(true) * 1000) - $page['start']).' ms'
   );
 ?>
