@@ -21,13 +21,9 @@
 // | USA.                                                                  |
 // +-----------------------------------------------------------------------+
 
+// admin_users: give the list of user ids that can reach the administrative
+// section
 $conf['admin_users'] = array(
-  1,    // pierrick
-  2,    // z0rglub
-  1442, // chrisaga
-  865,  // Sephi
-  974,  // volcom
-  1227, // VDigital
   );
 
 // +-----------------------------------------------------------------------+
@@ -96,4 +92,8 @@ $conf['website_url'] = 'http://phpwebgallery.net/ext';
 $conf['website_description'] = 'PhpWebGallery extensions';
 $conf['website_language'] = 'en';
 $conf['webmaster_email'] = 'team phpwebgallery.net';
+
+// l10n_key_prefix: if the language key has no value, the key is
+// displayed with this prefix.
+$conf['l10n_key_prefix'] = '{l10n} ';
 ?>

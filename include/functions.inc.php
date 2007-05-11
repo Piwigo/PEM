@@ -76,7 +76,9 @@ function isAdmin($user_id)
 
 function l10n($lang_key)
 {
-  return '{l10n}'.$lang_key;
+  global $conf;
+  
+  return $conf['l10n_key_prefix'].$lang_key;
 }
 
 /**
