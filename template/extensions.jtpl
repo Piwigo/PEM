@@ -6,6 +6,9 @@
 
 {foreach $extensions as $extension}
 <div class="row">
+{if isset($extension['thumbnail_src'])}
+  <a class="screenshot" href="{$extension['screenshot_url']}"><img src="{$extension['thumbnail_src']}"/></a>
+{/if}
   <p>
     <strong>
       <a

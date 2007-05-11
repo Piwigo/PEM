@@ -2,6 +2,9 @@
 
 {foreach $revisions as $revision}
 <div class="row">
+{if isset($revision['thumbnail_src'])}
+  <a class="screenshot" href="{$revision['screenshot_url']}"><img src="{$revision['thumbnail_src']}"/></a>
+{/if}
   <p><strong><a href="revision_view.php?rid={$revision[id]}">{$revision[extension_name]}, revision {$revision[name]}</a></strong></p>
   <ul class="revisionInfos">
     <li>Author: {$revision[author]}</li>

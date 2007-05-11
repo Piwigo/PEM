@@ -87,6 +87,7 @@ foreach ($revision_ids as $revision_id)
 {
   $extension_id = $revision_infos_of[$revision_id]['idx_extension'];
   $author_id = $extension_infos_of[$extension_id]['idx_user'];
+  $screenshot_infos = get_extension_screenshot_infos($extension_id);
   
   array_push(
     $revisions,
@@ -102,6 +103,12 @@ foreach ($revision_ids as $revision_id)
           )
         ),
       'date' => date('Y-m-d', $revision_infos_of[$revision_id]['date']),
+      'thumbnail_src' => $screenshot_infos
+        ? $screenshot_infos['thumbnail_src']
+        : null,
+      'screenshot_url' => $screenshot_infos
+        ? $screenshot_infos['screenshot_url']
+        : null,
       )
     );
 }

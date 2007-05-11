@@ -121,6 +121,7 @@ $tpl_extensions = array();
 foreach ($page_extension_ids as $extension_id)
 {
   $author_id = $extension_infos_of[$extension_id]['idx_user'];
+  $screenshot_infos = get_extension_screenshot_infos($extension_id);
 
   array_push(
     $tpl_extensions,
@@ -134,6 +135,12 @@ foreach ($page_extension_ids as $extension_id)
       'compatible_versions' => implode(
         ', ',
         $versions_of_extension[$extension_id]),
+      'thumbnail_src' => $screenshot_infos
+        ? $screenshot_infos['thumbnail_src']
+        : null,
+      'screenshot_url' => $screenshot_infos
+        ? $screenshot_infos['screenshot_url']
+        : null,
       )
     );
 }
