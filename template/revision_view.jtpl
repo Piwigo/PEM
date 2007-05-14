@@ -2,9 +2,10 @@
 
 <ul class="actionLinks">
   <li><a href="{$u_extension}" title="See extension"><img src="template/images/see_extension.png"></a></li>
-
+{if isset($u_modify)}
   <li><a href="{$u_modify}" title="Modify revision"><img src="template/images/modify.png"></a></li>
   <li><a href="{$u_delete}" onclick="return confirm_del();" title="Delete revision"><img src="template/images/delete.png"></a></li>
+{/if}
 </ul>
 
 <div class="row">

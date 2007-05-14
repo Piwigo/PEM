@@ -34,7 +34,17 @@ if (!isset($user['id']))
   $page['message']['go_back'] = true;
   include($root_path.'include/message.inc.php');
 }
-  
+
+if (basename($_SERVER['SCRIPT_FILENAME']) == 'extension_mod.php')
+{
+  $extension_infos = get_extension_infos_of($page['extension_id']);
+
+  if ($user['id'] != $extension_infos['idx_user'] and !isAdmin($user['id']))
+  {
+    message_die(l10n('You must be the extension author to modify it'));
+  }
+}
+
 // Form submitted
 if (isset($_POST['submit']))
 {

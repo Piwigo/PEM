@@ -500,6 +500,16 @@ function get_extension_infos_of($extension_ids)
   global $db;
 
   $extension_infos_of = array();
+
+  $ids_string = '';
+  if (is_array($extension_ids))
+  {
+    $ids_string = implode(',', $extension_ids);
+  }
+  else
+  {
+    $ids_string = $extension_ids;
+  }
   
   $query = '
 SELECT id_extension,
@@ -507,14 +517,21 @@ SELECT id_extension,
        idx_user,
        description
   FROM '.EXT_TABLE.'
-  WHERE id_extension IN ('.implode(',', $extension_ids).')
+  WHERE id_extension IN ('.$ids_string.')
 ;';
   $result = $db->query($query);
   while ($row = $db->fetch_assoc($result))
   {
-    $extension_infos_of[ $row['id_extension'] ] = $row;
+    if (is_array($extension_ids))
+    {
+      $extension_infos_of[ $row['id_extension'] ] = $row;
+    }
+    else
+    {
+      return $row;
+    }
   }
-
+  
   return $extension_infos_of;
 }
 

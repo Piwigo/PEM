@@ -52,7 +52,9 @@ if (empty($page['extension_id']))
 }
 
 $query = '
-SELECT name
+SELECT
+    name,
+    idx_user
   FROM '.EXT_TABLE.'
   WHERE id_extension = '.$page['extension_id'].'
 ;';
@@ -62,7 +64,12 @@ if ($db->num_rows($result) == 0)
 {
   message_die(l10n('Unknown extension'));
 }
-list($page['extension_name']) = $db->fetch_array($result);
+list($page['extension_name'], $ext_user) = $db->fetch_array($result);
+
+if ($user['id'] != $ext_user and !isAdmin($user['id']))
+{
+  message_die(l10n('You must be the extension author to modify it'));
+}
 
 // +-----------------------------------------------------------------------+
 // |                           Form submission                             |

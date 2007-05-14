@@ -35,7 +35,8 @@ else
 }
 
 $query = '
-SELECT id_revision
+SELECT
+    id_revision
   FROM '.REV_TABLE.'
   WHERE id_revision = '.$page['revision_id'].'
 ;';
@@ -80,8 +81,20 @@ $tpl->assign(
     )
   );
 $tpl->assign('u_extension', 'extension_view.php?eid='.$extension_id);
-$tpl->assign('u_modify', 'revision_mod.php?rid='.$page['revision_id']);
-$tpl->assign('u_delete', 'revision_del.php?rid='.$page['revision_id']);
+
+if (isset($user['id']))
+{
+  if (isAdmin($user['id']) or $user['id'] == $author_id)
+  {
+    $tpl->assign(
+      array(
+        'u_modify' => 'revision_mod.php?rid='.$page['revision_id'],
+        'u_delete' => 'revision_del.php?rid='.$page['revision_id'],
+        )
+      );
+  }
+}
+
 $tpl->assign(
   'u_download',
   get_revision_src(
