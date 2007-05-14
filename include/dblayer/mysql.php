@@ -52,10 +52,10 @@ class DBLayer
 			if (@mysql_select_db($db_name, $this->link_id))
 				return $this->link_id;
 			else
-				error('Unable to select database. MySQL reported: '.mysql_error(), __FILE__, __LINE__);
+				die('Unable to select database. MySQL reported: '.mysql_error().' '.__FILE__.':'.__LINE__);
 		}
 		else
-			error('Unable to connect to MySQL server. MySQL reported: '.mysql_error(), __FILE__, __LINE__);
+			die('Unable to connect to MySQL server. MySQL reported: '.mysql_error().' '.__FILE__.':'.__LINE__);
 	}
 
 

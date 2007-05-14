@@ -37,7 +37,7 @@ session_name('pem_session_id');
 session_start();
     
 require_once($root_path . 'include/config_default.inc.php');
-@require_once($root_path . 'include/config_local.inc.php');
+@include($root_path . 'include/config_local.inc.php');
 require_once($root_path . 'include/constants.inc.php');
 require_once($root_path . 'include/templates.inc.php');
 require_once($root_path . 'include/functions.inc.php');
