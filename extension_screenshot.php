@@ -239,7 +239,13 @@ if (isset($_POST['submit_add']))
 
 if (isset($_POST['submit_delete']))
 {
-  $_POST = escape_array($_POST);
+  $screenshot_infos = get_extension_screenshot_infos($page['extension_id']);
+  
+  if ($screenshot_infos)
+  {
+    unlink($screenshot_infos['thumbnail_src']);
+    unlink($screenshot_infos['screenshot_url']);
+  }
 }
 
 // +-----------------------------------------------------------------------+
