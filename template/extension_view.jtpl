@@ -4,7 +4,7 @@
 {if $show_detailed_revisions}
   <li><a href="{$u_hide_full_cl}" title="Hide full ChangeLog"><img src="template/images/show_full_changelog.png" alt="Hide full ChangeLog"></a></li>
 {else}
-  <li><a href="{$u_show_full_cl}" title="See full ChangeLog"><img src="template/images/show_full_changelog.png" alt="See full ChangeLog"></a></li>
+  <li><a href="{$u_show_full_cl}#changelog" title="See full ChangeLog"><img src="template/images/show_full_changelog.png" alt="See full ChangeLog"></a></li>
 {/if}
   
 {if isset($u_modify)}
@@ -56,16 +56,18 @@ filter you set.</p>
 {/if}
 
 {if $show_detailed_revisions}
+<div id="changelog">
   {foreach $revisions as $rev}
-<div class="row">
-  <a href="{$rev[u_download]}" title="Download revision {$rev[version]}"><img class="download" src="template/images/download.png" /></a>
-  <p>Revision: {$rev[version]}</p>
-  <p>Released on: {$rev[date]}</p>
-  <p>Compatible with: {$rev[versions_compatible]}</p>
-
-  <blockquote>
-    <p>{$rev[description]}</p>
-  </blockquote>
-</div>
+  <div class="row">
+    <a href="{$rev[u_download]}" title="Download revision {$rev[version]}"><img class="download" src="template/images/download.png" /></a>
+    <p>Revision: {$rev[version]}</p>
+    <p>Released on: {$rev[date]}</p>
+    <p>Compatible with: {$rev[versions_compatible]}</p>
+  
+    <blockquote>
+      <p>{$rev[description]}</p>
+    </blockquote>
+  </div>
   {/foreach}
+</div>
 {/if}
