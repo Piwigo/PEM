@@ -16,7 +16,7 @@
   </head>
   
   <body> 
-    <h1><a href="index.php">{$title}</a></h1>
+    {$banner}
     
     <div id="overall">
       <div id="Menus">

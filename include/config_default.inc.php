@@ -66,6 +66,9 @@ $conf['session_length'] = 60 * 60 * 24 * 30; // 1 month by default
 // title: displayed on every page
 $conf['page_title'] = 'Extensions Manager';
 
+// banner_filepath:
+$conf['banner_filepath'] = 'template/banner.html';
+
 // default_language
 $conf['default_language'] = 'english';
 

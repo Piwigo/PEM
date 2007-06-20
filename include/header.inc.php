@@ -88,8 +88,14 @@ foreach ($versions as $version_id => $version_name)
     );
 }
 
+ob_start();
+include($conf['banner_filepath']);
+$banner = ob_get_contents();
+ob_end_clean();
+
 $tpl->assign('menu_versions', $tpl_versions);
 $tpl->assign('title', $conf['page_title']);
+$tpl->assign('banner', $banner);
 $tpl->assign('action', $_SERVER['REQUEST_URI']);
 
 if (isset($user['id']))
