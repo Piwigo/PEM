@@ -67,5 +67,7 @@
       Page generated in {$generation_time}
       <a href="rss.php" title="RSS feed"><img src="template/images/rss_extensions.gif" border="0" /></a>
     </div> <!-- footer -->
+
+    {$footer}
   </body>
 </html>

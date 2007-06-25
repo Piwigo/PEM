@@ -66,8 +66,13 @@ $conf['session_length'] = 60 * 60 * 24 * 30; // 1 month by default
 // title: displayed on every page
 $conf['page_title'] = 'Extensions Manager';
 
-// banner_filepath:
+// banner_filepath: where to find the banner file. It can be a PHP file
+// producing HTML code.
 $conf['banner_filepath'] = 'template/banner.html';
+
+// footer_filepath: where to find the footer file. Works as the
+// banner_filepath but is displayed on the page bottom.
+$conf['footer_filepath'] = 'template/footer.html';
 
 // default_language
 $conf['default_language'] = 'english';

@@ -27,4 +27,12 @@ $tpl->assign(
   'generation_time',
   (intval(microtime(true) * 1000) - $page['start']).' ms'
   );
+
+ob_start();
+include($conf['footer_filepath']);
+$footer = ob_get_contents();
+ob_end_clean();
+
+$tpl->assign('footer', $footer);
+
 ?>
