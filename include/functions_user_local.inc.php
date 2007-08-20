@@ -136,7 +136,7 @@ function create_user_infos($user_id)
     );
 
   $insert = array(
-    'user_id' => $user_id,
+    'idx_user' => $user_id,
     'language' => $conf['default_language'],
     'registration_date' => $dbnow,
     );
