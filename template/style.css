@@ -20,8 +20,8 @@ h1
 
 p 
 {
-  font:100%/120% verdana, arial, helvetica, sans-serif;
-  margin:5px 0px 5px 0px;
+  font: 100%/120% verdana, arial, helvetica, sans-serif;
+  margin:5px 0px;
   padding:0px;
   text-align : justify;
 }
@@ -51,7 +51,6 @@ a
 {
   color : #005e89;
   text-decoration:none;
-  font-weight:600;
 }
 
 /*a:link {color:#005e89;}*/
@@ -126,6 +125,7 @@ div.menu
   margin-bottom : 5px;
   background-color:#EEE;
   border:1px dashed #275F98;
+  border:1px solid #275F98;
   line-height:16px;
   /* Again, the ugly brilliant hack. */
   voice-family: "\"}\"";
@@ -163,12 +163,21 @@ body>div.menu {width:150px;}
   margin-left: 190px;
   font-size: 83%;
   color: grey;
+
+  margin-bottom: 1em;
 }
 
 div.row, div.row1, div.row2
 {
   padding-top : 2px;
   padding-bottom : 2px;
+  overflow:hidden;
+}
+div.row img
+{
+  margin:10px;
+  padding:10px;
+  border:1px solid #DDD;
 }
 
 div.row1
@@ -178,7 +187,7 @@ div.row1
 
 div.row2
 {
-  background-color : #EEEEEE;
+  background-color : #EEE;
 }
 
 span.label, span.label_y
@@ -198,6 +207,7 @@ span.label_y
 {
   float : left;
   width : 100%;
+  margin-top : 1em;
 }
 
 img.header_image
