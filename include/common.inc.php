@@ -26,7 +26,40 @@ define('JTPL_TEMPLATES_PATH', $root_path.'template/');
 // determine the initial instant to indicate the generation time of this page
 $page['start'] = intval(microtime(true) * 1000);
 
-header('Content-Type: text/html; charset=iso-8859-1');
+set_magic_quotes_runtime(0); // Disable magic_quotes_runtime
+
+// echo '<pre>'; print_r($_POST); echo '</pre>';
+
+//
+// addslashes to vars if magic_quotes_gpc is off this is a security
+// precaution to prevent someone trying to break out of a SQL statement.
+//
+if (!get_magic_quotes_gpc())
+{
+  if (is_array($_POST))
+  {
+    while (list($k, $v) = each($_POST))
+    {
+      if (is_array($_POST[$k]))
+      {
+        while (list($k2, $v2) = each($_POST[$k]))
+        {
+          $_POST[$k][$k2] = addslashes($v2);
+        }
+        @reset($_POST[$k]);
+      }
+      else
+      {
+        $_POST[$k] = addslashes($v);
+      }
+    }
+    @reset($_POST);
+  }
+}
+
+// echo '<pre>'; print_r($_POST); echo '</pre>';
+
+// header('Content-Type: text/html; charset=utf-8');
 // Hacking attempt
 if(!defined('INTERNAL'))
 {
@@ -60,6 +93,7 @@ if (isset($_SESSION['user_id']))
 
 $template = new Template($root_path . 'template');
 $tpl = new jTPL();
+$tpl->assign('software', $conf['software']);
   
 // PWG Compatibility version set
 if (isset($_POST['compatibility_change']))

@@ -142,7 +142,7 @@ div.menu h3
 
 ul
 {
-  list-style-image : url(images/puce.png);
+/*  list-style-image : url(images/puce.png); */
   margin : 5px 0 5px 5px;
   padding : 0 0 0 25px;
 }
@@ -383,4 +383,20 @@ A.linkAction
 A.linkAction IMG
 {
   border: none;
+}
+
+.extension_title
+{
+  font-size: 120%;
+  font-weight: bold;
+}
+
+.revision_about
+{
+  margin-top: 1em;
+}
+
+.revision_changes
+{
+  margin-top: 1em;
 }

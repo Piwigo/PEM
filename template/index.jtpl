@@ -5,12 +5,18 @@
 {if isset($revision['thumbnail_src'])}
   <a class="screenshot" href="{$revision['screenshot_url']}"><img src="{$revision['thumbnail_src']}"/></a>
 {/if}
-  <p><strong><a href="revision_view.php?rid={$revision[id]}">{$revision[extension_name]}, revision {$revision[name]}</a></strong></p>
-  <ul class="revisionInfos">
-    <li>Author: {$revision[author]}</li>
-    <li>Released on: {$revision[date]}</li>
-    <li>Compatible with: {$revision[compatible_versions]}</li>
+  <p class="extension_title"><strong><a href="extension_view.php?eid={$revision[extension_id]}">{$revision[extension_name]}</a></strong></p>
+
+  <p><a href="revision_view.php?rid={$revision[id]}">revision {$revision[name]}</a></p>
+
+  <ul>
+    <li><em>author:</em> {$revision[author]}</li>
+    <li><em>released on:</em> {$revision[date]}</li>
+    <li><em>compatible with:</em> {$software} releases {$revision[compatible_versions]}</li>
   </ul>
-  <blockquote>{$revision[description]}</blockquote>
+
+  <p class="revision_about"><strong>About:</strong> {$revision[about]}</p>
+
+  <p class="revision_changes"><strong>Changes:</strong> {$revision[description]}</p>
 </div>
 {/foreach}
