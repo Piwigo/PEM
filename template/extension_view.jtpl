@@ -68,7 +68,7 @@
         <p>{$rev[description]}</p>
       </blockquote>
 
-  {if isset($rev['u_modify'])}
+  {if $rev['can_modify']}
       <ul class="revActionLinks">
         <li><a href="{$rev['u_modify']}" title="Modify revision"><img src="template/images/modify.png"></a></li>
       <li><a href="{$rev['u_delete']}" onclick="return confirm_del();" title="Delete revision"><img src="template/images/delete.png"></a></li>
