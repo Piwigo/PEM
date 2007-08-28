@@ -7,7 +7,7 @@
 {/if}
   <p class="extension_title"><strong><a href="extension_view.php?eid={$revision[extension_id]}">{$revision[extension_name]}</a></strong></p>
 
-  <p><a href="revision_view.php?rid={$revision[id]}">revision {$revision[name]}</a></p>
+  <p><a href="{$revision['revision_url']}">revision {$revision[name]}</a></p>
 
   <ul>
     <li><em>author:</em> {$revision[author]}</li>

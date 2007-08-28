@@ -111,6 +111,12 @@ foreach ($revision_ids as $revision_id)
       'screenshot_url' => $screenshot_infos
         ? $screenshot_infos['screenshot_url']
         : null,
+      'revision_url' => sprintf(
+        'extension_view.php?eid=%u&amp;rid=%u#rev%u',
+        $extension_id,
+        $revision_id,
+        $revision_id
+        ),
       )
     );
 }

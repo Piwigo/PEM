@@ -76,9 +76,14 @@ foreach ($revisions as $revision)
     array(
       'ext_name' => $extension['name'],
       'name' => $revision['version'],
-      'url' =>
-        'http://'.$_SERVER['SERVER_NAME'].ROOT. 
-        'revision_view.php?rid='.$revision['id_revision'],
+      'url' => sprintf(
+        'http://%s%sextension_view.php?eid=%u&amp;rid=%u#rev%u',
+        $_SERVER['SERVER_NAME'],
+        ROOT,
+        $revision['idx_extension'],
+        $revision['id_revision'],
+        $revision['id_revision']
+        ),
       'ext_author' => $author['username'],
       'ext_description' => $extension['description'],
       'description' => $revision['description'],

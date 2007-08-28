@@ -215,7 +215,12 @@ DELETE
       
   message_success(
     l10n('revision successfuly added. Thank you.'),
-    'revision_view.php?rid='.$page['revision_id']
+    sprintf(
+      'extension_view.php?eid=%u&amp;rid=%u#rev%u',
+      $page['extension_id'],
+      $page['revision_id'],
+      $page['revision_id']
+      )
     );
 }
 

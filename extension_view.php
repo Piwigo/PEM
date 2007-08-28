@@ -50,6 +50,16 @@ if (!isset($data['id_extension']))
 $user_infos_of = get_user_infos_of(array($data['idx_user']));
 $author = $user_infos_of[ $data['idx_user'] ]['username'];
 
+$page['user_can_modify'] = false;
+if (isAdmin($user['id']) or $user['id'] == $data['idx_user'])
+{
+  $page['user_can_modify'] = true;
+}
+
+$versions_of_extension = get_versions_of_extension(
+  array($page['extension_id'])
+  );
+
 $tpl->assign(
   array(
     'extension_name' => htmlspecialchars(
@@ -61,21 +71,22 @@ $tpl->assign(
         )
       ),
     'author' => $author,
-    'show_detailed_revisions' => isset($_GET['full_cl']) ? true : false,
-    'u_show_full_cl' =>
-      'extension_view.php?eid='.$page['extension_id'].'&amp;full_cl=1',
-    'u_hide_full_cl' => 'extension_view.php?eid='.$data['id_extension'],
     'first_date' => l10n('no revision yet'),
     'last_date'  => l10n('no revision yet'),
+    'compatible_with' => implode(
+        ', ',
+        $versions_of_extension[$page['extension_id']]
+      ),
     )
   );
 
 if (isset($user['id']))
 {
-  if (isAdmin($user['id']) or $user['id'] == $data['idx_user'])
+  if ($page['user_can_modify'])
   {
     $tpl->assign(
       array(
+        'can_modify' => $page['user_can_modify'],
         'u_modify' => 'extension_mod.php?eid='.$page['extension_id'],
         'u_add_rev' => 'revision_add.php?eid='.$page['extension_id'],
         'u_delete' => 'extension_del.php?eid='.$page['extension_id'],
@@ -163,6 +174,8 @@ SELECT id_revision,
 ;';
 
   $last_date = '';
+
+  $is_first_revision = true;
   
   $result = $db->query($query);  
   while ($row = $db->fetch_array($result))
@@ -178,12 +191,28 @@ SELECT id_revision,
         );
       $first_date_set = true;
     }
+
+    $expanded = false;
+    
+    if (isset($_GET['rid']))
+    {
+      if ($row['id_revision'] == $_GET['rid'])
+      {
+        $expanded = true;
+      }
+    }
+    else if ($is_first_revision)
+    {
+      $expanded = true;
+    }
+
+    $is_first_revision = false;
     
     array_push(
       $tpl_revisions,
       array(
+        'id' => $row['id_revision'],
         'version' => $row['version'],
-        'url' => 'revision_view.php?rid='.$row['id_revision'],
         'versions_compatible' => implode(
           ', ',
           $versions_of[ $row['id_revision'] ]
@@ -197,6 +226,10 @@ SELECT id_revision,
         'description' => nl2br(
           htmlspecialchars($row['description'])
           ),
+        'can_modify' => $page['user_can_modify'],
+        'u_modify' => 'revision_mod.php?rid='.$row['id_revision'],
+        'u_delete' => 'revision_del.php?rid='.$row['id_revision'],
+        'expanded' => $expanded,
         )
       );
 

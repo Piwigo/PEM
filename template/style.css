@@ -357,7 +357,14 @@ H2
 
 H3
 {
-  text-align: center;
+  text-align: left;
+  font-weight: bold;
+  margin-top: 2em;
+}
+
+H3.revisionListTitle {
+  margin-bottom: 0;
+  margin-top: 2em;
 }
 
 UL.linkManagement
@@ -400,3 +407,59 @@ A.linkAction IMG
 {
   margin-top: 1em;
 }
+
+UL.revActionLinks LI
+{
+  display: inline;
+  margin: 0;
+}
+
+UL.revActionLinks LI IMG
+{
+  border: none;
+  padding: 5px 0;
+}
+
+.listButton {
+  font-size: 90%;
+}
+
+A.javascriptButton {
+  cursor: pointer;
+}
+
+#changelog {
+  margin-top: 2em;
+}
+
+.changelogRevision {
+  border: 1px solid #999999;
+  background-color: #fafafa;
+  margin: 5px;
+  padding: 5px;
+  overflow: hidden;
+}
+
+.changelogRevisionHeader {
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.revisionTitle {
+  display:block;
+  float:left;
+  font-weight:bold;
+}
+
+.revisionDate {
+  font-style: italic;
+  display: block;
+  float: right;
+}
+
+UL.revActionLinks {
+  float: right;
+  margin: 0;
+  padding: 0;
+}
+
