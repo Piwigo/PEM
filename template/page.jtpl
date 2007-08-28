@@ -59,6 +59,7 @@
       </div> <!-- Menus -->
     
       <div id="Content">
+        <div id="quickNav"><a href="index.php">Index</a></div>
       {include $main_content}
       </div>
     </div> <!-- overall -->
