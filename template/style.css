@@ -440,9 +440,20 @@ A.javascriptButton {
   overflow: hidden;
 }
 
-.changelogRevisionHeader {
+.changelogRevisionHeaderCollapsed, .changelogRevisionHeaderExpanded {
   cursor: pointer;
   overflow: hidden;
+  background-repeat: no-repeat;
+  background-position: left center;
+  padding-left: 20px;
+}
+
+.changelogRevisionHeaderCollapsed {
+  background-image: url(images/expand.png);
+}
+
+.changelogRevisionHeaderExpanded {
+  background-image: url(images/collapse.png);
 }
 
 .revisionTitle {
@@ -463,3 +474,6 @@ UL.revActionLinks {
   padding: 0;
 }
 
+#quickNav {
+  float: left;
+}

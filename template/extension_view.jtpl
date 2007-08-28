@@ -45,15 +45,20 @@
   <div id="rev{$rev['id']}" class="changelogRevision">
 
     <div
-      class="changelogRevisionHeader"
-      onclick="toggleDisplay('CL_rev{$rev['id']}')"
+      id="rev{$rev['id']}_header"
+  {if $rev['expanded']}
+      class="changelogRevisionHeaderExpanded"
+  {else}
+      class="changelogRevisionHeaderCollapsed"
+  {/if}
+      onclick="revToggleDisplay('rev{$rev['id']}_header', 'rev{$rev['id']}_content')"
     >
-      <span class="revisionTitle"><img src="template/images/expand.png"/> Revision {$rev[version]}</span>
+      <span class="revisionTitle">Revision {$rev[version]}</span>
       <span class="revisionDate">released on {$rev[date]}
     </div>
 
     <div
-      id="CL_rev{$rev['id']}"
+      id="rev{$rev['id']}_content"
       class="changelogRevisionContent"
   {if !$rev['expanded']}
       style="display:none"

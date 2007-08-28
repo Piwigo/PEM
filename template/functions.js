@@ -26,6 +26,23 @@ function toggleDisplay(elementId)
   }
 }
 
+function revToggleDisplay(headerId, contentId)
+{
+  var revHeader = document.getElementById(headerId);
+  var revContent = document.getElementById(contentId);
+
+  if (revContent.style.display == 'none')
+  {
+    revContent.style.display = 'block';
+    revHeader.className = 'changelogRevisionHeaderExpanded';
+  }
+  else
+  {
+    revContent.style.display = 'none';
+    revHeader.className = 'changelogRevisionHeaderCollapsed';
+  }
+}
+
 function confirm_del()
 {
   return confirm( 'Are you sure you want to delete this item?' );
@@ -43,19 +60,32 @@ function fullToggleDisplay()
 
     if (revision.className == 'changelogRevision')
     {
+      var revHeader;
+      var revContent;
+
       for (var j = 0; j < revision.childNodes.length; j++)
       {
         var element = revision.childNodes[j];
 
+        if (element.className == 'changelogRevisionHeaderExpanded'
+            || element.className == 'changelogRevisionHeaderCollapsed')
+        {
+          revHeader = element;
+        }
+
         if (element.className == 'changelogRevisionContent')
         {
+          revContent = element;
+
           if (toggleStatus == 'collapsed')
           {
-            element.style.display = 'block';
+            revContent.style.display = 'block';
+            revHeader.className = 'changelogRevisionHeaderExpanded';
           }
           else
           {
-            element.style.display = 'none';
+            revContent.style.display = 'none';
+            revHeader.className = 'changelogRevisionHeaderCollapsed';
           }
         }
       }
