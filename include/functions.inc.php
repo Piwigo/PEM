@@ -343,6 +343,11 @@ function get_versions_of_revision($revision_ids)
 
 function get_version_ids_of_revision($revision_ids)
 {
+  if (count($revision_ids) == 0)
+  {
+    return array();
+  }
+  
   global $db;
 
     // Get list of compatibilities
@@ -412,12 +417,14 @@ SELECT id_revision,
   {
     $version_ids_of_extension[$extension_id] = array();
 
-    foreach ($revisions_of[$extension_id] as $revision_id)
-    {
-      $version_ids_of_extension[$extension_id] = array_merge(
-        $version_ids_of_extension[$extension_id],
-        $version_ids_of_revision[$revision_id]
-        );
+    if (isset($revisions_of[$extension_id])) {
+      foreach ($revisions_of[$extension_id] as $revision_id)
+      {
+        $version_ids_of_extension[$extension_id] = array_merge(
+          $version_ids_of_extension[$extension_id],
+          $version_ids_of_revision[$revision_id]
+          );
+      }
     }
 
     $version_ids_of_extension[$extension_id] =
