@@ -1,4 +1,4 @@
-<h2>Last added revisions</h2>
+<h2>Last updated extensions</h2>
 
 {foreach $revisions as $revision}
 <div class="row">

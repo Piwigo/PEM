@@ -32,9 +32,11 @@ $extension_infos_of = array();
 $author_ids = array();
 $author_infos_of = array();
 
-// retrieve N last added revisions, filtered on the user version
+// retrieve N last updated extensions, filtered on the user version
 $query = '
-SELECT DISTINCT r.id_revision
+SELECT
+    r.idx_extension,
+    MAX(r.id_revision) AS id_revision
   FROM '.REV_TABLE.' r';
 if (isset($_SESSION['id_version']))
 {
@@ -43,7 +45,8 @@ if (isset($_SESSION['id_version']))
   WHERE c.idx_version = '.$_SESSION['id_version'];
 }
 $query.= '
-  ORDER BY r.id_revision DESC
+  GROUP BY idx_extension
+  ORDER BY id_revision DESC
   LIMIT 0, '.$conf['nb_last_revs'].'
 ;';
 
