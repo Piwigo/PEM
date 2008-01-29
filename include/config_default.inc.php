@@ -66,6 +66,10 @@ $conf['session_length'] = 60 * 60 * 24 * 30; // 1 month by default
 // title: displayed on every page
 $conf['page_title'] = 'Extensions Manager';
 
+// specific_header_filepath: additionnal lines in <head> HTML tag. It can be
+// a PHP file producing HTML code.
+$conf['specific_header_filepath'] = 'template/specific_header.html';
+
 // banner_filepath: where to find the banner file. It can be a PHP file
 // producing HTML code.
 $conf['banner_filepath'] = 'template/banner.html';

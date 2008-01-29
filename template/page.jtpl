@@ -13,6 +13,7 @@
       title="Extensions"
     />
     <script type="text/javascript" src="template/functions.js"></script>
+    {$specific_header}
   </head>
   
   <body> 
