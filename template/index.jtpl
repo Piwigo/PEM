@@ -1,4 +1,5 @@
 <h2>Last updated extensions</h2>
+<div class="nav_right">{$pagination_bar}</div>
 
 {foreach $revisions as $revision}
 <div class="row">
@@ -20,3 +21,6 @@
   <p class="revision_changes"><strong>Changes:</strong> {$revision[description]}</p>
 </div>
 {/foreach}
+
+<div class="nav_right">{$pagination_bar}</div>
+<div style="clear : both;"></div>

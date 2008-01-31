@@ -25,6 +25,15 @@ define('INTERNAL', true);
 $root_path = './';
 require_once($root_path.'include/common.inc.php');
 
+$page['page'] = 1;
+if (isset($_GET['page'])) {
+  $page['page'] = abs(intval($_GET['page']));
+
+  if ($page['page'] == 0) {
+    $page['page'] = 1;
+  }
+}
+
 $revision_ids = array();
 $revision_infos_of = array();
 $extension_ids = array();
@@ -47,10 +56,18 @@ if (isset($_SESSION['id_version']))
 $query.= '
   GROUP BY idx_extension
   ORDER BY id_revision DESC
-  LIMIT 0, '.$conf['nb_last_revs'].'
 ;';
 
-$revision_ids = array_from_query($query, 'id_revision');
+$all_revision_ids = array_from_query($query, 'id_revision');
+$nb_total = count($all_revision_ids);
+
+$first = ($page['page'] - 1) * $conf['extensions_per_page'];
+
+$revision_ids = array_slice(
+  $all_revision_ids,
+  $first,
+  $conf['extensions_per_page']
+  );
 
 if (count($revision_ids) == 0)
 {
@@ -124,6 +141,20 @@ foreach ($revision_ids as $revision_id)
     );
 }
 $tpl->assign('revisions', $revisions);
+
+$tpl->assign(
+  'pagination_bar',
+  create_pagination_bar(
+    'index.php',
+    get_nb_pages(
+      $nb_total,
+      $conf['extensions_per_page']
+      ),
+    $page['page'],
+    'page'
+    )
+  );
+
 
 // +-----------------------------------------------------------------------+
 // |                           html code display                           |
