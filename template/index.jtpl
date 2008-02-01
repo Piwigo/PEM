@@ -1,5 +1,8 @@
-<h2>Last updated extensions</h2>
-<div class="nav_right">{$pagination_bar}</div>
+<h2>Most recent extensions</h2>
+<div class="pages">
+  <div class="paginationBar">{$pagination_bar}</div>
+  <div class="Results">({$nb_total} extensions)</div>
+</div>
 
 {foreach $revisions as $revision}
 <div class="row">
@@ -22,5 +25,8 @@
 </div>
 {/foreach}
 
-<div class="nav_right">{$pagination_bar}</div>
+<div class="pages">
+  <div class="paginationBar">{$pagination_bar}</div>
+  <div class="Results">({$nb_total} extensions)</div>
+</div>
 <div style="clear : both;"></div>

@@ -81,9 +81,6 @@ $conf['footer_filepath'] = 'template/footer.html';
 // default_language
 $conf['default_language'] = 'english';
 
-// nb_last_revs: how many revisions show on the index?
-$conf['nb_last_revs'] = 10;
-
 // extensions_per_page: how many extensions per page?
 $conf['extensions_per_page'] = 5;
 

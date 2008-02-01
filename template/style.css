@@ -477,3 +477,87 @@ UL.revActionLinks {
 #quickNav {
   float: left;
 }
+
+.paginationBar {
+  display: block;
+  text-align: center;
+}
+
+.pages {
+  display: block;
+  text-align: center;
+  margin: 10px;
+}
+
+.paginationBar {
+  font-size: 12px;
+}
+
+.paginationBar a {
+  padding: 2px 6px;
+  border: solid 1px #ddd;
+  background: #fff;
+  text-decoration: none;
+}
+
+.paginationBar a:visited {
+  padding: 2px 6px;
+  border: solid 1px #ddd;
+  background: #fff;
+  text-decoration: none;
+}
+
+.paginationBar .PrevActive,
+.paginationBar .PrevInactive {
+  margin-right: 20px;
+}
+
+.paginationBar .FirstActive,
+.paginationBar .FirstInactive,
+.paginationBar .PrevActive,
+.paginationBar .PrevInactive,
+.paginationBar .NextActive,
+.paginationBar .NextInactive,
+.paginationBar .LastActive,
+.paginationBar .LastInactive {
+  padding: 2px 6px;
+  border: solid 1px #ddd;
+  background: #fff;
+}
+
+.paginationBar .FirstInactive,
+.paginationBar .PrevInactive,
+.paginationBar .NextInactive,
+.paginationBar .LastInactive,
+.paginationBar .inactive {
+  color: #999;
+}
+
+.paginationBar .NextActive,
+.paginationBar .NextInactive {
+  margin-left: 20px;
+}
+
+.paginationBar .currentPage {
+  padding: 2px 6px;
+  border-color: #999;
+  font-weight: bold;
+  font-size: 13px;
+  vertical-align: top;
+  background: #fff;
+  color: red;
+}
+
+.paginationBar a:hover {
+  color: #fff;
+  background: #0063DC;
+  border-color: #036;
+  text-decoration: none;
+}
+
+.pages div.Results {
+  text-align: center;
+  font: 11px/15px Arial, Helvetica;
+  color: #aaa;
+  margin-top: 8px;
+}

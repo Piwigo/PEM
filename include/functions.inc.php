@@ -584,15 +584,15 @@ function create_pagination_bar(
     {
       $pagination_bar.=
         "\n".'&nbsp;'
-        .'<a href="'.$url.'1" rel="start">'
-        .'&lt;&lt;'
+        .'<a href="'.$url.'1" rel="start" class="FirstActive">'
+        .'&lt;&lt;first'
         .'</a>'
         ;
     }
     else
     {
       $pagination_bar.=
-        "\n".'&nbsp;<span class="inactive">&lt;&lt;</span>';
+        "\n".'&nbsp;<span class="FirstInactive">&lt;&lt;first</span>';
     }
 
     // link on previous page ?
@@ -602,13 +602,14 @@ function create_pagination_bar(
       
       $pagination_bar.=
         "\n".'&nbsp;'
-        .'<a href="'.$url.$previous.'" rel="prev">'.'&lt;'.'</a>'
+        .'<a href="'.$url.$previous.'" rel="prev" class="PrevActive">'
+        .'&lt;prev'.'</a>'
         ;
     }
     else
     {
       $pagination_bar.=
-        "\n".'&nbsp;<span class="inactive">&lt;</span>';
+        "\n".'&nbsp;<span class="PrevInactive">&lt;prev</span>';
     }
 
     $min_to_display = $current_page - $conf['paginate_pages_around'];
@@ -619,7 +620,8 @@ function create_pagination_bar(
     {
       if ($page_number == 1
           or $page_number == $nb_pages
-          or ($page_number >= $min_to_display and $page_number <= $max_to_display)
+          or ($page_number >= $min_to_display
+              and $page_number <= $max_to_display)
         )
       {
         if (isset($last_displayed_page)
@@ -656,13 +658,13 @@ function create_pagination_bar(
       
       $pagination_bar.=
         "\n".'&nbsp;'.
-        '<a href="'.$url.$next.'" rel="next">&gt;</a>'
+        '<a href="'.$url.$next.'" rel="next" class="NextActive">next&gt;</a>'
         ;
     }
     else
     {
       $pagination_bar.=
-        "\n".'&nbsp;<span class="inactive">&gt;</span>'
+        "\n".'&nbsp;<span class="NextInactive">next&gt;</span>'
         ;
     }
 
@@ -671,18 +673,20 @@ function create_pagination_bar(
     {
       $pagination_bar.=
         "\n".'&nbsp;'.
-        '<a href="'.$url.$nb_pages.'" rel="last">&gt;&gt;</a>'
+        '<a href="'.$url.$nb_pages.'" rel="last" class="LastActive">'
+        .'last&gt;&gt;</a>'
         ;
     }
     else
     {
       $pagination_bar.=
-        "\n".'&nbsp;<span class="inactive">&gt;&gt;</span>';
+        "\n".'&nbsp;<span class="LastInactive">last&gt;&gt;</span>';
     }
   }
   
   return $pagination_bar;
 }
+
 
 function get_extension_ids_without_revision()
 {
