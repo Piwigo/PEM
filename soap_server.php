@@ -24,6 +24,7 @@
 define('INTERNAL', true);
 $root_path = './';
 require_once($root_path.'include/common.inc.php');
+// require_once($root_path.'include/nusoap/nusoap.php');
 require_once($root_path.'include/nusoap.php');
 $ns = $conf['website_url'].'/wsdl';
 
@@ -31,7 +32,7 @@ $ns = $conf['website_url'].'/wsdl';
 // service. It is usually recommended that you designate a distinctive URI
 // for each one of your Web services.
 $server = new soap_server();
-$server->configureWSDL('RegisterUser',$ns);
+$server->configureWSDL('getRevisionList',$ns);
 $server->wsdl->schemaTargetNamespace = $ns;
 
 // Next step, we instantiate the SOAP server and define the settings for our
