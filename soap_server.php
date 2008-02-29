@@ -24,8 +24,7 @@
 define('INTERNAL', true);
 $root_path = './';
 require_once($root_path.'include/common.inc.php');
-// require_once($root_path.'include/nusoap/nusoap.php');
-require_once($root_path.'include/nusoap.php');
+require_once($root_path.'include/nusoap/nusoap.php');
 $ns = $conf['website_url'].'/wsdl';
 
 // First we must include our NuSOAP library and define the namespace of the
