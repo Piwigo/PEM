@@ -43,7 +43,7 @@ SELECT
     idx_extension
   FROM '.REV_TABLE.'
   ORDER BY id_revision DESC
-  LIMIT 0, '.$conf['nb_last_revs'].'
+  LIMIT 0, '.$conf['rss_nb_items'].'
 ;';
 $req = $db->query($query);
 

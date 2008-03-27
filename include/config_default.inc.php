@@ -108,4 +108,7 @@ $conf['l10n_key_prefix'] = '{l10n} ';
 
 // software: name of the extended software
 $conf['software'] = 'Piwigo';
+
+// rss_nb_items: number of items to display in the RSS feed
+$conf['rss_nb_items'] = 10;
 ?>
