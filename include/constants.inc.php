@@ -21,8 +21,6 @@
 // | USA.                                                                  |
 // +-----------------------------------------------------------------------+
 
-define( 'ROOT', '/pwg/mods/' );
-  
 define( 'EXT_TABLE',     $conf['db_params']['tables_prefix'].'extensions' );
 define( 'CAT_TABLE' ,    $conf['db_params']['tables_prefix'].'categories' );
 define( 'VER_TABLE',     $conf['db_params']['tables_prefix'].'versions' );

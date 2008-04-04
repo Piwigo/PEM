@@ -77,9 +77,8 @@ foreach ($revisions as $revision)
       'ext_name' => $extension['name'],
       'name' => $revision['version'],
       'url' => sprintf(
-        'http://%s%sextension_view.php?eid=%u&amp;rid=%u#rev%u',
-        $_SERVER['SERVER_NAME'],
-        ROOT,
+        '%s/extension_view.php?eid=%u&amp;rid=%u#rev%u',
+        $conf['website_url'],
         $revision['idx_extension'],
         $revision['id_revision'],
         $revision['id_revision']
