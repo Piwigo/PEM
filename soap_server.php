@@ -48,11 +48,15 @@ $server->wsdl->addComplexType(
       'type' => 'xsd:int'
       ),
     'extension_name' => array(
-      'name' => 'registration_date',
+      'name' => 'extension_name',
+      'type' => 'xsd:string'
+      ),
+    'extension_author' => array(
+      'name' => 'extension_author',
       'type' => 'xsd:string'
       ),
     'extension_description' => array(
-      'name' => 'registration_date',
+      'name' => 'extension_description',
       'type' => 'xsd:string'
       ),
     'revision_name' => array(
@@ -117,6 +121,7 @@ SELECT
     r.version             AS revision_name,
     e.id_extension        AS extension_id,
     e.name                AS extension_name,
+    e.idx_user            AS author_id,
     e.description         AS extension_description,
     r.date                AS revision_date,
     r.url                 AS revision_url,
@@ -130,6 +135,7 @@ SELECT
     AND v.version = \''.$version.'\'
 ;';
 
+  $author_ids = array();
   $revisions = array();
   $result = $db->query($query);
   while ($row = mysql_fetch_assoc($result)) {
@@ -146,8 +152,16 @@ SELECT
       );
     
     array_push($revisions, $row);
+    array_push($author_ids, $row['author_id']);
   }
 
+  $user_basic_infos_of = get_user_basic_infos_of($author_ids);
+
+  foreach ($revisions as $revision_index => $revision) {
+    $revisions[$revision_index]['extension_author']
+        = $user_basic_infos_of[ $revision['author_id'] ]['username'];
+  }
+  
   // echo '<pre>'; print_r($revisions); echo '<pre/>';
 
   return $revisions;
