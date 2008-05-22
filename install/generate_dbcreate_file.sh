@@ -24,7 +24,7 @@ mysqldump \
     | grep ^$prefix \
     | perl -ne 'END {print join(" ", @tables)} chomp; push @tables, $_;' \
   ) \
-  | perl -pe "s{$prefix}{pem_}g; s{ ENGINE=MyISAM DEFAULT CHARSET=latin1}{}g;" \
+  | perl -pe "s{$prefix}{pem_}g; s{ ENGINE=MyISAM( AUTO_INCREMENT=\d+)? DEFAULT CHARSET=latin1}{}g;" \
   | grep -v '^/\*' \
   | grep -v '^--' \
   | grep -v ^$

@@ -1,9 +1,3 @@
-DROP TABLE IF EXISTS `pem_revisions_compatibilities`;
-CREATE TABLE `pem_revisions_compatibilities` (
-  `idx_revision` int(11) NOT NULL default '0',
-  `idx_version` int(11) NOT NULL default '0',
-  PRIMARY KEY  (`idx_revision`,`idx_version`)
-);
 DROP TABLE IF EXISTS `pem_categories`;
 CREATE TABLE `pem_categories` (
   `id_category` int(11) NOT NULL auto_increment,
@@ -11,12 +5,6 @@ CREATE TABLE `pem_categories` (
   `name` varchar(255) NOT NULL default '',
   `description` text NOT NULL,
   PRIMARY KEY  (`id_category`)
-);
-DROP TABLE IF EXISTS `pem_versions`;
-CREATE TABLE `pem_versions` (
-  `id_version` int(11) NOT NULL auto_increment,
-  `version` varchar(10) NOT NULL default '',
-  PRIMARY KEY  (`id_version`)
 );
 DROP TABLE IF EXISTS `pem_extensions`;
 CREATE TABLE `pem_extensions` (
@@ -26,14 +14,11 @@ CREATE TABLE `pem_extensions` (
   `description` text NOT NULL,
   PRIMARY KEY  (`id_extension`)
 );
-DROP TABLE IF EXISTS `pem_users`;
-CREATE TABLE `pem_users` (
-  `id_user` smallint(5) NOT NULL auto_increment,
-  `username` varchar(20) NOT NULL default '',
-  `password` varchar(32) default NULL,
-  `email` varchar(255) default NULL,
-  PRIMARY KEY  (`id_user`),
-  UNIQUE KEY `users_ui1` (`username`)
+DROP TABLE IF EXISTS `pem_extensions_categories`;
+CREATE TABLE `pem_extensions_categories` (
+  `idx_category` int(11) NOT NULL default '0',
+  `idx_extension` int(11) NOT NULL default '0',
+  PRIMARY KEY  (`idx_category`,`idx_extension`)
 );
 DROP TABLE IF EXISTS `pem_links`;
 CREATE TABLE `pem_links` (
@@ -46,13 +31,6 @@ CREATE TABLE `pem_links` (
   PRIMARY KEY  (`id_link`),
   KEY `idx_extension` (`idx_extension`)
 );
-DROP TABLE IF EXISTS `pem_user_infos`;
-CREATE TABLE `pem_user_infos` (
-  `idx_user` smallint(5) NOT NULL default '0',
-  `language` varchar(50) NOT NULL default '',
-  `registration_date` datetime NOT NULL default '0000-00-00 00:00:00',
-  UNIQUE KEY `user_infos_ui1` (`idx_user`)
-);
 DROP TABLE IF EXISTS `pem_revisions`;
 CREATE TABLE `pem_revisions` (
   `id_revision` int(11) NOT NULL auto_increment,
@@ -61,11 +39,34 @@ CREATE TABLE `pem_revisions` (
   `url` varchar(255) NOT NULL default '',
   `description` text NOT NULL,
   `version` varchar(10) NOT NULL default '',
+  `accept_agreement` enum('true','false') default NULL,
   PRIMARY KEY  (`id_revision`)
 );
-DROP TABLE IF EXISTS `pem_extensions_categories`;
-CREATE TABLE `pem_extensions_categories` (
-  `idx_category` int(11) NOT NULL default '0',
-  `idx_extension` int(11) NOT NULL default '0',
-  PRIMARY KEY  (`idx_category`,`idx_extension`)
+DROP TABLE IF EXISTS `pem_revisions_compatibilities`;
+CREATE TABLE `pem_revisions_compatibilities` (
+  `idx_revision` int(11) NOT NULL default '0',
+  `idx_version` int(11) NOT NULL default '0',
+  PRIMARY KEY  (`idx_revision`,`idx_version`)
+);
+DROP TABLE IF EXISTS `pem_user_infos`;
+CREATE TABLE `pem_user_infos` (
+  `idx_user` smallint(5) NOT NULL default '0',
+  `language` varchar(50) NOT NULL default '',
+  `registration_date` datetime NOT NULL default '0000-00-00 00:00:00',
+  UNIQUE KEY `user_infos_ui1` (`idx_user`)
+);
+DROP TABLE IF EXISTS `pem_users`;
+CREATE TABLE `pem_users` (
+  `id_user` smallint(5) NOT NULL auto_increment,
+  `username` varchar(20) NOT NULL default '',
+  `password` varchar(32) default NULL,
+  `email` varchar(255) default NULL,
+  PRIMARY KEY  (`id_user`),
+  UNIQUE KEY `users_ui1` (`username`)
+);
+DROP TABLE IF EXISTS `pem_versions`;
+CREATE TABLE `pem_versions` (
+  `id_version` int(11) NOT NULL auto_increment,
+  `version` varchar(10) NOT NULL default '',
+  PRIMARY KEY  (`id_version`)
 );
