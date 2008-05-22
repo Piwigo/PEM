@@ -43,6 +43,10 @@
         </div>
     
         <div class="menu">
+{if $has_disclaimer}
+          <a href="disclaimer.php">Disclaimer</a><br/>
+{/if}
+
 {if !$user_is_logged}
           <a href="identification.php">Login</a>
 {else}

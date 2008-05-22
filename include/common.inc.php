@@ -94,7 +94,16 @@ if (isset($_SESSION['user_id']))
 $template = new Template($root_path . 'template');
 $tpl = new jTPL();
 $tpl->assign('software', $conf['software']);
-  
+
+// do we have a disclaimer?
+$has_disclaimer = false;
+if (is_file($root_path.'template/disclaimer.html'))
+{
+  $has_disclaimer = true;
+}
+
+$tpl->assign('has_disclaimer', $has_disclaimer);
+
 // PWG Compatibility version set
 if (isset($_POST['compatibility_change']))
 {
