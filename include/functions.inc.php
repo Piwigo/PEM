@@ -484,17 +484,19 @@ function get_revision_infos_of($revision_ids)
   
   // retrieve revisions information
   $query = '
-SELECT id_revision,
-       version,
-       date,
-       idx_extension,
-       description,
-       url
+SELECT
+    id_revision,
+    version,
+    date,
+    idx_extension,
+    description,
+    url,
+    accept_agreement
   FROM '.REV_TABLE.'
   WHERE id_revision IN ('.implode(',', $revision_ids).')
 ;';
   $result = $db->query($query);
-  while ($row = $db->fetch_array($result))
+  while ($row = $db->fetch_assoc($result))
   {
     $revision_infos_of[ $row['id_revision'] ] = $row;
   }
@@ -804,5 +806,32 @@ function get_extension_screenshot_infos($extension_id)
 //       );
    return false;
   }
+}
+
+function print_array($array)
+{
+  echo '<pre>';
+  print_r($array);
+  echo '</pre>';
+}
+
+// get_boolean transforms a string to a boolean value. If the string is
+// "false" (case insensitive), then the boolean value false is returned. In
+// any other case, true is returned.
+function get_boolean($string, $default = true)
+{
+  $boolean = $default;
+  
+  if (preg_match('/^false$/i', $string))
+  {
+    $boolean = false;
+  }
+
+  if (preg_match('/^true$/i', $string))
+  {
+    $boolean = true;
+  }
+  
+  return $boolean;
 }
 ?>

@@ -111,4 +111,10 @@ $conf['software'] = 'Piwigo';
 
 // rss_nb_items: number of items to display in the RSS feed
 $conf['rss_nb_items'] = 10;
+
+// use_agreement: if an agreement is asked (mandatory or not) during
+// revision add
+$conf['use_agreement'] = false;
+
+$conf['agreement_description'] = 'I accept this terms and conditions agreement that take my intellectual property on my contribution.';
 ?>

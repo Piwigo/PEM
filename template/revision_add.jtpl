@@ -41,6 +41,14 @@
           <textarea cols="80" rows="10" name="revision_changelog">{$description}</textarea>
         </td>
       </tr>
+{if $use_agreement}
+      <tr>
+        <th>Agreement</th>
+        <td>
+          <label><input type="checkbox" name="accept_agreement" {$accept_agreement_checked}>{$agreement_description}</label>
+        </td>
+      </tr>
+{/if}
     </table>
 
     <div>

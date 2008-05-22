@@ -152,6 +152,14 @@ if (isset($_POST['submit']))
       'description'    => $_POST['revision_changelog'],
       'url'            => $_FILES['revision_file']['name'],
       );
+
+    if ($conf['use_agreement'])
+    {
+      $insert['accept_agreement'] = isset($_POST['accept_agreement'])
+        ? 'true'
+        : 'false'
+        ;
+    }
     
     mass_inserts(
       REV_TABLE,
@@ -231,6 +239,8 @@ DELETE
 $tpl->assign(
   array(
     'extension_name' => $page['extension_name'],
+    'use_agreement' => $conf['use_agreement'],
+    'agreement_description' => $conf['agreement_description'],
     )
   );
 
@@ -239,6 +249,15 @@ if (isset($_POST['submit']))
   $version = @$_POST['revision_version'];
   $description = @$_POST['revision_description'];
   $selected_versions = $_POST['compatible_versions'];
+
+  if (isset($_POST['accept_agreement']))
+  {
+    $accept_agreement_checked = 'checked="checked"';
+  }
+  else
+  {
+    $accept_agreement_checked = '';
+  }
 }
 else if (basename($_SERVER['SCRIPT_FILENAME']) == 'revision_mod.php')
 {
@@ -249,12 +268,29 @@ else if (basename($_SERVER['SCRIPT_FILENAME']) == 'revision_mod.php')
   $version = $revision_infos_of[ $page['revision_id'] ]['version'];
   $description = $revision_infos_of[ $page['revision_id'] ]['description'];
   $selected_versions = $version_ids_of_revision[ $page['revision_id'] ];
+
+  $accept_agreement = get_boolean(
+    $revision_infos_of[ $page['revision_id'] ]['accept_agreement'],
+    false // default value
+    );
+  
+  if ($accept_agreement)
+  {
+    $accept_agreement_checked = 'checked="checked"';
+  }
+  else
+  {
+    $accept_agreement_checked = '';
+  }
 }
 else
 {
   $version = '';
   $description = '';
   $selected_versions = array();
+
+  // by default the contributor accepts the agreement
+  $accept_agreement_checked = 'checked="checked"';
 }
 
 // echo '<pre>'; print_r($version); echo '</pre>';
@@ -264,6 +300,7 @@ $tpl->assign(
   array(
     'name' => $version,
     'description' => $description,
+    'accept_agreement_checked' => $accept_agreement_checked,
     )
   );
   
