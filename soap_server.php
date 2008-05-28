@@ -167,6 +167,27 @@ SELECT
   return $revisions;
 }
 
+$server->register(
+  'getVersionList',
+  array(
+    ),
+  array(
+    'result' => 'xsd:string'
+    ),
+  $ns
+);
+
+function getVersionList()
+{
+  $query = '
+SELECT
+    version
+  FROM '.VER_TABLE.'
+;';
+  
+  return implode(',', versort(array_from_query($query, 'version')));
+}
+
 //Then we invoke the service using the following line of code:
 $HTTP_RAW_POST_DATA = isset($GLOBALS['HTTP_RAW_POST_DATA'])
   ? $GLOBALS['HTTP_RAW_POST_DATA']
