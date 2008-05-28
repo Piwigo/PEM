@@ -154,6 +154,10 @@ function get_user_basic_infos_of($author_ids)
 {
   global $db, $conf;
 
+  if (count($author_ids) == 0) {
+    return array();
+  }
+
   $user_basic_infos_of = array();
   
   $query = '

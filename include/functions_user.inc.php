@@ -48,6 +48,10 @@ function get_user_infos_of($user_ids)
 {
   global $db;
 
+  if (count($user_ids) == 0) {
+    return array();
+  }
+  
   $user_infos_of = get_user_basic_infos_of($user_ids);
 
   $query = '
