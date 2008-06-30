@@ -55,7 +55,7 @@ if (isset($_SESSION['id_version']))
 }
 $query.= '
   GROUP BY idx_extension
-  ORDER BY id_revision DESC
+  ORDER BY MAX(r.date) DESC
 ;';
 
 $all_revision_ids = array_from_query($query, 'id_revision');
