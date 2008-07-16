@@ -17,6 +17,7 @@
     <li><em>author:</em> {$revision[author]}</li>
     <li><em>released on:</em> {$revision[date]}</li>
     <li><em>compatible with:</em> {$software} releases {$revision[compatible_versions]}</li>
+    <li><em>downloads:</em> {$revision[downloads]}</li>
   </ul>
 
   <p class="revision_about"><strong>About:</strong> {$revision[about]}</p>

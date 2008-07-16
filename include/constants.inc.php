@@ -32,6 +32,11 @@ define( 'LINKS_TABLE', $conf['db_params']['tables_prefix'].'links' );
 
 define( 'USERS_TABLE', $conf['users_table'] );
 
+define(
+  'DOWNLOAD_LOG_TABLE',
+  $conf['db_params']['tables_prefix'].'download_log'
+  );
+
   
 define( 'EXTENSIONS_PER_PAGE', 3 );
 define( 'PUN_TURN_OFF_MAINT', 1 );

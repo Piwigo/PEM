@@ -100,6 +100,8 @@ $author_ids = array_unique(
     )
   );
 
+$download_of_extension = get_download_of_extension($extension_ids);
+
 $author_infos_of = get_user_infos_of($author_ids);
 
 $revisions = array();
@@ -137,6 +139,7 @@ foreach ($revision_ids as $revision_id)
         $revision_id,
         $revision_id
         ),
+      'downloads' => $download_of_extension[$extension_id],
       )
     );
 }

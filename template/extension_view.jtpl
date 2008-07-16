@@ -19,6 +19,7 @@
   <li><em>First revision date:</em> {$first_date}</li>
   <li><em>Latest revision date:</em> {$last_date}</li>
   <li><em>Compatible with:</em> {$software} releases {$compatible_with}</li>
+  <li><em>Downloads:</em> {$extension_downloads}</li>
 </ul>
 
 <p><strong>About:</strong> {$description}</p>
@@ -68,6 +69,7 @@
       <p>Revision: {$rev[version]}</p>
       <p>Released on: {$rev[date]}</p>
       <p>Compatible with: {$rev[versions_compatible]}</p>
+      <p>Downloads: {$rev[downloads]}</p>
     
       <blockquote>
         <p>{$rev[description]}</p>

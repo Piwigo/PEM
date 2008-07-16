@@ -834,4 +834,72 @@ function get_boolean($string, $default = true)
   
   return $boolean;
 }
+
+function log_download($revision_id)
+{
+  global $db;
+  
+  $revision_infos_of = get_revision_infos_of(array($revision_id));
+
+  if (count($revision_infos_of) == 0) {
+    return false;
+  }
+
+  $query = '
+SELECT CURDATE()
+;';
+  list($curdate) = mysql_fetch_row($db->query($query));
+  list($curyear, $curmonth, $curday) = explode('-', $curdate);
+
+  $query = '
+INSERT INTO '.DOWNLOAD_LOG_TABLE.'
+  (
+    year,
+    month,
+    day,
+    IP,
+    idx_revision
+  )
+  VALUES
+  (
+    '.$curyear.',
+    '.$curmonth.',
+    '.$curday.',
+    \''.$_SERVER['REMOTE_ADDR'].'\',
+    '.$revision_id.'
+  )
+;';
+  $db->query($query);
+}
+
+function get_download_of_extension($extension_ids) {
+  global $db;
+
+  if (count($extension_ids) == 0) {
+    return array();
+  }
+
+  $download_of_extension = array();
+
+  foreach ($extension_ids as $id) {
+    $download_of_extension[$id] = 0;
+  }
+  
+  $query = '
+SELECT
+    idx_extension AS extension_id,
+    count(*) AS counter
+  FROM '.DOWNLOAD_LOG_TABLE.'
+    JOIN '.REV_TABLE.' ON id_revision = idx_revision
+  WHERE idx_extension IN ('.implode(',', $extension_ids).')
+  GROUP BY idx_extension
+;';
+
+  $result = $db->query($query);
+  while ($row = $db->fetch_assoc($result)) {
+    $downloads_of_extension[ $row['extension_id'] ] = $row['counter'];
+  }
+
+  return $downloads_of_extension;
+}
 ?>

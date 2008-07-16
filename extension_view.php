@@ -60,6 +60,29 @@ $versions_of_extension = get_versions_of_extension(
   array($page['extension_id'])
   );
 
+// download statistics
+$query = '
+SELECT
+    idx_revision AS revision_id,
+    count(*) AS counter
+  FROM '.DOWNLOAD_LOG_TABLE.'
+  WHERE idx_revision IN (
+    SELECT
+        id_revision
+      FROM '.REV_TABLE.'
+      WHERE idx_extension = '.$page['extension_id'].'
+  )
+  GROUP BY idx_revision
+;';
+$result = $db->query($query);
+$extension_downloads = 0;
+$downloads_of_revision = array();
+while ($row = $db->fetch_assoc($result)) {
+  $extension_downloads += $row['counter'];
+  $downloads_of_revision[ $row['revision_id'] ] = $row['counter'];
+}
+
+
 $tpl->assign(
   array(
     'extension_name' => htmlspecialchars(
@@ -77,9 +100,11 @@ $tpl->assign(
         ', ',
         $versions_of_extension[$page['extension_id']]
       ),
+    'extension_downloads' => $extension_downloads,
     )
   );
 
+  
 if (isset($user['id']))
 {
   if ($page['user_can_modify'])
@@ -218,11 +243,7 @@ SELECT id_revision,
           $versions_of[ $row['id_revision'] ]
           ),
         'date' => date('Y-m-d', $row['date']),
-        'u_download' => get_revision_src(
-            $page['extension_id'],
-            $row['id_revision'],
-            $row['url']
-            ),
+        'u_download' => 'download.php?rid='.$row['id_revision'],
         'description' => nl2br(
           htmlspecialchars($row['description'])
           ),
@@ -230,6 +251,7 @@ SELECT id_revision,
         'u_modify' => 'revision_mod.php?rid='.$row['id_revision'],
         'u_delete' => 'revision_del.php?rid='.$row['id_revision'],
         'expanded' => $expanded,
+        'downloads' => $downloads_of_revision[$row['id_revision']],
         )
       );
 

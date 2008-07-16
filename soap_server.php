@@ -142,13 +142,9 @@ SELECT
     $row['revision_date'] = date('Y-m-d H:i:s', $row['revision_date']);
 
     $row['revision_url'] = sprintf(
-      '%s/%s',
+      '%s/download.php?rid=%u',
       $conf['website_url'],
-      get_revision_src(
-        $row['extension_id'],
-        $row['revision_id'],
-        $row['revision_url']
-        )
+      $row['revision_id']
       );
     
     array_push($revisions, $row);

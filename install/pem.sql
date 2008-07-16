@@ -6,6 +6,18 @@ CREATE TABLE `pem_categories` (
   `description` text NOT NULL,
   PRIMARY KEY  (`id_category`)
 );
+DROP TABLE IF EXISTS `pem_download_log`;
+CREATE TABLE `pem_download_log` (
+  `IP` varchar(15) NOT NULL,
+  `year` smallint(4) NOT NULL,
+  `month` tinyint(2) default NULL,
+  `day` tinyint(2) default NULL,
+  `idx_revision` int(11) NOT NULL,
+  KEY `download_log_i1` (`year`),
+  KEY `download_log_i2` (`month`),
+  KEY `download_log_i3` (`day`),
+  KEY `download_log_i4` (`idx_revision`)
+);
 DROP TABLE IF EXISTS `pem_extensions`;
 CREATE TABLE `pem_extensions` (
   `id_extension` int(11) NOT NULL auto_increment,
