@@ -45,7 +45,8 @@ $author_infos_of = array();
 $query = '
 SELECT
     r.idx_extension,
-    MAX(r.id_revision) AS id_revision
+    MAX(r.id_revision) AS id_revision,
+    MAX(r.date) AS max_date
   FROM '.REV_TABLE.' r';
 if (isset($_SESSION['id_version']))
 {
@@ -55,7 +56,7 @@ if (isset($_SESSION['id_version']))
 }
 $query.= '
   GROUP BY idx_extension
-  ORDER BY MAX(r.date) DESC
+  ORDER BY max_date DESC
 ;';
 
 $all_revision_ids = array_from_query($query, 'id_revision');
