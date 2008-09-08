@@ -58,8 +58,18 @@ $tpl->assign('categories', $tpl_categories);
 
 // Gets the list of the available versions (allows users to filter)
 $query = '
-SELECT id_version,
-       version
+SELECT
+    idx_version,
+    COUNT(*) AS counter
+  FROM '.COMP_TABLE.'
+  GROUP BY idx_version
+;';
+$nb_ext_of_version = simple_hash_from_query($query, 'idx_version', 'counter');
+
+$query = '
+SELECT
+    id_version,
+    version
   FROM '.VER_TABLE.'
 ;';
 $versions = simple_hash_from_query($query, 'id_version', 'version');
@@ -82,7 +92,11 @@ foreach ($versions as $version_id => $version_name)
     $tpl_versions,
     array(
       'id' => $version_id,
-      'name' => $version_name,
+      'name' => sprintf(
+        '%s (%u extensions)',
+        $version_name,
+        isset($nb_ext_of_version[$version_id]) ? $nb_ext_of_version[$version_id] : 0
+        ),
       'selected' => $selected,
       )
     );
