@@ -22,20 +22,21 @@
     <div id="overall">
       <div id="Menus">
         <div class="menu">
-          <ul>
-{foreach $categories as $category}
-            <li><a href="{$category[url]}">{$category[name]}</a></li>
-{/foreach}
-          </ul>
-        </div>
-    
-        <div class="menu">
           <form method="post" action="{$action}" style="margin:0;padding:0;">
+          Category<br />
+          <select name="category" style="width:130px;">
+            <option value="0">-------</option>
+{foreach $categories as $category}
+            <option value="{$category[id]}" {$category[selected]}>{$category[name]}</option>
+{/foreach}
+          </select><br />
+
           Search<br />
           <input name="search" type="text" style="width:130px" value="{$search}"/><br />
-          Version filter<br />
+
+          Version<br />
           <select name="pwg_version" style="width:130px;">
-            <option value="0">&lt; None &gt;</option>
+            <option value="0">-------</option>
 {foreach $menu_versions as $version}
             <option value="{$version[id]}" {$version[selected]}>{$version[name]}</option>
 {/foreach}

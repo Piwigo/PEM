@@ -24,11 +24,23 @@ if (!defined('INTERNAL'))
 }
 
 // Get the left nav menu
+
+// categories
 $query = '
-SELECT id_category,
-       idx_parent,
-       name,
-       description
+SELECT
+    idx_category,
+    COUNT(*) AS counter
+  FROM '.EXT_CAT_TABLE.'
+  GROUP BY idx_category
+;';
+$nb_ext_of_category = simple_hash_from_query($query, 'idx_category', 'counter');
+
+$query = '
+SELECT
+    id_category,
+    idx_parent,
+    name,
+    description
   FROM '.CAT_TABLE.'
   ORDER BY name ASC
 ;';
@@ -45,11 +57,29 @@ $tpl_categories = array();
 // Browse the categories and display them
 foreach($categories as $cat)
 {
+  $selected = '';
+  if (isset($_SESSION['filter']['category'])
+      and $_SESSION['filter']['category'] == $cat['id_category'])
+  {
+    $selected = 'selected="selected"';
+  }
+
+  $id = $cat['id_category'];
+
   array_push(
     $tpl_categories,
     array(
-      'url'  => 'extensions.php?category='.$cat['id_category'],
-      'name' => $cat['name'],
+      'id'  => $id,
+      'selected' => $selected,
+      'name' => sprintf(
+        '%s (%s)',
+        $cat['name'],
+        isset($nb_ext_of_category[$id])
+        ? $nb_ext_of_category[$id] > 1
+          ? $nb_ext_of_category[$id].' extensions'
+          : $nb_ext_of_category[$id].' extension'
+        : 'no extension'
+        ),
       )
     );
 }

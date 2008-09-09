@@ -105,28 +105,35 @@ if (is_file($root_path.'template/disclaimer.html'))
 $tpl->assign('has_disclaimer', $has_disclaimer);
 
 // PWG Compatibility version set
-if (isset($_POST['filter_submit']))
-{
-  // Check if the field is valid
-  if (isset($_POST['pwg_version']) and is_numeric($_POST['pwg_version']))
-  {
+if (isset($_POST['filter_submit'])) {
+  // filter on the extended application version
+  if (isset($_POST['pwg_version']) and is_numeric($_POST['pwg_version'])) {
     // If the field is empty, this means that the user wants to cancel the
     // compatibility version setting
-    if (!empty($_POST['pwg_version']))
-    {
+    if (!empty($_POST['pwg_version'])) {
       $_SESSION['filter']['id_version'] = intval($_POST['pwg_version']);
     }
-    else
-    {
+    else {
       unset($_SESSION['filter']['id_version']);
     }
   }
 
+  // filter on a textual free search
   if (isset($_POST['search']) and !empty($_POST['search'])) {
     $_SESSION['filter']['search'] = $_POST['search'];
   }
   else {
     unset($_SESSION['filter']['search']);
+  }
+
+  // filter on a category
+  if (isset($_POST['category']) and is_numeric($_POST['category'])) {
+    if ($_POST['category'] != 0) {
+      $_SESSION['filter']['category'] = $_POST['category'];
+    }
+    else {
+      unset($_SESSION['filter']['category']);
+    }
   }
 }
 
@@ -134,6 +141,10 @@ if (isset($_POST['filter_reset'])) {
   if (isset($_SESSION['filter'])) {
     unset($_SESSION['filter']);
   }
+}
+
+if (isset($_POST['filter_reset']) or isset($_POST['filter_submit'])) {
+  unset($_GET['page']);
 }
 
 // if a filter is active, we must prepare a filtered list of extensions
@@ -165,6 +176,16 @@ SELECT
   ) AGAINST (\''.$_SESSION['filter']['search'].'\' IN BOOLEAN MODE)
 ;';
     $filtered_sets['search'] = array_from_query($query, 'id_extension');
+  }
+
+  if (isset($_SESSION['filter']['category'])) {
+    $query = '
+SELECT
+    idx_extension
+ FROM '.EXT_CAT_TABLE.'
+ WHERE idx_category = '.$_SESSION['filter']['category'].'
+;';
+    $filtered_sets['category'] = array_from_query($query, 'idx_extension');
   }
 
   $page['filtered_extension_ids'] = array();
