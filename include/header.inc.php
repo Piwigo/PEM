@@ -56,6 +56,11 @@ foreach($categories as $cat)
 
 $tpl->assign('categories', $tpl_categories);
 
+// Gets the current search
+if (isset($_SESSION['filter']['search'])) {
+  $tpl->assign('search', $_SESSION['filter']['search']);
+}
+
 // Gets the list of the available versions (allows users to filter)
 $query = '
 SELECT
@@ -83,8 +88,8 @@ $tpl_versions = array();
 foreach ($versions as $version_id => $version_name)
 {
   $selected = '';
-  if (isset($_SESSION['id_version'])
-      and $_SESSION['id_version'] == $version_id)
+  if (isset($_SESSION['filter']['id_version'])
+      and $_SESSION['filter']['id_version'] == $version_id)
   {
     $selected = 'selected="selected"';
   }

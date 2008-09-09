@@ -105,7 +105,7 @@ if (is_file($root_path.'template/disclaimer.html'))
 $tpl->assign('has_disclaimer', $has_disclaimer);
 
 // PWG Compatibility version set
-if (isset($_POST['compatibility_change']))
+if (isset($_POST['filter_submit']))
 {
   // Check if the field is valid
   if (isset($_POST['pwg_version']) and is_numeric($_POST['pwg_version']))
@@ -114,12 +114,82 @@ if (isset($_POST['compatibility_change']))
     // compatibility version setting
     if (!empty($_POST['pwg_version']))
     {
-      $_SESSION['id_version'] = intval($_POST['pwg_version']);
+      $_SESSION['filter']['id_version'] = intval($_POST['pwg_version']);
     }
     else
     {
-      unset($_SESSION['id_version']);
+      unset($_SESSION['filter']['id_version']);
     }
   }
+
+  if (isset($_POST['search']) and !empty($_POST['search'])) {
+    $_SESSION['filter']['search'] = $_POST['search'];
+  }
+  else {
+    unset($_SESSION['filter']['search']);
+  }
+}
+
+if (isset($_POST['filter_reset'])) {
+  if (isset($_SESSION['filter'])) {
+    unset($_SESSION['filter']);
+  }
+}
+
+// if a filter is active, we must prepare a filtered list of extensions
+if (isset($_SESSION['filter']) and count($_SESSION['filter']) > 0) {
+  $filtered_sets = array();
+  
+  if (isset($_SESSION['filter']['id_version'])) {
+    $query = '
+SELECT
+    DISTINCT id_extension
+  FROM '.EXT_TABLE.' AS e
+    JOIN '.REV_TABLE.' AS r ON r.idx_extension = e.id_extension
+    JOIN '.COMP_TABLE.' AS c ON c.idx_revision = r.id_revision
+  WHERE idx_version = '.$_SESSION['filter']['id_version'].'
+;';
+    $filtered_sets['version'] = array_from_query($query, 'id_extension');
+  }
+
+  if (isset($_SESSION['filter']['search'])) {
+    $query = '
+SELECT
+    id_extension
+  FROM '.EXT_TABLE.' AS e
+    JOIN '.REV_TABLE.' AS r ON r.idx_extension = e.id_extension
+  WHERE MATCH (
+    e.name,
+    e.description,
+    r.description
+  ) AGAINST (\''.$_SESSION['filter']['search'].'\' IN BOOLEAN MODE)
+;';
+    $filtered_sets['search'] = array_from_query($query, 'id_extension');
+  }
+
+  $page['filtered_extension_ids'] = array();
+  $is_first_set = true;
+  foreach ($filtered_sets as $set) {
+    if ($is_first_set) {
+      $is_first_set = false;
+
+      $page['filtered_extension_ids'] = $set;
+    }
+    else {
+      $page['filtered_extension_ids'] = array_intersect(
+        $page['filtered_extension_ids'],
+        $set
+        );
+    }
+  }
+  
+  $page['filtered_extension_ids'] = array_unique(
+    $page['filtered_extension_ids']
+    );
+
+  $page['filtered_extension_ids_string'] = implode(
+    ',',
+    $page['filtered_extension_ids']
+    );
 }
 ?>

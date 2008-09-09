@@ -31,14 +31,19 @@
     
         <div class="menu">
           <form method="post" action="{$action}" style="margin:0;padding:0;">
+          Search<br />
+          <input name="search" type="text" style="width:130px" value="{$search}"/><br />
           Version filter<br />
-          <select name="pwg_version" style="width:100px;">
+          <select name="pwg_version" style="width:130px;">
             <option value="0">&lt; None &gt;</option>
 {foreach $menu_versions as $version}
             <option value="{$version[id]}" {$version[selected]}>{$version[name]}</option>
 {/foreach}
           </select>
-          <input type="submit" value="OK" name="compatibility_change" />
+          <p class="filter_buttons">
+            <input type="submit" value="Filter" name="filter_submit" />
+            <input type="submit" value="Reset" name="filter_reset" />
+          </p>
           </form>
         </div>
     

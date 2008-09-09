@@ -561,3 +561,8 @@ UL.revActionLinks {
   color: #aaa;
   margin-top: 8px;
 }
+
+.filter_buttons {
+  margin-top: 1em;
+  text-align: center;
+}

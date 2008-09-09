@@ -48,11 +48,15 @@ SELECT
     MAX(r.id_revision) AS id_revision,
     MAX(r.date) AS max_date
   FROM '.REV_TABLE.' r';
-if (isset($_SESSION['id_version']))
-{
-  $query.= '
-    INNER JOIN '.COMP_TABLE.' c ON c.idx_revision = r.id_revision
-  WHERE c.idx_version = '.$_SESSION['id_version'];
+if (isset($page['filtered_extension_ids'])) {
+  if (count($page['filtered_extension_ids']) > 0) {
+    $query.= '
+  WHERE idx_extension IN ('.$page['filtered_extension_ids_string'].')';
+  }
+  else {
+    $query.='
+  WHERE 0=1';
+  }
 }
 $query.= '
   GROUP BY idx_extension

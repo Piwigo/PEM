@@ -169,10 +169,10 @@ SELECT id_revision
     INNER JOIN '.EXT_TABLE.' e ON e.id_extension = r.idx_extension
   WHERE id_extension = '.$page['extension_id'];
 
-if (isset($_SESSION['id_version']))
+if (isset($_SESSION['filter']['id_version']))
 {
   $query.= '
-    AND idx_version = '.$_SESSION['id_version'];
+    AND idx_version = '.$_SESSION['filter']['id_version'];
 }
   
 $query.= '
