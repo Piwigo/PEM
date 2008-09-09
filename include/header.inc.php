@@ -60,8 +60,9 @@ $tpl->assign('categories', $tpl_categories);
 $query = '
 SELECT
     idx_version,
-    COUNT(*) AS counter
-  FROM '.COMP_TABLE.'
+    COUNT(DISTINCT(idx_extension)) AS counter
+  FROM '.COMP_TABLE.' AS c
+    JOIN '.REV_TABLE.' AS r ON r.id_revision = c.idx_revision
   GROUP BY idx_version
 ;';
 $nb_ext_of_version = simple_hash_from_query($query, 'idx_version', 'counter');
@@ -93,9 +94,13 @@ foreach ($versions as $version_id => $version_name)
     array(
       'id' => $version_id,
       'name' => sprintf(
-        '%s (%u extensions)',
+        '%s (%s)',
         $version_name,
-        isset($nb_ext_of_version[$version_id]) ? $nb_ext_of_version[$version_id] : 0
+        isset($nb_ext_of_version[$version_id])
+        ? $nb_ext_of_version[$version_id] > 1
+          ? $nb_ext_of_version[$version_id].' extensions'
+          : $nb_ext_of_version[$version_id].' extension'
+        : 'no extension'
         ),
       'selected' => $selected,
       )
