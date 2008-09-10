@@ -135,6 +135,16 @@ if (isset($_POST['filter_submit'])) {
       unset($_SESSION['filter']['category']);
     }
   }
+  
+  // filter on a user
+  if (isset($_POST['user']) and is_numeric($_POST['user'])) {
+    if ($_POST['user'] != 0) {
+      $_SESSION['filter']['user'] = $_POST['user'];
+    }
+    else {
+      unset($_SESSION['filter']['user']);
+    }
+  }
 }
 
 if (isset($_POST['filter_reset'])) {
@@ -186,6 +196,16 @@ SELECT
  WHERE idx_category = '.$_SESSION['filter']['category'].'
 ;';
     $filtered_sets['category'] = array_from_query($query, 'idx_extension');
+  }
+
+  if (isset($_SESSION['filter']['user'])) {
+    $query = '
+SELECT
+    id_extension
+ FROM '.EXT_TABLE.'
+ WHERE idx_user = '.$_SESSION['filter']['user'].'
+;';
+    $filtered_sets['user'] = array_from_query($query, 'id_extension');
   }
 
   $page['filtered_extension_ids'] = array();

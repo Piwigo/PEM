@@ -41,6 +41,15 @@
             <option value="{$version[id]}" {$version[selected]}>{$version[name]}</option>
 {/foreach}
           </select>
+
+          Author<br />
+          <select name="user" style="width:130px;">
+            <option value="0">-------</option>
+{foreach $filter_users as $user}
+            <option value="{$user[id]}" {$user[selected]}>{$user[name]}</option>
+{/foreach}
+          </select>
+
           <p class="filter_buttons">
             <input type="submit" value="Filter" name="filter_submit" />
             <input type="submit" value="Reset" name="filter_reset" />

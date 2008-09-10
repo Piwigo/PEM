@@ -142,6 +142,51 @@ foreach ($versions as $version_id => $version_name)
     );
 }
 
+// filter on authors
+$query = '
+SELECT
+    idx_user,
+    COUNT(*) AS counter
+  FROM '.EXT_TABLE.'
+  GROUP BY idx_user
+;';
+$nb_ext_of_user = simple_hash_from_query($query, 'idx_user', 'counter');
+
+$user_infos_of = get_user_infos_of(array_keys($nb_ext_of_user));
+usort($user_infos_of, 'compare_username');
+
+$tpl_filter_users = array();
+foreach ($user_infos_of as $user) {
+  $id = $user['id'];
+
+  $selected = '';
+  if (isset($_SESSION['filter']['user'])
+      and $_SESSION['filter']['user'] == $user['id'])
+  {
+    $selected = 'selected="selected"';
+  }
+    
+  array_push(
+    $tpl_filter_users,
+    array(
+      'id' => $id,
+      'selected' => $selected,
+      'name' => sprintf(
+        '%s (%s)',
+        $user['username'],
+        isset($nb_ext_of_user[$id])
+        ? $nb_ext_of_user[$id] > 1
+          ? $nb_ext_of_user[$id].' extensions'
+          : $nb_ext_of_user[$id].' extension'
+        : 'no extension'
+        ),
+      )
+    );
+}
+
+$tpl->assign('filter_users', $tpl_filter_users);
+
+
 if (isset($conf['specific_header_filepath']))
 {
   ob_start();

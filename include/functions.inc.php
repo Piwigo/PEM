@@ -902,4 +902,8 @@ SELECT
 
   return $downloads_of_extension;
 }
+
+function compare_username($a, $b) {
+  return strcmp(strtolower($a["username"]), strtolower($b["username"]));
+}
 ?>
