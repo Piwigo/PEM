@@ -156,12 +156,12 @@ $user_infos_of = get_user_infos_of(array_keys($nb_ext_of_user));
 usort($user_infos_of, 'compare_username');
 
 $tpl_filter_users = array();
-foreach ($user_infos_of as $user) {
-  $id = $user['id'];
+foreach ($user_infos_of as $author) {
+  $id = $author['id'];
 
   $selected = '';
   if (isset($_SESSION['filter']['user'])
-      and $_SESSION['filter']['user'] == $user['id'])
+      and $_SESSION['filter']['user'] == $author['id'])
   {
     $selected = 'selected="selected"';
   }
@@ -173,7 +173,7 @@ foreach ($user_infos_of as $user) {
       'selected' => $selected,
       'name' => sprintf(
         '%s (%s)',
-        $user['username'],
+        $author['username'],
         isset($nb_ext_of_user[$id])
         ? $nb_ext_of_user[$id] > 1
           ? $nb_ext_of_user[$id].' extensions'
