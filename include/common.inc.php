@@ -174,16 +174,89 @@ SELECT
   }
 
   if (isset($_SESSION['filter']['search'])) {
+    $fields = array('e.name', 'e.description', 'r.description');
+
+    $replace_by = array(
+      '-' => ' ',
+      '^' => ' ',
+      '$' => ' ',
+      ';' => ' ',
+      '#' => ' ',
+      '&' => ' ',
+      '(' => ' ',
+      ')' => ' ',
+      '<' => ' ',
+      '>' => ' ',
+      '`' => '',
+      '\'' => '',
+      '"' => ' ',
+      '|' => ' ',
+      ',' => ' ',
+      '@' => ' ',
+      '_' => '',
+      '?' => ' ',
+      '%' => ' ',
+      '~' => ' ',
+      '.' => ' ',
+      '[' => ' ',
+      ']' => ' ',
+      '{' => ' ',
+      '}' => ' ',
+      ':' => ' ',
+      '\\' => '',
+      '/' => ' ',
+      '=' => ' ',
+      '\'' => ' ',
+      '!' => ' ',
+      '*' => ' ',
+      );
+    
+    // Split words
+    $words = array_unique(
+      preg_split(
+        '/\s+/',
+        str_replace(
+          array_keys($replace_by),
+          array_values($replace_by),
+          $_SESSION['filter']['search']
+          )
+        )
+      );
+
+    // ((field1 LIKE '%word1%' OR field2 LIKE '%word1%')
+    // AND (field1 LIKE '%word2%' OR field2 LIKE '%word2%'))
+    $word_clauses = array();
+    foreach ($words as $word) {
+      $field_clauses = array();
+      foreach ($fields as $field) {
+        array_push($field_clauses, $field." LIKE '%".$word."%'");
+      }
+      // adds brackets around where clauses
+      array_push(
+        $word_clauses,
+        implode(
+          "\n          OR ",
+          $field_clauses
+          )
+        );
+    }
+
+    array_walk(
+      $word_clauses,
+      create_function('&$s','$s="(".$s.")";')
+      );
+
+    $clause = implode(
+      "\n         AND\n         ",
+      $word_clauses
+      );
+
     $query = '
 SELECT
     id_extension
   FROM '.EXT_TABLE.' AS e
     JOIN '.REV_TABLE.' AS r ON r.idx_extension = e.id_extension
-  WHERE MATCH (
-    e.name,
-    e.description,
-    r.description
-  ) AGAINST (\''.$_SESSION['filter']['search'].'\' IN BOOLEAN MODE)
+  WHERE '.$clause.'
 ;';
     $filtered_sets['search'] = array_from_query($query, 'id_extension');
   }
