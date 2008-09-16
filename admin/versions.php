@@ -21,110 +21,113 @@
 // | USA.                                                                  |
 // +-----------------------------------------------------------------------+
 
-  define('INTERNAL', true);
-  $root_path = './../';
-  require_once($root_path . 'include/common.inc.php');
-  require_once( $root_path . 'include/functions_admin.inc.php' );
+define('INTERNAL', true);
+$root_path = './../';
+require_once($root_path . 'include/common.inc.php');
+require_once( $root_path . 'include/functions_admin.inc.php' );
 require_once( $root_path . 'admin/init.inc.php' );
-  
-  $action = isset( $_GET['action'] ) ? $_GET['action'] : '';
-  
-  switch( $action )
-  {
-    case 'add' :
-      if( isset( $_POST['send'] ) )
-      {
-        $_POST = escape_array( $_POST );
-        
-        $sql =  "INSERT INTO " . VER_TABLE;
-        $sql .= " (version)";
-        $sql .= " VALUES('" . $_POST['version'] . "')";
-        
-        $db->query( $sql ) or die( 'Erreur lors de l\'ajout de la version' );
-        admin_message_success( 'La version a été ajoutée avec succès.', 'versions.php' );
-      }
-      
-      $template->set_file( 'version_add', 'admin/version_add.tpl' );
-      
-      build_admin_header();
-      $template->parse( 'output', 'version_add', true );
-      build_admin_footer();
-      
-    case 'del' :
-      if( isset( $_GET['id'] ) )
-      {
-        $id = intval( $_GET['id'] );
-      }
-      else
-      {
-        admin_message_die( 'Identificateur non spécifié.' );
-      }
-      
-      $sql =  "DELETE FROM " . COMP_TABLE;
-      $sql .= " WHERE idx_version = '" . $id . "'";
-      $db->query( $sql ) or admin_message_die( 'Erreur lors de la suppression de la version.' );
-      
-      $sql =  "DELETE FROM " . VER_TABLE;
-      $sql .= " WHERE id_version = '" . $id . "'";
-      $db->query( $sql ) or admin_message_die( 'Erreur lors de la suppression de la version.' );
-      
-      admin_message_success( 'Version supprimée avec succès.', 'versions.php' );
-      break;
-      
-    case 'mod' :
-      if( isset( $_GET['id'] ) )
-      {
-        $id = intval( $_GET['id'] );
-      }
-      else
-      {
-        admin_message_die( 'Identificateur non spécifié.' );
-      }
-      
-      if( isset( $_POST['send'] ) )
-      {
-        $sql =  "UPDATE " . VER_TABLE;
-        $sql .= " SET version = '" . $_POST['version'] . "'";
-        $sql .= " WHERE id_version = '" . $id . "'";
-        $db->query( $sql ) or die( 'Erreur lors de la modification de la version. Elle existe peut-être déjà.' );
-        
-        admin_message_success( 'Version ajoutée avec succès.' );
-      }
-      
-      $template->set_file( 'version_mod', 'admin/version_mod.tpl' );
-      
-      $sql =  "SELECT version";
-      $sql .= " FROM " . VER_TABLE;
-      $sql .= " WHERE id_version = '" . $id . "'";
-      $req = $db->query( $sql );
-      $data = $db->fetch_assoc( $req );
-      
-      $template->set_var( array( 'L_VERSION_NAME' => $data['version'],
-                                 'L_VERSION_ID' => $id ) );
-      
-      build_admin_header();
-      $template->parse( 'output', 'version_mod', true );
-      build_admin_footer();
-      break;
+
+$tpl->assign('version_form_title', l10n('Add a version'));
+$tpl->assign('version_form_type', l10n('add'));
+
+if (isset($_POST['submit_add'])) {
+  escape_array($_POST);
+
+  $insert = array(
+    'version' => $_POST['name'],
+    );
+
+  mass_inserts(
+    VER_TABLE,
+    array_keys($insert),
+    array($insert)
+    );
+}
+
+if (isset($_POST['submit_edit'])) {
+  escape_array($_POST);
+
+  mass_updates(
+    VER_TABLE,
+    array(
+      'primary' => array('id_version'),
+      'update' => array('version'),
+      ),
+    array(
+      array(
+        'id_version' => $_POST['id'],
+        'version' => $_POST['name'],
+        )
+      )
+    );
+
+  $tpl->assign('f_action', 'versions.php');
+  unset($_GET['edit']);
+}
+
+if (isset($_GET['edit'])) {
+  $page['version_id'] = abs(intval($_GET['edit']));
+  if ($page['version_id'] != $_GET['edit']) {
+    message_die(l10n('edit URL parameter is incorrect'), 'Error', false);
   }
-      
-  $template->set_file( 'versions', 'admin/versions.tpl' );
+
+  $tpl->assign('version_form_title', l10n('Modify a version'));
+  $tpl->assign('version_form_type', l10n('edit'));
+  $tpl->assign('version_form_expanded', true);
+
+  $query = '
+SELECT
+    id_version,
+    version
+  FROM '.VER_TABLE.'
+  WHERE id_version = '.$page['version_id'].'
+;';
+  $data = $db->fetch_assoc($db->query($query));
   
-  $sql =  "SELECT version, id_version";
-  $sql .= " FROM " . VER_TABLE;
-  $sql .= " ORDER BY version ASC";
-  
-  $req = $db->query( $sql );
-  
-  $template->set_block( 'versions', 'version', 't_version' );
-  while( $data = $db->fetch_assoc( $req ) )
-  {
-    $template->set_var( array(  'L_VERSION_ID' => $data['id_version'],
-                                'L_VERSION_NAME' => $data['version'] ) );
-    $template->parse( 't_version', 'version', true );
+  $tpl->assign('version_id', $data['id_version']);
+  $tpl->assign('name', $data['version']);
+}
+
+if (isset($_GET['delete'])) {
+  $page['version_id'] = abs(intval($_GET['delete']));
+  if ($page['version_id'] != $_GET['delete']) {
+    message_die(l10n('edit URL parameter is incorrect'), 'Error', false);
   }
-  
-  build_admin_header();
-  $template->parse( 'output', 'versions', true );
-  build_admin_footer();
+
+  delete_version($page['version_id']);
+}
+
+// Categories selection
+$query = '
+SELECT
+    id_version,
+    version
+  FROM '.VER_TABLE.'
+;';
+$versions = simple_hash_from_query($query, 'id_version', 'version');
+versort($versions);
+$versions = array_reverse($versions, true);
+
+$tpl_versions = array();
+
+// Displays the versions
+foreach ($versions as $version_id => $version_name)
+{
+  array_push(
+    $tpl_versions,
+    array(
+      'id' => $version_id,
+      'name' => $version_name,
+      )
+    );
+}
+
+$tpl->assign('versions', $tpl_versions);
+
+// +-----------------------------------------------------------------------+
+// |                           html code display                           |
+// +-----------------------------------------------------------------------+
+
+$tpl->assign('main_content', 'admin/versions.jtpl');
+$tpl->display('admin/page.jtpl');
 ?>

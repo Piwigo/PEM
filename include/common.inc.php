@@ -72,7 +72,6 @@ session_start();
 require_once($root_path . 'include/config_default.inc.php');
 @include($root_path . 'include/config_local.inc.php');
 require_once($root_path . 'include/constants.inc.php');
-require_once($root_path . 'include/templates.inc.php');
 require_once($root_path . 'include/functions.inc.php');
 require_once($root_path . 'include/functions_user.inc.php');
 require_once($root_path . 'include/dblayer/common_db.php');
@@ -91,7 +90,6 @@ if (isset($_SESSION['user_id']))
 // echo '<pre>session: '; print_r($_SESSION); echo '</pre>';
 // echo '<pre>user: '; print_r($user); echo '</pre>';
 
-$template = new Template($root_path . 'template');
 $tpl = new jTPL();
 $tpl->assign('software', $conf['software']);
 

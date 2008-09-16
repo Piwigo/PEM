@@ -138,10 +138,9 @@ class jTpl {
      * @param string $tpl template selector
      * @param string $fctname the internal function name (meta or content)
      */
-    protected function  getTemplate($tpl,$fctname){
-        $tpl = JTPL_TEMPLATES_PATH . $tpl;
-        $filename = basename($tpl);
-        $cachefile = JTPL_CACHE_PATH . $filename;
+    protected function  getTemplate($file,$fctname){
+        $cachefile = JTPL_CACHE_PATH . $file;
+        $tpl = JTPL_TEMPLATES_PATH . $file;
 
         $mustCompile = $GLOBALS['jTplConfig']['compilation_force']['force'] || !file_exists($cachefile);
         if (!$mustCompile) {
@@ -154,10 +153,10 @@ class jTpl {
             include_once(JTPL_PATH . 'jTplCompiler.class.php');
 
             $compiler = new jTplCompiler();
-            $compiler->compile($tpl);
+            $compiler->compile($file);
         }
         require_once($cachefile);
-        $fct = $fctname.md5($tpl);
+        $fct = $fctname.md5($file);
         $fct($this);
     }
 
@@ -184,12 +183,11 @@ class jTpl {
      * @return string the generated content
      * @since 1.0b1
      */
-    public function metaFetch ($tpl){
+    public function metaFetch ($file){
         ob_start ();
         try{
-            $tpl = JTPL_TEMPLATES_PATH . $tpl;
-            $filename = basename($tpl);
-            $cachefile = JTPL_CACHE_PATH . $filename;
+            $tpl = JTPL_TEMPLATES_PATH . $file;
+            $cachefile = JTPL_CACHE_PATH . $file;
 
             $mustCompile = $GLOBALS['jTplConfig']['compilation_force']['force'] || !file_exists($cachefile);
             if (!$mustCompile) {
@@ -201,10 +199,10 @@ class jTpl {
             if ($mustCompile) {
                 include_once(JTPL_PATH . 'jTplCompiler.class.php');
                 $compiler = new jTplCompiler();
-                $compiler->compile($tpl);
+                $compiler->compile($file);
             }
             require_once($cachefile);
-            $md = md5($tpl);
+            $md = md5($file);
             $fct = 'template_meta_'.$md;
             $fct($this);
             $fct = 'template_'.$md;

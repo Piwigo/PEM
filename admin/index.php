@@ -21,24 +21,27 @@
 // | USA.                                                                  |
 // +-----------------------------------------------------------------------+
 
-  define('INTERNAL', true);
-  $root_path = './../';
-  require_once($root_path . 'include/common.inc.php');
-  require_once( $root_path . 'include/functions_admin.inc.php' );
-  require_once( $root_path . 'admin/init.inc.php' );
+define('INTERNAL', true);
+$root_path = './../';
+require_once($root_path . 'include/common.inc.php');
+require_once( $root_path . 'include/functions_admin.inc.php' );
+require_once( $root_path . 'admin/init.inc.php' );
   
-  $template->set_file( 'index', 'admin/index.tpl' );
+// Select the revisions count
+$sql =  '
+SELECT
+    COUNT(id_revision) AS revisions_count
+  FROM '.REV_TABLE.'
+;';
+$req = $db->query($sql);
+$data = $db->fetch_assoc($req);
   
-  // Select the revisions count
-  $sql =  "SELECT COUNT(id_revision) AS revisions_count";
-  $sql .= " FROM " . REV_TABLE;
-  $req = $db->query( $sql );
-  $data = $db->fetch_assoc( $req );
-  
-  $template->set_var( 'L_REVISIONS_COUNT', $data['revisions_count'] );
-  
-  build_admin_header();
-  $template->parse( 'output', 'index', true );
-  build_admin_footer();
-  
+$tpl->assign('revisions_count', $data['revisions_count']);
+
+// +-----------------------------------------------------------------------+
+// |                           html code display                           |
+// +-----------------------------------------------------------------------+
+
+$tpl->assign('main_content', 'admin/index.jtpl');
+$tpl->display('admin/page.jtpl');
 ?>

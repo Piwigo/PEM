@@ -1,9 +1,7 @@
 DROP TABLE IF EXISTS `pem_categories`;
 CREATE TABLE `pem_categories` (
   `id_category` int(11) NOT NULL auto_increment,
-  `idx_parent` int(11) default NULL,
   `name` varchar(255) NOT NULL default '',
-  `description` text NOT NULL,
   PRIMARY KEY  (`id_category`)
 );
 DROP TABLE IF EXISTS `pem_download_log`;

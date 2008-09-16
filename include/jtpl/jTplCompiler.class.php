@@ -79,8 +79,14 @@ class jTplCompiler
      * @return boolean true if ok
      */
     public function compile($tplFile){
-        $this->_sourceFile = $tplFile;
-        $cachefile = JTPL_CACHE_PATH . basename($tplFile);
+        $this->_sourceFile = JTPL_TEMPLATES_PATH.$tplFile;
+        $cachedir = JTPL_CACHE_PATH . dirname($tplFile);
+        if (!is_dir($cachedir)) {
+          umask(0000);
+          $recursive = true;
+          mkdir($cachedir, 0777, $recursive);
+        }
+        $cachefile = JTPL_CACHE_PATH . $tplFile;
 
 
         if(!file_exists($this->_sourceFile)){

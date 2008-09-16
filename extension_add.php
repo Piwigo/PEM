@@ -128,23 +128,15 @@ DELETE
 // Get the category listing
 $query = '
 SELECT name,
-       id_category,
-       idx_parent
+       id_category
   FROM '.CAT_TABLE.'
   ORDER BY name ASC
 ;';
 $req = $db->query($query);
       
-// We need to display only categories that don't have sub-categories
 $cats = array();
-$subcats = array();
 while($data = $db->fetch_assoc($req))
 {
-  if (!empty($data['idx_parent']))
-  {
-    $subcats[] = $data['idx_parent'];
-  }
-
   array_push($cats, $data);
 }
 
@@ -203,20 +195,17 @@ $tpl->assign(
 $tpl_extension_categories = array();
 foreach($cats as $cat)
 {
-  if (!in_array($cat['id_category'], $subcats))
-  {
-    array_push(
-      $tpl_extension_categories,
-      array(
-        'name' => $cat['name'],
-        'value' => $cat['id_category'],
-        'checked' =>
-          in_array($cat['id_category'], $selected_categories)
-          ? 'checked="checked"'
-          : '',
-        )
-      );
-  }
+  array_push(
+    $tpl_extension_categories,
+    array(
+      'name' => $cat['name'],
+      'value' => $cat['id_category'],
+      'checked' =>
+      in_array($cat['id_category'], $selected_categories)
+        ? 'checked="checked"'
+        : '',
+      )
+    );
 }
 $tpl->assign('extension_categories', $tpl_extension_categories);
 

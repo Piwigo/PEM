@@ -38,9 +38,7 @@ $nb_ext_of_category = simple_hash_from_query($query, 'idx_category', 'counter');
 $query = '
 SELECT
     id_category,
-    idx_parent,
-    name,
-    description
+    name
   FROM '.CAT_TABLE.'
   ORDER BY name ASC
 ;';

@@ -21,66 +21,39 @@
 // | USA.                                                                  |
 // +-----------------------------------------------------------------------+
 
-  function build_admin_header( $parse = true )
-  {
-    global $template;
-    
-    $template->set_file( 'header', 'admin/header.tpl' );
-    
-    if( $parse )
-      $template->parse( 'output', 'header' );
-  }
+function delete_category($category_id) {
+  global $db;
   
-  function build_admin_footer()
-  {
-    global $template;
-    
-    $template->set_file( 'footer', 'admin/footer.tpl' );
-    $template->parse( 'output', 'footer', true );
-    $template->p( 'output' );
-    exit();
-  }
-  
-  function admin_message_die( $message, $title = 'Erreur', $go_back = true )
-  {
-    global $template;
-    
-    build_admin_header();
-    $template->set_file('message', 'admin/message.tpl');
-    $template->set_var(array( 'L_MESSAGE_TITLE' => $title,
-                              'L_MESSAGE_TEXT' => $message));
-    $template->set_block('message', 'switch_redirect', 'Tswitch_redirect');
-    $template->set_block('message', 'switch_goback', 'Tswitch_goback'); 
-    
-    if( $go_back )
-    {
-      $template->parse('Tswitch_goback', 'switch_goback');
-    }
-    
-    $template->parse('output', 'message', true);
-    build_admin_footer();
-  }
-  
-  function admin_message_success($message, $redirect = '', $title = 'Succès', $time_redirect = '5')
-  {
-    global $template;
+  $query = '
+DELETE
+  FROM '.EXT_CAT_TABLE.'
+  WHERE idx_category = '.$category_id.'
+;';
+  $db->query($query);
 
-    build_admin_header( false );
-    $template->set_file( 'message', 'admin/message.tpl' );
-    $template->set_var(array( 'L_MESSAGE_TITLE' => $title,
-                              'L_MESSAGE_TEXT' => $message,
-                              'L_META' => '<meta http-equiv="refresh" content="' . 
-                                          $time_redirect . ';' . $redirect . '">'));
-    $template->set_block('message', 'switch_redirect', 'Tswitch_redirect'); 
-    $template->set_block('message', 'switch_goback', 'Tswitch_goback');     
-    if(!empty($redirect))
-    {
-      $template->set_var(array( 'L_TIME_REDIRECT' => $time_redirect,
-                                'U_REDIRECT' => $redirect));
-      $template->parse('Tswitch_redirect', 'switch_redirect');
-    }
-    $template->parse('output', 'header');
-    $template->parse('output', 'message', true);
-    build_admin_footer();
-  }
+  $query = '
+DELETE
+  FROM '.CAT_TABLE.'
+  WHERE id_category = '.$category_id.'
+;';
+  $db->query($query);
+}
+
+function delete_version($version_id) {
+  global $db;
+
+  $query = '
+DELETE
+  FROM '.COMP_TABLE.'
+  WHERE idx_version = '.$version_id.'
+;';
+  $db->query($query);
+
+  $query = '
+DELETE
+  FROM '.VER_TABLE.'
+  WHERE id_version = '.$version_id.'
+;';
+  $db->query($query);
+}
 ?>

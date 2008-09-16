@@ -104,7 +104,7 @@ $conf['webmaster_email'] = 'team phpwebgallery.net';
 
 // l10n_key_prefix: if the language key has no value, the key is
 // displayed with this prefix.
-$conf['l10n_key_prefix'] = '{l10n} ';
+$conf['l10n_key_prefix'] = null;
 
 // software: name of the extended software
 $conf['software'] = 'Piwigo';
