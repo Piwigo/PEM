@@ -65,7 +65,7 @@
       style="display:none"
   {/if}
     >
-      <a href="{$rev[u_download]}" title="Download revision {$rev[version]}"><img class="download" src="template/images/download.png" /></a>
+      <a href="{$rev[u_download]}" title="Download revision {$rev[version]}" rel="nofollow"><img class="download" src="template/images/download.png" /></a>
       <p>Revision: {$rev[version]}</p>
       <p>Released on: {$rev[date]}</p>
       <p>Compatible with: {$rev[versions_compatible]}</p>
