@@ -101,5 +101,19 @@ foreach ($revisions as $revision_index => $revision) {
   $revisions[$revision_index]['revision_nb_downloads'] = $download_of_revision[ $revision['revision_id'] ];
 }
 
-echo json_encode($revisions);
+$format = 'json';
+if (isset($_GET['format'])) {
+  $format = strtolower($_GET['format']);
+}
+
+switch ($format) {
+  case 'json' :
+    echo json_encode($revisions);
+    break;
+  case 'php' :
+    echo serialize($revisions);
+    break;
+  default :
+    echo json_encode($revisions);
+}
 ?>
