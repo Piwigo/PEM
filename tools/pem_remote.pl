@@ -46,7 +46,7 @@ use Data::Dumper;
 # print Dumper($revisions);
 
 my $t = Text::ASCIITable->new({ headingText => 'Components' });
-$t->setCols(qw/author date revision component url/);
+$t->setCols(qw/author date revision component url ext_dl rev_dl/);
 
 foreach my $revision_href (@{$revisions}) {
     $t->addRow(
@@ -54,7 +54,9 @@ foreach my $revision_href (@{$revisions}) {
         $revision_href->{revision_date},
         $revision_href->{revision_name},
         $revision_href->{extension_name},
-        $revision_href->{file_url}
+        $revision_href->{download_url},
+        $revision_href->{extension_nb_downloads},
+        $revision_href->{revision_nb_downloads}
     );
 }
 print $t;

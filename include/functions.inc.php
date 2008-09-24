@@ -903,6 +903,36 @@ SELECT
   return $downloads_of_extension;
 }
 
+function get_download_of_revision($revision_ids) {
+  global $db;
+  
+  if (count($revision_ids) == 0) {
+    return array();
+  }
+
+  $download_of_revision = array();
+
+  foreach ($revision_ids as $id) {
+    $download_of_revision[$id] = 0;
+  }
+  
+  $query = '
+SELECT
+    idx_revision,
+    COUNT(*) AS counter
+  FROM '.DOWNLOAD_LOG_TABLE.'
+  WHERE idx_revision IN ('.implode(',', $revision_ids).')
+  GROUP BY idx_revision
+;';
+  $result = $db->query($query);
+  
+  while ($row = $db->fetch_assoc($result)) {
+    $downloads_of_revision[ $row['idx_revision'] ] = $row['counter'];
+  }
+
+  return $downloads_of_revision;
+}
+
 function compare_username($a, $b) {
   return strcmp(strtolower($a["username"]), strtolower($b["username"]));
 }

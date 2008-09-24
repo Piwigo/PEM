@@ -62,6 +62,8 @@ SELECT
 ;';
 
 $author_ids = array();
+$extension_ids = array();
+$revision_ids = array();
 $revisions = array();
 $result = $db->query($query);
 while ($row = mysql_fetch_assoc($result)) {
@@ -85,13 +87,18 @@ while ($row = mysql_fetch_assoc($result)) {
 
   array_push($revisions, $row);
   array_push($author_ids, $row['author_id']);
+  array_push($extension_ids, $row['extension_id']);
+  array_push($revision_ids, $row['revision_id']);
 }
 
 $user_basic_infos_of = get_user_basic_infos_of($author_ids);
+$download_of_extension = get_download_of_extension($extension_ids);
+$download_of_revision = get_download_of_revision($revision_ids);
 
 foreach ($revisions as $revision_index => $revision) {
-  $revisions[$revision_index]['extension_author']
-    = $user_basic_infos_of[ $revision['author_id'] ]['username'];
+  $revisions[$revision_index]['extension_author'] = $user_basic_infos_of[ $revision['author_id'] ]['username'];
+  $revisions[$revision_index]['extension_nb_downloads'] = $download_of_extension[ $revision['extension_id'] ];
+  $revisions[$revision_index]['revision_nb_downloads'] = $download_of_revision[ $revision['revision_id'] ];
 }
 
 echo json_encode($revisions);
