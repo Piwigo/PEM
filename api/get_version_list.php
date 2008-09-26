@@ -39,7 +39,7 @@ if (isset($_GET['category_id'])) {
 $query = '
 SELECT
     idx_version,
-    COUNT(DISTINCT(id_extension)) AS counter
+    COUNT(DISTINCT(r.idx_extension)) AS counter
   FROM '.COMP_TABLE.' AS c
     JOIN '.REV_TABLE.' AS r ON r.id_revision = c.idx_revision';
 if (isset($category_id)) {
