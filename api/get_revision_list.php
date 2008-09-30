@@ -59,6 +59,9 @@ if (isset($_GET['exclude']))
   }
 }
 
+$username_field = $conf['user_fields']['username'];
+$userid_field = $conf['user_fields']['id'];
+
 $query = '
 SELECT
     r.id_revision         AS revision_id,
@@ -69,12 +72,14 @@ SELECT
     e.description         AS extension_description,
     r.date                AS revision_date,
     r.url                 AS filename,
-    r.description         AS revision_description
+    r.description         AS revision_description,
+    u.'.$username_field.' AS author_name
   FROM '.REV_TABLE.' AS r
     INNER JOIN '.EXT_TABLE.'      AS e  ON e.id_extension = r.idx_extension
     INNER JOIN '.COMP_TABLE.'     AS c  ON c.idx_revision = r.id_revision
     INNER JOIN '.VER_TABLE.'      AS v  ON v.id_version = c.idx_version
     INNER JOIN '.EXT_CAT_TABLE.'  AS ec ON ec.idx_extension = e.id_extension
+    INNER JOIN '.USERS_TABLE.'    AS u  ON u.'.$userid_field.' = e.idx_user
   WHERE ec.idx_category = '.$category_id.'
     AND v.version IN ( ' . $version . ' )';
 
@@ -130,14 +135,16 @@ while ($row = mysql_fetch_assoc($result)) {
   array_push($revision_ids, $row['revision_id']);
 }
 
-$user_basic_infos_of = get_user_basic_infos_of($author_ids);
-$download_of_extension = get_download_of_extension($extension_ids);
-$download_of_revision = get_download_of_revision($revision_ids);
+if (isset($_GET['get_nb_downloads']) and $_GET['get_nb_downloads'] == 'true')
+{
+  $download_of_extension = get_download_of_extension($extension_ids);
+  $download_of_revision = get_download_of_revision($revision_ids);
 
-foreach ($revisions as $revision_index => $revision) {
-  $revisions[$revision_index]['extension_author'] = $user_basic_infos_of[ $revision['author_id'] ]['username'];
-  $revisions[$revision_index]['extension_nb_downloads'] = $download_of_extension[ $revision['extension_id'] ];
-  $revisions[$revision_index]['revision_nb_downloads'] = $download_of_revision[ $revision['revision_id'] ];
+  foreach ($revisions as $revision_index => $revision)
+  {
+    $revisions[$revision_index]['extension_nb_downloads'] = $download_of_extension[ $revision['extension_id'] ];
+    $revisions[$revision_index]['revision_nb_downloads'] = $download_of_revision[ $revision['revision_id'] ];
+  }
 }
 
 $format = 'json';
