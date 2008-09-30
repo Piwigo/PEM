@@ -36,9 +36,27 @@ $category_id = $_GET['category_id'];
 $version = $_GET['version'];
 
 $version = mysql_real_escape_string($version);
+$version = '\'' . str_replace(',', '\',\'', $version) . '\'';
 
 if ($category_id != abs(intval($category_id))) {
   die('unexpected category identifier');
+}
+
+if (isset($_GET['include']))
+{
+  $include = mysql_real_escape_string($_GET['include']);
+  if (!preg_match('/^\d+(,\d+)*$/', $include))
+  {
+    die('wrong parameters for include');
+  }
+}
+if (isset($_GET['exclude']))
+{
+  $exclude = mysql_real_escape_string($_GET['exclude']);
+  if (!preg_match('/^\d+(,\d+)*$/', $exclude))
+  {
+    die('wrong parameters for exclude');
+  }
 }
 
 $query = '
@@ -58,8 +76,29 @@ SELECT
     INNER JOIN '.VER_TABLE.'      AS v  ON v.id_version = c.idx_version
     INNER JOIN '.EXT_CAT_TABLE.'  AS ec ON ec.idx_extension = e.id_extension
   WHERE ec.idx_category = '.$category_id.'
-    AND v.version = \''.$version.'\'
-;';
+    AND v.version IN ( ' . $version . ' )';
+
+if (isset($include))
+{
+  $query .= '
+    AND e.id_extension IN (' . $include . ')';
+}
+if (isset($exclude))
+{
+  $query .= '
+    AND e.id_extension NOT IN (' . $exclude . ')';
+}
+
+$query .= '
+  ORDER BY v.id_version DESC, r.date DESC';
+
+if (isset($_GET['return']) and $_GET['return'] == 'last_revision')
+{
+  $query = '
+SELECT t.* 
+  FROM (' . $query . ') AS t
+  GROUP BY t.extension_id';
+}
 
 $author_ids = array();
 $extension_ids = array();
