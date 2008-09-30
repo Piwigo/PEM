@@ -33,29 +33,31 @@ foreach ($required_params as $required_param) {
 }
 
 $category_id = $_GET['category_id'];
-$version = $_GET['version'];
-
-$version = mysql_real_escape_string($version);
-$version = '\'' . str_replace(',', '\',\'', $version) . '\'';
-
-if ($category_id != abs(intval($category_id))) {
+if ($category_id != abs(intval($category_id)))
+{
   die('unexpected category identifier');
 }
 
-if (isset($_GET['include']))
+$version = mysql_real_escape_string($_GET['version']);
+if (!preg_match('/^\d+(,\d+)*$/', $version))
 {
-  $include = mysql_real_escape_string($_GET['include']);
-  if (!preg_match('/^\d+(,\d+)*$/', $include))
+  die('wrong parameters for version');
+}
+
+if (isset($_GET['extension_include']))
+{
+  $extension_include = mysql_real_escape_string($_GET['extension_include']);
+  if (!preg_match('/^\d+(,\d+)*$/', $extension_include))
   {
-    die('wrong parameters for include');
+    die('wrong parameters for extension_include');
   }
 }
-if (isset($_GET['exclude']))
+if (isset($_GET['extension_exclude']))
 {
-  $exclude = mysql_real_escape_string($_GET['exclude']);
-  if (!preg_match('/^\d+(,\d+)*$/', $exclude))
+  $extension_exclude = mysql_real_escape_string($_GET['extension_exclude']);
+  if (!preg_match('/^\d+(,\d+)*$/', $extension_exclude))
   {
-    die('wrong parameters for exclude');
+    die('wrong parameters for extension_exclude');
   }
 }
 
@@ -63,7 +65,7 @@ $username_field = $conf['user_fields']['username'];
 $userid_field = $conf['user_fields']['id'];
 
 $query = '
-SELECT
+SELECT DISTINCT
     r.id_revision         AS revision_id,
     r.version             AS revision_name,
     e.id_extension        AS extension_id,
@@ -81,23 +83,23 @@ SELECT
     INNER JOIN '.EXT_CAT_TABLE.'  AS ec ON ec.idx_extension = e.id_extension
     INNER JOIN '.USERS_TABLE.'    AS u  ON u.'.$userid_field.' = e.idx_user
   WHERE ec.idx_category = '.$category_id.'
-    AND v.version IN ( ' . $version . ' )';
+    AND v.id_version IN ( ' . $version . ' )';
 
-if (isset($include))
+if (isset($extension_include))
 {
   $query .= '
-    AND e.id_extension IN (' . $include . ')';
+    AND e.id_extension IN (' . $extension_include . ')';
 }
-if (isset($exclude))
+if (isset($extension_exclude))
 {
   $query .= '
-    AND e.id_extension NOT IN (' . $exclude . ')';
+    AND e.id_extension NOT IN (' . $extension_exclude . ')';
 }
 
 $query .= '
   ORDER BY v.id_version DESC, r.date DESC';
 
-if (isset($_GET['return']) and $_GET['return'] == 'last_revision')
+if (isset($_GET['last_revision_only']) and $_GET['last_revision_only'] == 'true')
 {
   $query = '
 SELECT t.* 
@@ -130,7 +132,6 @@ while ($row = mysql_fetch_assoc($result)) {
     );
 
   array_push($revisions, $row);
-  array_push($author_ids, $row['author_id']);
   array_push($extension_ids, $row['extension_id']);
   array_push($revision_ids, $row['revision_id']);
 }
