@@ -33,6 +33,14 @@ include($conf['footer_filepath']);
 $footer = ob_get_contents();
 ob_end_clean();
 
+$subversion_revision = get_Subversion_revision();
+if (isset($subversion_revision)) {
+  $tpl->assign(
+    'subversion_revision',
+    $subversion_revision
+    );
+}
+
 $tpl->assign('footer', $footer);
 
 ?>

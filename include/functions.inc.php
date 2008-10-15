@@ -936,4 +936,20 @@ SELECT
 function compare_username($a, $b) {
   return strcmp(strtolower($a["username"]), strtolower($b["username"]));
 }
+
+function get_Subversion_revision() {
+  global $root_path;
+
+  // this piece of code was copied from FluxBB extension "Show revision"
+  // written by "the DtTvB"
+  if (file_exists($root_path . '.svn/entries')) {
+    if (preg_match_all('~^\\S.*$~m', file_get_contents($root_path . '.svn/entries'), $matches)) {
+      if (!empty($matches[0][2])) {
+        return 'r' . intval(trim($matches[0][2]));
+      }
+    }
+  }
+
+  return null;
+}
 ?>

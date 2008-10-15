@@ -159,8 +159,8 @@ body>div.menu {width:150px;}
 #footer
 {
   clear: both;
-  text-align: center;
-  margin-left: 190px;
+  text-align: right;
+  margin-right: 1em;
   font-size: 83%;
   color: grey;
 

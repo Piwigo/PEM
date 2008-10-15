@@ -85,8 +85,9 @@
     </div> <!-- overall -->
     
     <div id="footer">
-      Page generated in {$generation_time}
-      <a href="rss.php" title="RSS feed"><img src="template/images/rss_extensions.gif" border="0" /></a>
+      <a href="rss.php" title="notification feed">news feed</a>
+      - page generated in {$generation_time}
+      - powered by <a href="https://gna.org/projects/pem/">PEM</a> {$subversion_revision}
     </div> <!-- footer -->
 
     {$footer}
