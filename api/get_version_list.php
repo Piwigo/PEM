@@ -60,18 +60,24 @@ SELECT
     version
   FROM '.VER_TABLE.'
 ;';
-$versions = simple_hash_from_query($query, 'id_version', 'version');
-versort($versions);
-$versions = array_reverse($versions, true);
+$versions = array_reverse(
+  versort(
+    array_of_arrays_from_query(
+      $query
+      )
+    )
+  );
 
 $output_versions = array();
 
-foreach ($versions as $id_version => $version) {
+foreach ($versions as $version) {
+  $id_version = $version['id_version'];
+  
   array_push(
     $output_versions,
     array(
       'id' => $id_version,
-      'name' => $version,
+      'name' => $version['version'],
       'nb_extensions' => isset($nb_ext_of_version[$id_version]) ? $nb_ext_of_version[$id_version] : 0,
       )
     );

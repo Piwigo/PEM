@@ -104,20 +104,24 @@ SELECT
     version
   FROM '.VER_TABLE.'
 ;';
-$versions = simple_hash_from_query($query, 'id_version', 'version');
-versort($versions);
-$versions = array_reverse($versions, true);
+$versions = array_reverse(
+  versort(
+    array_of_arrays_from_query(
+      $query
+      )
+    )
+  );
 
 $tpl_versions = array();
 
 // Displays the versions
-foreach ($versions as $version_id => $version_name)
+foreach ($versions as $version)
 {
   array_push(
     $tpl_versions,
     array(
-      'id' => $version_id,
-      'name' => $version_name,
+      'id' => $version['id_version'],
+      'name' => $version['version'],
       )
     );
 }

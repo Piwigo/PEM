@@ -106,15 +106,16 @@ SELECT
     version
   FROM '.VER_TABLE.'
 ;';
-$versions = simple_hash_from_query($query, 'id_version', 'version');
-versort($versions);
-$versions = array_reverse($versions, true);
+$versions = array_of_arrays_from_query($query);
+$versions = versort($versions);
+$versions = array_reverse($versions);
 
 $tpl_versions = array();
 
 // Displays the versions
-foreach ($versions as $version_id => $version_name)
+foreach ($versions as $version)
 {
+  $version_id = $version['id_version'];
   $selected = '';
   if (isset($_SESSION['filter']['id_version'])
       and $_SESSION['filter']['id_version'] == $version_id)
@@ -128,7 +129,7 @@ foreach ($versions as $version_id => $version_name)
       'id' => $version_id,
       'name' => sprintf(
         '%s (%s)',
-        $version_name,
+        $version['version'],
         isset($nb_ext_of_version[$version_id])
         ? $nb_ext_of_version[$version_id] > 1
           ? $nb_ext_of_version[$version_id].' extensions'

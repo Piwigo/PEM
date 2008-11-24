@@ -306,25 +306,27 @@ $tpl->assign(
   
 // Get the main application versions listing
 $query = '
-SELECT version,
-       id_version
+SELECT
+    id_version,
+    version
   FROM '.VER_TABLE.'
-  ORDER BY version ASC
-';
-$req = $db->query($query);
-  
+;';
+$versions = array_of_arrays_from_query($query);
+$versions = versort($versions);
+$versions = array_reverse($versions);
+
 // Displays the available versions
 $tpl_versions = array();
 
-while ($data = $db->fetch_assoc($req))
+foreach ($versions as $version)
 {
   array_push(
     $tpl_versions,
     array(
-      'id_version' => $data['id_version'],
-      'name' => $data['version'],
+      'id_version' => $version['id_version'],
+      'name' => $version['version'],
       'checked' =>
-        in_array($data['id_version'], $selected_versions)
+        in_array($version['id_version'], $selected_versions)
         ? 'checked="checked"'
         : '',
       )

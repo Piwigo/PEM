@@ -21,11 +21,21 @@
 // | USA.                                                                  |
 // +-----------------------------------------------------------------------+
 
-function versort ($array)
+function versort($array)
 {
-  usort($array, 'version_compare');
+  if (is_array($array[0])) {
+    usort($array, 'pem_version_compare');
+  }
+  else {
+    usort($array, 'version_compare');
+  }
 
   return $array;
+}
+
+function pem_version_compare($a, $b)
+{
+  return version_compare($a['version'], $b['version']);
 }
 
 function escape_array($array_to_escape)
@@ -281,6 +291,21 @@ function array_from_query($query, $fieldname)
   return $array;
 }
 
+function array_of_arrays_from_query($query)
+{
+  global $db;
+  
+  $array = array();
+
+  $result = $db->query($query);
+  while ($row = $db->fetch_assoc($result))
+  {
+    array_push($array, $row);
+  }
+
+  return $array;
+}
+
 function simple_hash_from_query($query, $keyname, $valuename)
 {
   global $db;
@@ -335,7 +360,7 @@ function get_versions_of_revision($revision_ids)
         );
     }
 
-    versort($versions_of[$revision_id]);
+    $versions_of[$revision_id] = array_reverse(versort($versions_of[$revision_id]));
   }
 
   return $versions_of;
