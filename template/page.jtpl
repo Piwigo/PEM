@@ -63,7 +63,21 @@
 {/if}
 
 {if !$user_is_logged}
-          <a href="identification.php">Login</a>
+	<form method="post">
+			<ul class"ident">
+				<li><a href="register.php">Register</a><br /></li>
+				<li><a href="identification.php">Login</a><br /></li>
+			</ul>
+			Username<br />
+			<input type="text" name="username" />
+			Password<br />
+			<input type="password" name="password" /><br />
+		<div>
+			<p class="filter_buttons">
+				<input type="submit" name="submit" value="Submit" />
+			</p>
+		</div>
+	</form>
 {else}
           <p>Hello {$username}</p>
           <ul>
