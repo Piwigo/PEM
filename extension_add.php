@@ -68,9 +68,6 @@ if (isset($_POST['submit']))
     }
   }
     
-  // Escapes the array by using the mysql_escape_array( ) function
-  $_POST = escape_array($_POST);
-
   if (basename($_SERVER['SCRIPT_FILENAME']) == 'extension_mod.php')
   {
     // Update the extension

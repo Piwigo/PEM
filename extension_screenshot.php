@@ -170,8 +170,6 @@ list($page['extension_name']) = $db->fetch_array($result);
 
 if (isset($_POST['submit_add']))
 {
-  $_POST = escape_array($_POST);
-
   if (!isset($_FILES['picture']))
   {
     message_die(l10n("You did not upload anything!"));

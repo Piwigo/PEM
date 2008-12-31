@@ -38,7 +38,7 @@ if ($category_id != abs(intval($category_id)))
   die('unexpected category identifier');
 }
 
-$version = mysql_real_escape_string($_GET['version']);
+$version = $_GET['version'];
 if (!preg_match('/^\d+(,\d+)*$/', $version))
 {
   die('wrong parameters for version');
@@ -46,7 +46,7 @@ if (!preg_match('/^\d+(,\d+)*$/', $version))
 
 if (isset($_GET['extension_include']))
 {
-  $extension_include = mysql_real_escape_string($_GET['extension_include']);
+  $extension_include = $_GET['extension_include'];
   if (!preg_match('/^\d+(,\d+)*$/', $extension_include))
   {
     die('wrong parameters for extension_include');
@@ -54,7 +54,7 @@ if (isset($_GET['extension_include']))
 }
 if (isset($_GET['extension_exclude']))
 {
-  $extension_exclude = mysql_real_escape_string($_GET['extension_exclude']);
+  $extension_exclude = $_GET['extension_exclude'];
   if (!preg_match('/^\d+(,\d+)*$/', $extension_exclude))
   {
     die('wrong parameters for extension_exclude');

@@ -26,9 +26,7 @@
 function check_user_password($username, $password)
 {
   global $conf, $db;
-  
-  $username = mysql_escape_string($username);
-  
+    
   // retrieving the encrypted password of the login submitted
   $query = '
 SELECT '.$conf['user_fields']['id'].' AS id,
@@ -39,6 +37,11 @@ SELECT '.$conf['user_fields']['id'].' AS id,
 
   $row = $db->fetch_assoc($db->query($query));
 
+  // possible problem if there is an escaped character in the password,
+  // because it will have been automatically escaped in
+  // include/common.inc.php
+  $password = stripslashes($password);
+  
   if ($row['password'] == $conf['pass_convert']($password))
   {
     return $row['id'];;
@@ -73,9 +76,14 @@ function register_user($username, $password, $email)
   // if no error until here, registration of the user
   if (count($errors) == 0)
   {
+    // possible problem if there is an escaped character in the password,
+    // because it will have been automatically escaped in
+    // include/common.inc.php
+    $password = stripslashes($password);
+    
     $insert =
       array(
-        $conf['user_fields']['username'] => mysql_escape_string($username),
+        $conf['user_fields']['username'] => $username,
         $conf['user_fields']['password'] => $conf['pass_convert']($password),
         $conf['user_fields']['email'] => $email
         );
@@ -101,8 +109,6 @@ function register_user($username, $password, $email)
 function get_userid($username)
 {
   global $conf, $db;
-
-  $username = mysql_escape_string($username);
 
   $query = '
 SELECT '.$conf['user_fields']['id'].'

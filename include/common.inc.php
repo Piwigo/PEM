@@ -26,40 +26,8 @@ define('JTPL_TEMPLATES_PATH', $root_path.'template/');
 // determine the initial instant to indicate the generation time of this page
 $page['start'] = intval(microtime(true) * 1000);
 
-set_magic_quotes_runtime(0); // Disable magic_quotes_runtime
-
-// echo '<pre>'; print_r($_POST); echo '</pre>';
-
-//
-// addslashes to vars if magic_quotes_gpc is off this is a security
-// precaution to prevent someone trying to break out of a SQL statement.
-//
-if (!get_magic_quotes_gpc())
-{
-  if (is_array($_POST))
-  {
-    while (list($k, $v) = each($_POST))
-    {
-      if (is_array($_POST[$k]))
-      {
-        while (list($k2, $v2) = each($_POST[$k]))
-        {
-          $_POST[$k][$k2] = addslashes($v2);
-        }
-        @reset($_POST[$k]);
-      }
-      else
-      {
-        $_POST[$k] = addslashes($v);
-      }
-    }
-    @reset($_POST);
-  }
-}
-
-// echo '<pre>'; print_r($_POST); echo '</pre>';
-
 // header('Content-Type: text/html; charset=utf-8');
+
 // Hacking attempt
 if(!defined('INTERNAL'))
 {
@@ -76,6 +44,16 @@ require_once($root_path . 'include/functions.inc.php');
 require_once($root_path . 'include/functions_user.inc.php');
 require_once($root_path . 'include/dblayer/common_db.php');
 require_once($root_path . 'include/jtpl/jtpl_standalone_prepend.php');
+
+// secure user incoming data
+//
+// First we undo what has been done magically
+fix_magic_quotes();
+
+// Then we "sanitize" data out own way
+$_GET = $db->escape_array($_GET);
+$_POST = $db->escape_array($_POST);
+$_COOKIE = $db->escape_array($_COOKIE);
 
 // user informations
 $user = array();

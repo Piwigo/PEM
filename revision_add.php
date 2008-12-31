@@ -123,9 +123,6 @@ if (isset($_POST['submit']))
     }
   }
   
-  // Escapes the array by using the mysql_escape_string( ) function
-  $_POST = escape_array($_POST);
-
   if (basename($_SERVER['SCRIPT_FILENAME']) == 'revision_mod.php')
   {
     mass_updates(

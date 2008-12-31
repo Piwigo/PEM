@@ -31,8 +31,6 @@ $tpl->assign('category_form_title', l10n('Add a category'));
 $tpl->assign('category_form_type', l10n('add'));
 
 if (isset($_POST['submit_add'])) {
-  escape_array($_POST);
-
   $insert = array(
     'name' => $_POST['name'],
     );
@@ -45,8 +43,6 @@ if (isset($_POST['submit_add'])) {
 }
 
 if (isset($_POST['submit_edit'])) {
-  escape_array($_POST);
-
   mass_updates(
     CAT_TABLE,
     array(

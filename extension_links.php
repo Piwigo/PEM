@@ -107,8 +107,6 @@ list($page['extension_name']) = $db->fetch_array($result);
 
 if (isset($_POST['submit_add']))
 {
-  $_POST = escape_array($_POST);
-  
   if (!preg_match('/^https?:/', $_POST['link_url']))
   {
     message_die(l10n('Incorrect URL'));
