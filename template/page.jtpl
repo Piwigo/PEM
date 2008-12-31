@@ -64,7 +64,7 @@
 
 {if !$user_is_logged}
 	<form method="post">
-			<ul class"ident">
+			<ul class="ident">
 				<li><a href="register.php">Register</a><br /></li>
 				<li><a href="identification.php">Login</a><br /></li>
 			</ul>
