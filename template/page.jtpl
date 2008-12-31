@@ -24,7 +24,7 @@
         <div class="menu">
           <form method="post" action="{$action}" style="margin:0;padding:0;">
           Category<br />
-          <select name="category" style="width:130px;">
+          <select name="category">
             <option value="0">-------</option>
 {foreach $categories as $category}
             <option value="{$category[id]}" {$category[selected]}>{$category[name]}</option>
@@ -32,10 +32,10 @@
           </select><br />
 
           Search<br />
-          <input name="search" type="text" style="width:130px" value="{$search}"/><br />
+          <input name="search" type="text" value="{$search}"/><br />
 
           Version<br />
-          <select name="pwg_version" style="width:130px;">
+          <select name="pwg_version">
             <option value="0">-------</option>
 {foreach $menu_versions as $version}
             <option value="{$version[id]}" {$version[selected]}>{$version[name]}</option>
@@ -43,7 +43,7 @@
           </select>
 
           Author<br />
-          <select name="user" style="width:130px;">
+          <select name="user">
             <option value="0">-------</option>
 {foreach $filter_users as $user}
             <option value="{$user[id]}" {$user[selected]}>{$user[name]}</option>
