@@ -482,6 +482,10 @@ UL.revActionLinks {
   float: left;
 }
 
+#viewSelect {
+  float: right;
+}
+
 .paginationBar {
   display: block;
   text-align: center;
