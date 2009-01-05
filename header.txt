@@ -1,7 +1,7 @@
 <?php
 // +-----------------------------------------------------------------------+
 // | PEM - a PHP based Extension Manager                                   |
-// | Copyright (C) 2005-2006 PEM Team - http://home.gna.org/pem            |
+// | Copyright (C) 2005-2009 PEM Team - http://home.gna.org/pem            |
 // +-----------------------------------------------------------------------+
 // | last modifier : $Author: plg $
 // | revision      : $Revision: 2 $
