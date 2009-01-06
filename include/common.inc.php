@@ -284,7 +284,7 @@ SELECT
 }
 if (!isset($user['id']))
 {
-if (isset($_POST['submit']))
+if (isset($_POST['quickconnect_submit']))
 {
   if ($user_id = check_user_password($_POST['username'], $_POST['password']))
   {
