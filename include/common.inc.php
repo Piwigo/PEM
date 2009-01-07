@@ -36,7 +36,7 @@ if(!defined('INTERNAL'))
 
 session_name('pem_session_id');
 session_start();
-    
+
 require_once($root_path . 'include/config_default.inc.php');
 @include($root_path . 'include/config_local.inc.php');
 require_once($root_path . 'include/constants.inc.php');
@@ -50,6 +50,11 @@ require_once($root_path . 'include/jtpl/jtpl_standalone_prepend.php');
 // First we undo what has been done magically
 fix_magic_quotes();
 
+// echo '<pre>cookie: '; print_r($_COOKIE); echo '</pre>';
+debug($_COOKIE);
+// echo '<pre>session: '; print_r($_SESSION); echo '</pre>';
+// echo '<pre>user: '; print_r($user); echo '</pre>';
+
 // Then we "sanitize" data out own way
 $_GET = $db->escape_array($_GET);
 $_POST = $db->escape_array($_POST);
@@ -58,14 +63,32 @@ $_COOKIE = $db->escape_array($_COOKIE);
 // user informations
 $user = array();
 
-if (isset($_SESSION['user_id']))
-{
-  $user_infos_of = get_user_infos_of(array($_SESSION['user_id']));
-  $user = $user_infos_of[ $_SESSION['user_id'] ];
+if (isset($_COOKIE[ $conf['user_cookie_name'] ])) {
+  $cookie = array();
+  
+  list($cookie['user_id'], $cookie['password_hash']) = unserialize(
+    stripslashes($_COOKIE[ $conf['user_cookie_name'] ])
+    );
+
+  // echo '<pre>'; print_r($cookie); echo '</pre>';
+  
+  $user_infos_of = get_user_infos_of(array($cookie['user_id']));
+  $user = $user_infos_of[$cookie['user_id']];
+
+  debug($user);
+
+  debug(
+    array(
+      md5($conf['cookie_seed'].$user['password']),
+      $cookie['password_hash']
+      )
+    );
+  
+  if (md5($conf['cookie_seed'].$user['password']) !== $cookie['password_hash']) {
+    $user = array();
+  }
 }
 
-// echo '<pre>cookie: '; print_r($_COOKIE); echo '</pre>';
-// echo '<pre>session: '; print_r($_SESSION); echo '</pre>';
 // echo '<pre>user: '; print_r($user); echo '</pre>';
 
 $tpl = new jTPL();
@@ -288,7 +311,7 @@ if (isset($_POST['quickconnect_submit']))
 {
   if ($user_id = check_user_password($_POST['username'], $_POST['password']))
   {
-    log_user($user_id);
+    log_user($user_id, $_POST['password']);
 
     $page['message']['is_success'] = true;
     $page['message']['message'] = l10n('Identification successful');
@@ -320,6 +343,9 @@ if (isset($_GET['action']))
         ini_get('session.cookie_path'),
         ini_get('session.cookie_domain')
         );
+
+      unset($_COOKIE[ $conf['user_cookie_name'] ]);
+      setcookie($conf['user_cookie_name'], false, 0, $conf['cookie_path']);
 
       // redirect to index
       $page['message']['is_success'] = true;

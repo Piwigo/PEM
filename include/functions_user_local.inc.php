@@ -169,6 +169,7 @@ function get_user_basic_infos_of($author_ids)
   $query = '
 SELECT '.$conf['user_fields']['id'].' AS id,
        '.$conf['user_fields']['username'].' AS username,
+       '.$conf['user_fields']['password'].' AS password,
        '.$conf['user_fields']['email'].' AS email
   FROM '.USERS_TABLE.'
   WHERE '.$conf['user_fields']['id'].' IN ('.implode(',', $author_ids).')

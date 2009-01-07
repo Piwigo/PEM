@@ -29,7 +29,7 @@ if (isset($_POST['submit']))
 {
   if ($user_id = check_user_password($_POST['username'], $_POST['password']))
   {
-    log_user($user_id);
+    log_user($user_id, $_POST['password']);
 
     $page['message']['is_success'] = true;
     $page['message']['message'] = l10n('Identification successful');
@@ -61,6 +61,9 @@ if (isset($_GET['action']))
         ini_get('session.cookie_path'),
         ini_get('session.cookie_domain')
         );
+
+      unset($_COOKIE[ $conf['user_cookie_name'] ]);
+      setcookie($conf['user_cookie_name'], false, 0, $conf['cookie_path']);
 
       // redirect to index
       $page['message']['is_success'] = true;

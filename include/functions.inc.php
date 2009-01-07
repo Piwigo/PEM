@@ -1023,4 +1023,40 @@ function fix_magic_quotes($var = NULL, $sybase = NULL) {
   // otherwise ignore
   return $var;
 }
+
+function debug($var) {
+  global $conf;
+
+  if ($conf['debug_mode']) {
+    echo '<pre>';
+    print_r($var);
+    echo '</pre>';
+  }
+}
+
+function pun_setcookie($user_id, $password_hash)
+{
+  global $conf;
+  
+  $cookie_name = $conf['user_cookie_name'];
+  $cookie_domain = '';
+  $cookie_path = $conf['cookie_path'];
+  $cookie_secure = 0;
+  $cookie_seed = $conf['cookie_seed'];
+  $cookie_expire = strtotime('+1 year');
+
+  if (!version_compare(PHP_VERSION, '5.2.0', '>=')) {
+    $cookie_path.= '; HttpOnly';
+  }
+
+  setcookie(
+    $cookie_name,
+    serialize(array($user_id, md5($cookie_seed.$password_hash))),
+    $cookie_expire,
+    $cookie_path,
+    $cookie_domain,
+    $cookie_secure,
+    true
+    );
+}
 ?>

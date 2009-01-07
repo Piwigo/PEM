@@ -117,4 +117,12 @@ $conf['rss_nb_items'] = 10;
 $conf['use_agreement'] = false;
 
 $conf['agreement_description'] = 'I accept this terms and conditions agreement that take my intellectual property on my contribution.';
+
+$conf['debug_mode'] = false;
+
+// cookie management
+$conf['user_cookie_name'] = 'pem_auth_cookie';
+$conf['cookie_path'] = '/';
+$conf['cookie_seed'] = 'very secret seed';
+$conf['set_cookie'] = 'pun_setcookie';
 ?>
