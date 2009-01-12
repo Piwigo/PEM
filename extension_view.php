@@ -90,7 +90,9 @@ $tpl->assign(
       ),
     'description' => nl2br(
       htmlspecialchars(
-        strip_tags($data['description'])
+        strip_tags(
+          get_user_language($data['description'])
+          )
         )
       ),
     'author' => $author,
@@ -153,7 +155,7 @@ while ($row = $db->fetch_array($result))
     array(
       'name' => $row['name'],
       'url' => $row['url'],
-      'description' => $row['description'],
+      'description' => get_user_language($row['description']),
       )
     );
 }
@@ -245,7 +247,9 @@ SELECT id_revision,
         'date' => date('Y-m-d', $row['date']),
         'u_download' => 'download.php?rid='.$row['id_revision'],
         'description' => nl2br(
-          htmlspecialchars($row['description'])
+          htmlspecialchars(
+            get_user_language($row['description'])
+            )
           ),
         'can_modify' => $page['user_can_modify'],
         'u_modify' => 'revision_mod.php?rid='.$row['id_revision'],

@@ -103,6 +103,18 @@ if (is_file($root_path.'template/disclaimer.html'))
 
 $tpl->assign('has_disclaimer', $has_disclaimer);
 
+// Language selection
+if (isset($_GET['lang'])) {
+  $_SESSION['language'] = $_GET['lang'];
+}
+if (empty($_SESSION['language'])) {
+  $_SESSION['language'] = 'en';
+}
+$self_uri = preg_replace('#(\?|&)lang=..#', '', $_SERVER['REQUEST_URI']);
+$self_uri .= strpos($self_uri, '?') ? '&amp;' : '?';
+$tpl->assign('self_uri', $self_uri);
+$tpl->assign('lang', $_SESSION['language']);
+
 // PWG Compatibility version set
 if (isset($_POST['filter_submit'])) {
   // filter on the extended application version

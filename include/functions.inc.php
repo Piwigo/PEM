@@ -1059,4 +1059,34 @@ function pun_setcookie($user_id, $password_hash)
     true
     );
 }
+
+/* *
+* Return description traduction
+*/
+function get_user_language($desc)
+{
+  $languages = array($_SESSION['language'], 'default', 'en');
+
+  foreach ($languages as $language)
+  {
+    if (strpos(strtolower($desc), '[lang=' . $language . ']') !== false)
+    {
+      $patterns[] = '#(^|\[/lang\])(.*?)(\[lang=(' . $language . '|all)\]|$)#is';
+      $replacements[] = '';
+      $patterns[] = '#\[lang=(' . $language . '|all)\](.*?)\[/lang\]#is';
+      $replacements[] = '\\1';
+
+      return preg_replace($patterns, $replacements, $desc);
+    }
+  }
+
+  // tag not found for selected language
+  // we take all outside language tags
+  $patterns[] = '#\[lang=all\](.*?)\[/lang\]#is';
+  $replacements[] = '\\1';
+  $patterns[] = '#\[lang=.*\].*\[/lang\]#is';
+  $replacements[] = '';
+
+  return preg_replace($patterns, $replacements, $desc);
+}
 ?>

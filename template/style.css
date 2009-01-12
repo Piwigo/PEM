@@ -482,6 +482,11 @@ UL.revActionLinks {
   float: left;
 }
 
+#langSelect {
+  float: right;
+  margin-left: 10px;
+}
+
 #viewSelect {
   float: right;
 }
