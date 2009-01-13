@@ -61,6 +61,8 @@ if (isset($_GET['extension_exclude']))
   }
 }
 
+$_SESSION['language'] = isset($_GET['lang']) ? $_GET['lang'] : 'en';
+
 $username_field = $conf['user_fields']['username'];
 $userid_field = $conf['user_fields']['id'];
 
@@ -130,6 +132,9 @@ while ($row = mysql_fetch_assoc($result)) {
     $conf['website_url'],
     $row['revision_id']
     );
+
+  $row['extension_description'] = get_user_language($row['extension_description']);
+  $row['revision_description'] = get_user_language($row['revision_description']);
 
   array_push($revisions, $row);
   array_push($extension_ids, $row['extension_id']);
