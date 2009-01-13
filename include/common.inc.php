@@ -114,6 +114,7 @@ $self_uri = preg_replace('#(\?|&)lang=..#', '', $_SERVER['REQUEST_URI']);
 $self_uri .= strpos($self_uri, '?') ? '&amp;' : '?';
 $tpl->assign('self_uri', $self_uri);
 $tpl->assign('lang', $_SESSION['language']);
+$tpl->assign('languages', $conf['languages']);
 
 // PWG Compatibility version set
 if (isset($_POST['filter_submit'])) {

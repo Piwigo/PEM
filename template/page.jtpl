@@ -94,13 +94,20 @@
     
       <div id="Content">
         <div id="quickNav"><a href="index.php">Index</a></div>
+{if count($languages) > 0}
         <div id="langSelect">
           <select onchange="document.location = this.options[this.selectedIndex].value;">
-            <option value="{$self_uri}lang=en" {$lang == 'en' ? 'selected="selected"' : ''}>English</option>
-            <option value="{$self_uri}lang=fr" {$lang == 'fr' ? 'selected="selected"' : ''}>Français</option>
-            <option value="{$self_uri}lang=it" {$lang == 'it' ? 'selected="selected"' : ''}>Italiano</option>
+  {foreach $languages as $language}
+            <option
+              value="{$self_uri}lang={$language[code]}"
+              {$lang == $language[code] ? 'selected="selected"' : ''}
+            >
+              {$language[label]}
+            </option>
+  {/foreach}
           </select>
         </div>
+{/if}
       {include $main_content}
       </div>
     </div> <!-- overall -->

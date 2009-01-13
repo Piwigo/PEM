@@ -125,4 +125,16 @@ $conf['user_cookie_name'] = 'pem_auth_cookie';
 $conf['cookie_path'] = '/';
 $conf['cookie_seed'] = 'very secret seed';
 $conf['set_cookie'] = 'pun_setcookie';
+
+// languages
+$conf['languages'] = array(
+  array(
+    'code' => 'en',
+    'label' => 'English',
+    ),
+  array(
+    'code' => 'fr',
+    'label' => 'Français',
+    ),
+  );
 ?>
