@@ -25,16 +25,22 @@ define('INTERNAL', true);
 $root_path = './';
 require_once($root_path.'include/common.inc.php');
 
+$tpl->set_filename('page', 'page.tpl');
+
 // +-----------------------------------------------------------------------+
 // |                           html code display                           |
 // +-----------------------------------------------------------------------+
 
+$disclaimer = '';
+
 if (is_file($root_path.'template/disclaimer.html'))
 {
-  $tpl->assign('main_content', 'disclaimer.html');
+  $disclaimer = file_get_contents($root_path.'template/disclaimer.html');
 }
 
+$tpl->assign('main_content', $disclaimer);
 include($root_path.'include/header.inc.php');
 include($root_path.'include/footer.inc.php');
-$tpl->display('page.jtpl');
+$tpl->parse('page');
+$tpl->p();
 ?>
