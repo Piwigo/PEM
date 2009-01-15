@@ -23,6 +23,8 @@ if (!defined('INTERNAL'))
   die('No right to do that, sorry. :)');
 }
 
+$tpl->set_filename('index_view_standard', 'index_view_standard.tpl');
+
 $page['page'] = 1;
 if (isset($_GET['page'])) {
   $page['page'] = abs(intval($_GET['page']));
@@ -76,10 +78,7 @@ if (count($revision_ids) == 0)
 {
   message_die(
     l10n('No extension match your filter'),
-    sprintf(
-      l10n('%d last revisions added'),
-      $conf['nb_last_revs']
-      ),
+    l10n('Most recent extensions'),
     false
     );
 }
@@ -172,8 +171,7 @@ $tpl->assign(
 // |                           html code display                           |
 // +-----------------------------------------------------------------------+
 
-$tpl->assign('main_content', 'index_view_standard.jtpl');
+$tpl->assign_var_from_handle('main_content', 'index_view_standard');
 include($root_path.'include/header.inc.php');
 include($root_path.'include/footer.inc.php');
-$tpl->display('page.jtpl');
 ?>

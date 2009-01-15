@@ -11,7 +11,7 @@
 {/if}
 
 {if isset($thumbnail)}
-<a class="screenshot" href="{$thumbnail[url]}"><img src="{$thumbnail[src]}"/></a>
+<a class="screenshot" href="{$thumbnail.url}"><img src="{$thumbnail.src}"/></a>
 {/if}
 
 <ul class="extensionInfos">
@@ -28,8 +28,8 @@
 <h3>Related links</h3>
 
 <ul>
-  {foreach $links as $link}
-  <li><strong><a href="{$link[url]}">{$link[name]}</a></strong>: {$link[description]}</li>
+  {foreach from=$links item=link}
+  <li><strong><a href="{$link.url}">{$link.name}</a></strong>: {$link.description}</li>
   {/foreach}
 </ul>
 {/if}
@@ -42,47 +42,47 @@
 
 {if isset($revisions)}
 <div id="changelog">
-  {foreach $revisions as $rev}
-  <div id="rev{$rev['id']}" class="changelogRevision">
+  {foreach from=$revisions item=rev}
+  <div id="rev{$rev.id}" class="changelogRevision">
 
     <div
-      id="rev{$rev['id']}_header"
-  {if $rev['expanded']}
+      id="rev{$rev.id}_header"
+  {if $rev.expanded}
       class="changelogRevisionHeaderExpanded"
   {else}
       class="changelogRevisionHeaderCollapsed"
   {/if}
-      onclick="revToggleDisplay('rev{$rev['id']}_header', 'rev{$rev['id']}_content')"
+      onclick="revToggleDisplay('rev{$rev.id}_header', 'rev{$rev.id}_content')"
     >
-      <span class="revisionTitle">Revision {$rev[version]}</span>
-      <span class="revisionDate">released on {$rev[date]}</span>
+      <span class="revisionTitle">Revision {$rev.version}</span>
+      <span class="revisionDate">released on {$rev.date}</span>
     </div>
 
     <div
-      id="rev{$rev['id']}_content"
+      id="rev{$rev.id}_content"
       class="changelogRevisionContent"
-  {if !$rev['expanded']}
+  {if !$rev.expanded}
       style="display:none"
   {/if}
     >
-      <a href="{$rev[u_download]}" title="Download revision {$rev[version]}" rel="nofollow"><img class="download" src="template/images/download.png" /></a>
-      <p>Revision: {$rev[version]}</p>
-      <p>Released on: {$rev[date]}</p>
-      <p>Compatible with: {$rev[versions_compatible]}</p>
-      <p>Downloads: {$rev[downloads]}</p>
+      <a href="{$rev.u_download}" title="Download revision {$rev.version}" rel="nofollow"><img class="download" src="template/images/download.png" /></a>
+      <p>Revision: {$rev.version}</p>
+      <p>Released on: {$rev.date}</p>
+      <p>Compatible with: {$rev.versions_compatible}</p>
+      <p>Downloads: {$rev.downloads}</p>
     
       <blockquote>
-        <p>{$rev[description]}</p>
+        <p>{$rev.description}</p>
       </blockquote>
 
-  {if $rev['can_modify']}
+  {if $rev.can_modify}
       <ul class="revActionLinks">
-        <li><a href="{$rev['u_modify']}" title="Modify revision"><img src="template/images/modify.png"></a></li>
-      <li><a href="{$rev['u_delete']}" onclick="return confirm_del();" title="Delete revision"><img src="template/images/delete.png"></a></li>
+        <li><a href="{$rev.u_modify}" title="Modify revision"><img src="template/images/modify.png"></a></li>
+      <li><a href="{$rev.u_delete}" onclick="return confirm_del();" title="Delete revision"><img src="template/images/delete.png"></a></li>
       </ul>
   {/if}
     </div>
-  </div> <!-- rev{$rev['id']} -->
+  </div> <!-- rev{$rev.id} -->
   {/foreach}
 </div> <!-- changelog -->
 {else}

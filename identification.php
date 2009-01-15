@@ -25,6 +25,13 @@ define('INTERNAL', true);
 $root_path = './';
 require_once($root_path.'include/common.inc.php');
 
+$tpl->set_filenames(
+  array(
+    'page' => 'page.tpl',
+    'identification' => 'identification.tpl'
+  )
+);
+
 if (isset($_POST['submit']))
 {
   if ($user_id = check_user_password($_POST['username'], $_POST['password']))
@@ -82,8 +89,9 @@ $tpl->assign('u_register', 'register.php');
 // |                           html code display                           |
 // +-----------------------------------------------------------------------+
 
-$tpl->assign('main_content', 'identification.jtpl');
+$tpl->assign_var_from_handle('main_content', 'identification');
 include($root_path.'include/header.inc.php');
 include($root_path.'include/footer.inc.php');
-$tpl->display('page.jtpl');
+$tpl->parse('page');
+$tpl->p();
 ?>

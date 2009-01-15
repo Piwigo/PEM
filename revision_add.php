@@ -30,6 +30,13 @@ if (!isset($user['id']))
   message_die(l10n('You must be connected to reach this page'));
 }
 
+$tpl->set_filenames(
+  array(
+    'page' => 'page.tpl',
+    'revision_add' => 'revision_add.tpl'
+  )
+);
+
 // We need a valid extension
 if (basename($_SERVER['SCRIPT_FILENAME']) == 'revision_mod.php')
 {
@@ -336,8 +343,9 @@ $tpl->assign('versions', $tpl_versions);
 // |                           html code display                           |
 // +-----------------------------------------------------------------------+
 
-$tpl->assign('main_content', 'revision_add.jtpl');
+$tpl->assign_var_from_handle('main_content', 'revision_add');
 include($root_path.'include/header.inc.php');
 include($root_path.'include/footer.inc.php');
-$tpl->display('page.jtpl');
+$tpl->parse('page');
+$tpl->p();
 ?>

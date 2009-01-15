@@ -21,9 +21,19 @@
 // | USA.                                                                  |
 // +-----------------------------------------------------------------------+
 
-define( 'INTERNAL', true );
+if(!defined('INTERNAL'))
+{
+  define( 'INTERNAL', true );
+}
 $root_path = './';
 require_once( $root_path . 'include/common.inc.php' );
+
+$tpl->set_filenames(
+  array(
+    'page' => 'page.tpl',
+    'extension_add' => 'extension_add.tpl'
+  )
+);
   
 if (!isset($user['id']))
 {
@@ -221,8 +231,9 @@ $tpl->assign('f_action', $f_action);
 // |                           html code display                           |
 // +-----------------------------------------------------------------------+
 
-$tpl->assign('main_content', 'extension_add.jtpl');
+$tpl->assign_var_from_handle('main_content', 'extension_add');
 include($root_path.'include/header.inc.php');
 include($root_path.'include/footer.inc.php');
-$tpl->display('page.jtpl');
+$tpl->parse('page');
+$tpl->p();
 ?>

@@ -56,12 +56,12 @@
     <legend>Manage links</legend>
 
     <ul class="linkManagement">
-  {foreach $links as $link}
+  {foreach from=$links item=link}
       <li>
-        <a href="{$link[u_delete]}" onclick="return confirm_del();" class="linkAction"><img src="template/images/delete.png"></a>
+        <a href="{$link.u_delete}" onclick="return confirm_del();" class="linkAction"><img src="template/images/delete.png"></a>
         <p>
-          <strong><a href="{$link[url]}">{$link[name]}</a></strong>
-          {$link[description]}
+          <strong><a href="{$link.url}">{$link.name}</a></strong>
+          {$link.description}
         </p>
         <p>
           <label>

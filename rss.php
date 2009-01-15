@@ -22,6 +22,8 @@ define('INTERNAL', true);
 $root_path = './';
 require_once($root_path.'include/common.inc.php');
 
+$tpl->set_filename('rss', 'rss.tpl');
+
 // $conf['page_title']
 $tpl->assign(
   array(
@@ -97,5 +99,5 @@ $tpl->assign('revisions', $tpl_revisions);
 // |                           html code display                           |
 // +-----------------------------------------------------------------------+
 
-$tpl->display('rss.jtpl');
+$tpl->pparse('rss');
 ?>

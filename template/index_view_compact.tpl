@@ -1,7 +1,7 @@
 <div id="viewSelect">
   <select onchange="document.location = this.options[this.selectedIndex].value;">
-    <option value="index.php?view=standard" {$view == 'standard' ? 'selected="selected"' : ''}>standard view</option>
-    <option value="index.php?view=compact" {$view == 'compact' ? 'selected="selected"' : ''}>compact view</option>
+    <option value="index.php?view=standard">standard view</option>
+    <option value="index.php?view=compact" selected="selected">compact view</option>
   </select>
 </div>
 
@@ -12,9 +12,9 @@
 
 {if count($revisions) > 0}
 <ul>
-{foreach $revisions as $revision}
+{foreach from=$revisions item=revision}
   <li>
-    [{$revision[date]}] <a href="{$revision['revision_url']}">{$revision[extension_name]}-{$revision[name]}</a> -- {$revision[about]|truncate}
+    [{$revision.date}] <a href="{$revision.revision_url}">{$revision.extension_name}-{$revision.name}</a> -- {$revision.about|truncate}
   </li>
 {/foreach}
 </ul>

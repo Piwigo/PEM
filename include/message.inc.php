@@ -22,6 +22,13 @@ if (!defined('INTERNAL'))
 {
   die('No right to do that, sorry. :)');
 }
+
+$tpl->set_filenames(
+  array(
+    'page' => 'page.tpl',
+    'message' => 'message.tpl'
+  )
+);
   
 if ($page['message']['is_success'])
 {
@@ -50,6 +57,7 @@ if ($page['message']['is_success'])
         )
       );
   }
+  $page['message']['go_back'] = false;
 }
 else
 {
@@ -62,14 +70,13 @@ else
   {
     $page['message']['go_back'] = true;
   }
-
-  $tpl->assign('go_back', $page['message']['go_back']);
 }
 
 $tpl->assign(
   array(
     'message_title' => $page['message']['title'],
     'message_text' => $page['message']['message'],
+    'go_back' => $page['message']['go_back'],
     )
   );
 
@@ -77,9 +84,10 @@ $tpl->assign(
 // |                           html code display                           |
 // +-----------------------------------------------------------------------+
 
-$tpl->assign('main_content', 'message.jtpl');
+$tpl->assign_var_from_handle('main_content', 'message');
 include($root_path.'include/header.inc.php');
 include($root_path.'include/footer.inc.php');
-$tpl->display('page.jtpl');
+$tpl->parse('page');
+$tpl->p();
 exit();
 ?>

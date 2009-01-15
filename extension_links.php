@@ -22,6 +22,13 @@ define('INTERNAL', true);
 $root_path = './';
 require_once($root_path.'include/common.inc.php');
 
+$tpl->set_filenames(
+  array(
+    'page' => 'page.tpl',
+    'extension_links' => 'extension_links.tpl'
+  )
+);
+
 // +-----------------------------------------------------------------------+
 // |                             Functions                                 |
 // +-----------------------------------------------------------------------+
@@ -227,8 +234,9 @@ $tpl->assign('links', $tpl_links);
 // |                           html code display                           |
 // +-----------------------------------------------------------------------+
 
-$tpl->assign('main_content', 'extension_links.jtpl');
+$tpl->assign_var_from_handle('main_content', 'extension_links');
 include($root_path.'include/header.inc.php');
 include($root_path.'include/footer.inc.php');
-$tpl->display('page.jtpl');
+$tpl->parse('page');
+$tpl->p();
 ?>

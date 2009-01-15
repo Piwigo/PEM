@@ -38,11 +38,11 @@
 </div>
 
 <ul>
-{foreach $versions as $version}
+{foreach from=$versions item=version}
   <li>
-    <a href="versions.php?edit={$version[id]}"><img style="border:none;" src="../template/images/admin_edit.png" /></a>
-    <a href="versions.php?delete={$version[id]}" onclick="return confirm_del();"><img style="border:none;" src="../template/images/admin_delete.png" /></a>
-    {$version[name]}
+    <a href="versions.php?edit={$version.id}"><img style="border:none;" src="../template/images/admin_edit.png" /></a>
+    <a href="versions.php?delete={$version.id}" onclick="return confirm_del();"><img style="border:none;" src="../template/images/admin_delete.png" /></a>
+    {$version.name}
   </li>
 {/foreach}
 </ul>

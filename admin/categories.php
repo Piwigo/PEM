@@ -27,6 +27,13 @@ require_once($root_path . 'include/common.inc.php');
 require_once( $root_path . 'include/functions_admin.inc.php' );
 require_once( $root_path . 'admin/init.inc.php' );
 
+$tpl->set_filenames(
+  array(
+    'page' => 'admin/page.tpl',
+    'categories' => 'admin/categories.tpl'
+  )
+);
+
 $tpl->assign('category_form_title', l10n('Add a category'));
 $tpl->assign('category_form_type', l10n('add'));
 
@@ -121,6 +128,7 @@ $tpl->assign('categories', $tpl_categories);
 // |                           html code display                           |
 // +-----------------------------------------------------------------------+
 
-$tpl->assign('main_content', 'admin/categories.jtpl');
-$tpl->display('admin/page.jtpl');
+$tpl->assign_var_from_handle('main_content', 'categories');
+$tpl->parse('page');
+$tpl->p();
 ?>

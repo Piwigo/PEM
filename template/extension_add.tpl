@@ -13,8 +13,8 @@
         <th>Categories</th>
         <td>
           <div class="checkboxBox">
-{foreach $extension_categories as $cat}
-            <label><input type="checkbox" name="extension_category[]" value="{$cat[value]}" {$cat[checked]} /> {$cat[name]}</label>
+{foreach from=$extension_categories item=cat}
+            <label><input type="checkbox" name="extension_category[]" value="{$cat.value}" {$cat.checked} /> {$cat.name}</label>
 {/foreach}
           </div>
         </td>

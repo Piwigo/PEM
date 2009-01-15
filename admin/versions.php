@@ -27,6 +27,13 @@ require_once($root_path . 'include/common.inc.php');
 require_once( $root_path . 'include/functions_admin.inc.php' );
 require_once( $root_path . 'admin/init.inc.php' );
 
+$tpl->set_filenames(
+  array(
+    'page' => 'admin/page.tpl',
+    'versions' => 'admin/versions.tpl'
+  )
+);
+
 $tpl->assign('version_form_title', l10n('Add a version'));
 $tpl->assign('version_form_type', l10n('add'));
 
@@ -128,6 +135,7 @@ $tpl->assign('versions', $tpl_versions);
 // |                           html code display                           |
 // +-----------------------------------------------------------------------+
 
-$tpl->assign('main_content', 'admin/versions.jtpl');
-$tpl->display('admin/page.jtpl');
+$tpl->assign_var_from_handle('main_content', 'versions');
+$tpl->parse('page');
+$tpl->p();
 ?>

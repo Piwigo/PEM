@@ -25,6 +25,8 @@ define('INTERNAL', true);
 $root_path = './';
 require_once($root_path.'include/common.inc.php');
 
+$tpl->set_filename('page', 'page.tpl');
+
 $available_views = array('standard', 'compact');
 
 if (isset($_GET['view'])) {
@@ -41,4 +43,7 @@ if (isset($_SESSION['view'])) {
 $tpl->assign('view', $view);
 
 require_once($root_path.'include/index_view_'.$view.'.inc.php');
+
+$tpl->parse('page');
+$tpl->p();
 ?>

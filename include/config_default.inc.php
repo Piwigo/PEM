@@ -137,4 +137,27 @@ $conf['languages'] = array(
     'label' => 'Français',
     ),
   );
+
+// +-----------------------------------------------------------------------+
+// |                            debug/performance                          |
+// +-----------------------------------------------------------------------+
+
+// activate template debugging - a new window will appear
+$conf['debug_template'] = false;
+
+// This tells Smarty whether to check for recompiling or not. Recompiling
+// does not need to happen unless a template is changed. false results in
+// better performance.
+$conf['template_compile_check'] = true;
+
+// if true, some language strings are replaced during template compilation
+// (insted of template output). this results in better performance. however
+// any change in the language file will not be propagated until you purge
+// the compiled templates from the admin / maintenance menu
+$conf['compiled_template_cache_language'] = false;
+
+// the local data directory is used to store data such as compiled templates
+// or other plugin variables etc
+$conf['local_data_dir'] = dirname(dirname(__FILE__)).'/_data';
+
 ?>

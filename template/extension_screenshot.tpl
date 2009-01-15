@@ -38,7 +38,7 @@
     <table>
       <tr>
         <td>
-          <a class="screenshot" href="{$current['u_screenshot']}"><img src="{$current['thumbnail_src']}"/></a>
+          <a class="screenshot" href="{$current.u_screenshot}"><img src="{$current.thumbnail_src}"/></a>
         </td>
         <td valign="middle">
           <input type="submit" value="Submit" name="submit_delete" />

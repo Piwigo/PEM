@@ -3,7 +3,7 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8">
-    {$meta}
+    {if isset($meta)}{$meta}{/if}
     <title>{$title}</title>
     <style type="text/css" media="all">@import "template/style.css";</style>
     <link
@@ -26,27 +26,27 @@
           Category<br />
           <select name="category">
             <option value="0">-------</option>
-{foreach $categories as $category}
-            <option value="{$category[id]}" {$category[selected]}>{$category[name]}</option>
+{foreach from=$categories item=category}
+            <option value="{$category.id}" {$category.selected}>{$category.name}</option>
 {/foreach}
           </select><br />
 
           Search<br />
-          <input name="search" type="text" value="{$search}"/><br />
+          <input name="search" type="text" value="{if isset($search)}{$search}{/if}"/><br />
 
           Version<br />
           <select name="pwg_version">
             <option value="0">-------</option>
-{foreach $menu_versions as $version}
-            <option value="{$version[id]}" {$version[selected]}>{$version[name]}</option>
+{foreach from=$menu_versions item=version}
+            <option value="{$version.id}" {$version.selected}>{$version.name}</option>
 {/foreach}
           </select>
 
           Author<br />
           <select name="user">
             <option value="0">-------</option>
-{foreach $filter_users as $user}
-            <option value="{$user[id]}" {$user[selected]}>{$user[name]}</option>
+{foreach from=$filter_users item=user}
+            <option value="{$user.id}" {$user.selected}>{$user.name}</option>
 {/foreach}
           </select>
 
@@ -97,18 +97,18 @@
 {if count($languages) > 0}
         <div id="langSelect">
           <select onchange="document.location = this.options[this.selectedIndex].value;">
-  {foreach $languages as $language}
+  {foreach from=$languages item=language}
             <option
-              value="{$self_uri}lang={$language[code]}"
-              {$lang == $language[code] ? 'selected="selected"' : ''}
+              value="{$self_uri}lang={$language.code}"
+              {if ($lang == $language.code)}selected="selected"{/if}
             >
-              {$language[label]}
+              {$language.label}
             </option>
   {/foreach}
           </select>
         </div>
 {/if}
-      {include $main_content}
+      {$main_content}
       </div>
     </div> <!-- overall -->
     

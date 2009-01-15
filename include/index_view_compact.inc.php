@@ -27,6 +27,8 @@ if(!defined('INTERNAL'))
   die('No right to do that, sorry. :)');
 }
 
+$tpl->set_filename('index_view_compact', 'index_view_compact.tpl');
+
 $revision_ids = array();
 $revision_infos_of = array();
 $extension_ids = array();
@@ -61,10 +63,7 @@ if (count($revision_ids) == 0)
 {
   message_die(
     l10n('No extension match your filter'),
-    sprintf(
-      l10n('%d last revisions added'),
-      $conf['nb_last_revs']
-      ),
+    l10n('Most recent extensions'),
     false
     );
 }
@@ -121,8 +120,7 @@ $tpl->assign(
 // |                           html code display                           |
 // +-----------------------------------------------------------------------+
 
-$tpl->assign('main_content', 'index_view_compact.jtpl');
+$tpl->assign_var_from_handle('main_content', 'index_view_compact');
 include($root_path.'include/header.inc.php');
 include($root_path.'include/footer.inc.php');
-$tpl->display('page.jtpl');
 ?>

@@ -38,11 +38,11 @@
 </div>
 
 <ul>
-{foreach $categories as $category}
+{foreach from=$categories item=category}
   <li>
-    <a href="categories.php?edit={$category[id]}"><img style="border:none;" src="../template/images/admin_edit.png" /></a>
-    <a href="categories.php?delete={$category[id]}" onclick="return confirm_del();"><img style="border:none;" src="../template/images/admin_delete.png" /></a>
-    {$category[name]}
+    <a href="categories.php?edit={$category.id}"><img style="border:none;" src="../template/images/admin_edit.png" /></a>
+    <a href="categories.php?delete={$category.id}" onclick="return confirm_del();"><img style="border:none;" src="../template/images/admin_delete.png" /></a>
+    {$category.name}
   </li>
 {/foreach}
 </ul>

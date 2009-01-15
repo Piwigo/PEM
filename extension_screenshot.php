@@ -25,6 +25,13 @@ define('INTERNAL', true);
 $root_path = './';
 require_once($root_path.'include/common.inc.php');
 
+$tpl->set_filenames(
+  array(
+    'page' => 'page.tpl',
+    'extension_screenshot' => 'extension_screenshot.tpl'
+  )
+);
+
 // +-----------------------------------------------------------------------+
 // |                             Functions                                 |
 // +-----------------------------------------------------------------------+
@@ -275,8 +282,9 @@ if ($screenshot_infos = get_extension_screenshot_infos($page['extension_id']))
 // |                           html code display                           |
 // +-----------------------------------------------------------------------+
 
-$tpl->assign('main_content', 'extension_screenshot.jtpl');
+$tpl->assign_var_from_handle('main_content', 'extension_screenshot');
 include($root_path.'include/header.inc.php');
 include($root_path.'include/footer.inc.php');
-$tpl->display('page.jtpl');
+$tpl->parse('page');
+$tpl->p();
 ?>

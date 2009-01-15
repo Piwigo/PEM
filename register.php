@@ -25,6 +25,13 @@ define('INTERNAL', true);
 $root_path = './';
 require_once($root_path.'include/common.inc.php');
 
+$tpl->set_filenames(
+  array(
+    'page' => 'page.tpl',
+    'register' => 'register.tpl'
+  )
+);
+
 if (isset($_POST['submit']))
 {
   $errors = array();
@@ -61,8 +68,9 @@ if (isset($_POST['submit']))
 // |                           html code display                           |
 // +-----------------------------------------------------------------------+
 
-$tpl->assign('main_content', 'register.jtpl');
+$tpl->assign_var_from_handle('main_content', 'register');
 include($root_path.'include/header.inc.php');
 include($root_path.'include/footer.inc.php');
-$tpl->display('page.jtpl');
+$tpl->parse('page');
+$tpl->p();
 ?>

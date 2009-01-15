@@ -21,8 +21,6 @@
 // | USA.                                                                  |
 // +-----------------------------------------------------------------------+
 
-define('JTPL_TEMPLATES_PATH', $root_path.'template/');
-
 // determine the initial instant to indicate the generation time of this page
 $page['start'] = intval(microtime(true) * 1000);
 
@@ -43,7 +41,7 @@ require_once($root_path . 'include/constants.inc.php');
 require_once($root_path . 'include/functions.inc.php');
 require_once($root_path . 'include/functions_user.inc.php');
 require_once($root_path . 'include/dblayer/common_db.php');
-require_once($root_path . 'include/jtpl/jtpl_standalone_prepend.php');
+require_once($root_path . 'include/template.class.php');
 
 // secure user incoming data
 //
@@ -91,7 +89,7 @@ if (isset($_COOKIE[ $conf['user_cookie_name'] ])) {
 
 // echo '<pre>user: '; print_r($user); echo '</pre>';
 
-$tpl = new jTPL();
+$tpl = new template($root_path . 'template/');
 $tpl->assign('software', $conf['software']);
 
 // do we have a disclaimer?

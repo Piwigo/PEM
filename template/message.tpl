@@ -6,6 +6,6 @@
 <p><a href="{$u_redirect}">Click here if don't want to wait.</a></p>
 {/if}
 
-{if $goback}
+{if $go_back}
 <p><a href="javascript:history.back();">Back to previous page</a>.</p>
 {/if}

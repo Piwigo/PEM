@@ -31,6 +31,13 @@ if (!isset($page['extension_id']))
   message_die(l10n('eid URL parameter is missing'), 'Error', false );
 }
 
+$tpl->set_filenames(
+  array(
+    'page' => 'page.tpl',
+    'extension_view' => 'extension_view.tpl'
+  )
+);
+
 // Gets extension informations
 $query = '
 SELECT description,
@@ -277,8 +284,9 @@ SELECT id_revision,
 // |                           html code display                           |
 // +-----------------------------------------------------------------------+
 
-$tpl->assign('main_content', 'extension_view.jtpl');
+$tpl->assign_var_from_handle('main_content', 'extension_view');
 include($root_path.'include/header.inc.php');
 include($root_path.'include/footer.inc.php');
-$tpl->display('page.jtpl');
+$tpl->parse('page');
+$tpl->p();
 ?>

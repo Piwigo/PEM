@@ -26,7 +26,14 @@ $root_path = './../';
 require_once($root_path . 'include/common.inc.php');
 require_once( $root_path . 'include/functions_admin.inc.php' );
 require_once( $root_path . 'admin/init.inc.php' );
-  
+
+$tpl->set_filenames(
+  array(
+    'page' => 'admin/page.tpl',
+    'index' => 'admin/index.tpl'
+  )
+);
+
 // Select the revisions count
 $sql =  '
 SELECT
@@ -42,6 +49,6 @@ $tpl->assign('revisions_count', $data['revisions_count']);
 // |                           html code display                           |
 // +-----------------------------------------------------------------------+
 
-$tpl->assign('main_content', 'admin/index.jtpl');
-$tpl->display('admin/page.jtpl');
+$tpl->assign_var_from_handle('main_content', 'index');
+$tpl->pparse('page');
 ?>

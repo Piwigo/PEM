@@ -27,9 +27,9 @@
         <th>Compatibility</th>
         <td>
           <div class="checkboxBox">
-{foreach $versions as $version}
+{foreach from=$versions item=version}
             <label>
-              <input type="checkbox" name="compatible_versions[]" value="{$version['id_version']}" {$version['checked']} />{$version['name']}
+              <input type="checkbox" name="compatible_versions[]" value="{$version.id_version}" {$version.checked} />{$version.name}
             </label>
 {/foreach}
           </div>

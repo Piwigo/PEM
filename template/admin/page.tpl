@@ -28,7 +28,7 @@
   </div>
 
   <div id="Content">
-{include $main_content}
+{$main_content}
   </div>
 </div>
 
