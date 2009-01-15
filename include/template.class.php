@@ -22,7 +22,7 @@
 // +-----------------------------------------------------------------------+
 
 
-include($root_path.'include/smarty/libs/Smarty.class.php');
+include($root_path.'include/Smarty/libs/Smarty.class.php');
 
 class Template {
 
