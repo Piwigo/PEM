@@ -24,7 +24,7 @@
 // determine the initial instant to indicate the generation time of this page
 $page['start'] = intval(microtime(true) * 1000);
 
-// header('Content-Type: text/html; charset=utf-8');
+header('Content-Type: text/html; charset=utf-8');
 
 // Hacking attempt
 if(!defined('INTERNAL'))
@@ -42,6 +42,8 @@ require_once($root_path . 'include/functions.inc.php');
 require_once($root_path . 'include/functions_user.inc.php');
 require_once($root_path . 'include/dblayer/common_db.php');
 require_once($root_path . 'include/template.class.php');
+
+$db->query('SET NAMES "utf8"');
 
 // secure user incoming data
 //
