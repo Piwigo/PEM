@@ -3,7 +3,7 @@
 <h3>{'Manage links'|translate}</h3>
 
 <ul class="actionLinks">
-  <li><a href="{$u_extension}" title="See extension"><img src="template/images/see_extension.png"></a></li>
+  <li><a href="{$u_extension}" title="{'See extension'|translate}"><img src="template/images/see_extension.png" alt="{'See extension'|translate}"></a></li>
 </ul>
 
 <form method="post" action="{$f_action}" enctype="multipart/form-data">
@@ -34,8 +34,8 @@
           />
         </td>
       </tr>
-      <tr>
-      </tr>
+      <tr><td>
+      </td></tr>
       <tr>
         <th>{'Description'|translate}</th>
         <td>
@@ -58,7 +58,8 @@
     <ul class="linkManagement">
   {foreach from=$links item=link}
       <li>
-        <a href="{$link.u_delete}" onclick="return confirm('{'Are you sure you want to delete this item?'|translate|escape:javascript}');" class="linkAction"><img src="template/images/delete.png"></a>
+        <a href="{$link.u_delete}" onclick="return confirm('{'Are you sure you want to delete this item?'|translate|escape:javascript}');" class="linkAction" title="{'Delete link'|translate}">
+        <img src="template/images/delete.png" alt="{'Delete link'|translate}"></a>
         <p>
           <strong><a href="{$link.url}">{$link.name}</a></strong>
           {$link.description}

@@ -6,12 +6,7 @@
     {if isset($meta)}{$meta}{/if}
     <title>{$title}</title>
     <style type="text/css" media="all">@import "template/style.css";</style>
-    <link
-      rel="alternate"
-      type="application/rss+xml"
-      href="extensions.rss"
-      title="Extensions"
-    />
+    <link rel="alternate" type="application/rss+xml" href="rss.php" title="Extensions">
     <script type="text/javascript" src="template/functions.js"></script>
     {$specific_header}
   </head>
@@ -63,7 +58,7 @@
 {/if}
 
 {if !$user_is_logged}
-	<form method="post">
+	<form method="post" action="{$action}">
 			<ul class="ident">
 				<li><a href="register.php">{'Register'|translate}</a><br /></li>
 				<li><a href="identification.php">{'Login'|translate}</a><br /></li>

@@ -65,7 +65,7 @@
       style="display:none"
   {/if}
     >
-      <a href="{$rev.u_download}" title="{'Download revision'|translate} {$rev.version}" rel="nofollow"><img class="download" src="template/images/download.png" /></a>
+      <a href="{$rev.u_download}" title="{'Download revision'|translate} {$rev.version}" rel="nofollow"><img class="download" src="template/images/download.png" alt="{'Download revision'|translate} {$rev.version}"/></a>
       <p>{'Revision'|translate}: {$rev.version}</p>
       <p>{'Released on'|translate}: {$rev.date}</p>
       <p>{'Compatible with'|translate}: {$rev.versions_compatible}</p>
@@ -77,8 +77,9 @@
 
   {if $rev.can_modify}
       <ul class="revActionLinks">
-        <li><a href="{$rev.u_modify}" title="{'Modify revision'|translate}"><img src="template/images/modify.png"></a></li>
-      <li><a href="{$rev.u_delete}" onclick="return confirm('{'Are you sure you want to delete this item?'|translate|escape:javascript}');" title="{'Delete revision'|translate}"><img src="template/images/delete.png"></a></li>
+        <li><a href="{$rev.u_modify}" title="{'Modify revision'|translate}"><img src="template/images/modify.png" alt="{'Modify revision'|translate}"></a></li>
+        <li><a href="{$rev.u_delete}" onclick="return confirm('{'Are you sure you want to delete this item?'|translate|escape:javascript}');" title="{'Delete revision'|translate}">
+            <img src="template/images/delete.png" alt="{'Delete revision'|translate}"></a></li>
       </ul>
   {/if}
     </div>

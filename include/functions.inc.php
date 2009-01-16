@@ -1078,7 +1078,7 @@ function pun_setcookie($user_id, $password_hash)
 */
 function get_user_language($desc)
 {
-  $languages = array($_SESSION['language'], 'default', 'en');
+  $languages = array(@$_SESSION['language'], 'default', 'en');
 
   foreach ($languages as $language)
   {

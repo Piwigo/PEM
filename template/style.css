@@ -95,7 +95,7 @@ body>#Header {height:33px;}
 
 #Content 
 {
-  margin:0px 10px 10px 190px;
+  margin:0px 10px 10px 200px;
   padding:10px;
   border : 1px solid #275F98;
   -moz-border-radius : 6px;
@@ -130,7 +130,7 @@ div.menu
   /* Again, the ugly brilliant hack. */
   voice-family: "\"}\"";
   voice-family:inherit;
-  width:150px;
+  width:160px;
 }
 
 div.menu h3
