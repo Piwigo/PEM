@@ -28,7 +28,7 @@ require_once( $root_path . 'include/common.inc.php' );
 $page['extension_id'] = isset($_GET['eid']) ? abs(intval($_GET['eid'])) : null;
 if (!isset($page['extension_id']))
 {
-  message_die(l10n('eid URL parameter is missing'), 'Error', false );
+  message_die('eid URL parameter is missing', 'Error', false );
 }
 
 $tpl->set_filenames(
@@ -58,7 +58,7 @@ $user_infos_of = get_user_infos_of(array($data['idx_user']));
 $author = $user_infos_of[ $data['idx_user'] ]['username'];
 
 $page['user_can_modify'] = false;
-if (isAdmin($user['id']) or $user['id'] == $data['idx_user'])
+if (isset($user['id']) and (isAdmin($user['id']) or $user['id'] == $data['idx_user']))
 {
   $page['user_can_modify'] = true;
 }
@@ -262,7 +262,8 @@ SELECT id_revision,
         'u_modify' => 'revision_mod.php?rid='.$row['id_revision'],
         'u_delete' => 'revision_del.php?rid='.$row['id_revision'],
         'expanded' => $expanded,
-        'downloads' => $downloads_of_revision[$row['id_revision']],
+        'downloads' => isset($downloads_of_revision[$row['id_revision']]) ? 
+                        $downloads_of_revision[$row['id_revision']] : 0,
         )
       );
 

@@ -80,7 +80,7 @@ function save_order_links($sorted_link_ids)
 if (!isset($user['id']))
 {
   message_die(
-    l10n('You must be connected to add, modify or delete an extension')
+    l10n('You must be connected to add, modify or delete an extension.')
     );
 }
 

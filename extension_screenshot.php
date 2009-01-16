@@ -143,7 +143,7 @@ function resize_picture(
 
 if (!isset($user['id']))
 {
-  message_die(l10n('You must be connected to reach this page'));
+  message_die(l10n('You must be connected to reach this page.'));
 }
 
 // We need a valid extension
@@ -179,7 +179,7 @@ if (isset($_POST['submit_add']))
 {
   if (!isset($_FILES['picture']))
   {
-    message_die(l10n("You did not upload anything!"));
+    message_die(l10n('You did not upload anything!'));
   }
 
   $temp_name = get_extension_dir($page['extension_id']).'/screenshot.tmp';
@@ -194,7 +194,7 @@ if (isset($_POST['submit_add']))
   // $type == 3 means PNG
   if (!in_array($type, array(2, 3)))
   {
-    message_die(l10n('You can only upload PNG and JPEG files as screenshot'));
+    message_die(l10n('You can only upload PNG and JPEG files as screenshot.'));
     unlink($temp_name);
   }
 
@@ -224,6 +224,7 @@ if (isset($_POST['submit_add']))
   }
   else
   {
+    @unlink($screenshot_filename);
     rename($temp_name, $screenshot_filename);
   }
 

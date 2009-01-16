@@ -58,7 +58,7 @@ if ($row['idx_user'] != $user['id'] and !isAdmin($user['id']))
 delete_revisions(array($page['revision_id']));
 
 message_success(
-  l10n('Revision successfuly deleted'),
+  l10n('Revision successfuly deleted.'),
   'extension_view.php?eid='.$row['idx_extension']
   );
 ?>

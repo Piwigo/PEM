@@ -33,9 +33,16 @@ $tpl->set_filename('page', 'page.tpl');
 
 $disclaimer = '';
 
-if (is_file($root_path.'template/disclaimer.html'))
+$selected_language_file = $root_path.'language/'.$_SESSION['language'].'/disclaimer.html';
+$default_language_file = $root_path.'language/'.$conf['default_language'].'/disclaimer.html';
+
+if (is_file($selected_language_file))
 {
-  $disclaimer = file_get_contents($root_path.'template/disclaimer.html');
+  $disclaimer = file_get_contents($selected_language_file);
+}
+elseif (is_file($default_language_file))
+{
+  $disclaimer = file_get_contents($default_language_file);
 }
 
 $tpl->assign('main_content', $disclaimer);

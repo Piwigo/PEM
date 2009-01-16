@@ -34,12 +34,12 @@ if ($page['message']['is_success'])
 {
   if (!isset($page['message']['title']))
   {
-    $page['message']['title'] = 'Success';
+    $page['message']['title'] = l10n('Success');
   }
 
   if (!isset($page['message']['time_redirect']))
   {
-    $page['message']['time_redirect'] = 5;
+    $page['message']['time_redirect'] = $conf['time_redirect'];
   }
   
   if (isset($page['message']['redirect']))
@@ -50,7 +50,7 @@ if ($page['message']['is_success'])
         'u_redirect' => $page['message']['redirect'],
         'meta' =>
           sprintf(
-            '<meta http-equiv="refresh" content="%s;%s">',
+            '<meta http-equiv="refresh" content="%s;url=%s">',
             $page['message']['time_redirect'],
             $page['message']['redirect']
             ),
@@ -63,7 +63,7 @@ else
 {
   if (!isset($page['message']['title']))
   {
-    $page['message']['title'] = 'Error';
+    $page['message']['title'] = l10n('Error');
   }
 
   if (!isset($page['message']['go_back']))

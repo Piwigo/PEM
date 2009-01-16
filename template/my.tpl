@@ -1,9 +1,9 @@
-<h2>My personnal homepage</h2>
+<h2>{'My personnal homepage'|translate}</h2>
 
 <!-- Used to fix a margin bug with IE... -->
 <br />
 
-<p>My extensions:</p>
+<p>{'My extensions'|translate}:</p>
 {if count($extensions) > 0}
 <ul>
   {foreach from=$extensions item=extension}

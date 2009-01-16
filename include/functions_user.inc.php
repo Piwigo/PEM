@@ -32,16 +32,17 @@ include_once(
  * @param bool remember_me
  * @return void
  */
-function log_user($user_id, $password)
+function log_user($user_id, $username, $password)
 {
   global $conf, $user;
 
   $conf['set_cookie']($user_id, $conf['pass_convert']($password));
   
   session_set_cookie_params($conf['session_length']);
-  session_start();
+  //session_start();
   
   $user['id'] = $user_id;
+  $user['username'] = $username;
 }
 
 /**

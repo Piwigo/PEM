@@ -21,13 +21,16 @@
 // | USA.                                                                  |
 // +-----------------------------------------------------------------------+
 
-define('INTERNAL', true);
+if (!defined('INTERNAL'))
+{
+  define('INTERNAL', true);
+}
 $root_path = './';
 require_once($root_path.'include/common.inc.php');
   
 if (!isset($user['id']))
 {
-  message_die(l10n('You must be connected to reach this page'));
+  message_die(l10n('You must be connected to reach this page.'));
 }
 
 $tpl->set_filenames(
@@ -75,7 +78,7 @@ list($page['extension_name'], $ext_user) = $db->fetch_array($result);
 
 if ($user['id'] != $ext_user and !isAdmin($user['id']))
 {
-  message_die(l10n('You must be the extension author to modify it'));
+  message_die(l10n('You must be the extension author to modify it.'));
 }
 
 // +-----------------------------------------------------------------------+
@@ -126,7 +129,7 @@ if (isset($_POST['submit']))
   {
     if (empty($_POST[$field]))
     {
-      message_die(l10n('Some fields are missing.'));
+      message_die(l10n('Some fields are missing'));
     }
   }
   
@@ -226,7 +229,7 @@ DELETE
     );
       
   message_success(
-    l10n('revision successfuly added. Thank you.'),
+    l10n('Revision successfuly added. Thank you.'),
     sprintf(
       'extension_view.php?eid=%u&amp;rid=%u#rev%u',
       $page['extension_id'],
@@ -244,7 +247,7 @@ $tpl->assign(
   array(
     'extension_name' => $page['extension_name'],
     'use_agreement' => $conf['use_agreement'],
-    'agreement_description' => $conf['agreement_description'],
+    'agreement_description' => l10n('agreement_description'),
     )
   );
 
@@ -338,6 +341,7 @@ foreach ($versions as $version)
 }
 
 $tpl->assign('versions', $tpl_versions);
+$tpl->assign('f_action', 'revision_add.php?eid='.$page['extension_id']);
 
 // +-----------------------------------------------------------------------+
 // |                           html code display                           |

@@ -43,7 +43,7 @@ function message_die($message, $title = 'Error', $go_back = true)
   global $root_path, $tpl, $db, $user, $page, $conf;
   
   $page['message'] = array(
-    'title' => $title,
+    'title' => l10n($title),
     'is_success' => false,
     'message' => $message,
     'go_back' => $go_back
@@ -60,6 +60,7 @@ function message_success(
 {
   global $root_path, $tpl, $db, $user, $page, $conf;
   
+  $page['message']['title'] = l10n($title);
   $page['message']['is_success'] = true;
   $page['message']['message'] = $message;
   $page['message']['redirect'] = $redirect;
@@ -73,11 +74,23 @@ function isAdmin($user_id)
   return in_array($user_id, $conf['admin_users']);
 }
 
-function l10n($lang_key)
+/**
+ * returns the corresponding value from $lang if existing. Else, the key is
+ * returned
+ *
+ * @param string key
+ * @return string
+ */
+function l10n($key)
 {
-  global $conf;
-  
-  return $conf['l10n_key_prefix'].$lang_key;
+  global $lang, $conf;
+
+  if ($conf['debug_l10n'] and !isset($lang[$key]) and !empty($key))
+  {
+    trigger_error('[l10n] language key "'.$key.'" is not defined', E_USER_WARNING);
+  }
+
+  return isset($lang[$key]) ? $lang[$key] : $key;
 }
 
 /**
@@ -1089,4 +1102,28 @@ function get_user_language($desc)
 
   return preg_replace($patterns, $replacements, $desc);
 }
+
+/**
+ * includes a language file
+ */
+function load_language($filename, $dirname = './')
+{
+  global $conf, $lang;
+
+  $lang = array();
+
+  $dirname .= 'language/';
+
+  $selected_language_file = $dirname . $_SESSION['language'] . '/' . $filename;
+  $default_language_file = $dirname . $conf['default_language'] . '/' . $filename;
+
+  if (file_exists($selected_language_file))
+  {
+    @include($selected_language_file);
+  }
+  elseif (file_exists( $default_language_file))
+  {
+    @include($default_language_file);
+  }
+}  
 ?>

@@ -143,7 +143,8 @@ foreach ($revision_ids as $revision_id)
         $revision_id,
         $revision_id
         ),
-      'downloads' => $download_of_extension[$extension_id],
+      'downloads' => isset($download_of_extension[$extension_id]) ?
+                       $download_of_extension[$extension_id] : 0,
       )
     );
 }

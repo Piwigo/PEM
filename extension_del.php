@@ -29,7 +29,7 @@ if (!isset($user['id']))
 {
   $page['message']['is_success'] = false;
   $page['message']['message'] = l10n(
-    'You must be connected to add, modify or delete an extension'
+    'You must be connected to add, modify or delete an extension.'
     );
   $page['message']['go_back'] = true;
   include($root_path.'include/message.inc.php');
@@ -106,7 +106,7 @@ $db->query($query);
 
 $page['message']['is_success'] = true;
 $page['message']['message'] = l10n(
-  'extension successfuly deleted'
+  'Extension successfuly deleted.'
   );
 $page['message']['redirect'] = 'index.php';
 include($root_path.'include/message.inc.php');

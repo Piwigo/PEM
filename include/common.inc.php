@@ -92,27 +92,38 @@ if (isset($_COOKIE[ $conf['user_cookie_name'] ])) {
 $tpl = new template($root_path . 'template/');
 $tpl->assign('software', $conf['software']);
 
-// do we have a disclaimer?
-$has_disclaimer = false;
-if (is_file($root_path.'template/disclaimer.html'))
-{
-  $has_disclaimer = true;
-}
-
-$tpl->assign('has_disclaimer', $has_disclaimer);
-
 // Language selection
 if (isset($_GET['lang'])) {
   $_SESSION['language'] = $_GET['lang'];
 }
-if (empty($_SESSION['language'])) {
-  $_SESSION['language'] = 'en';
+if (empty($_SESSION['language']))
+{
+  $_SESSION['language'] = $conf['default_language'];
+
+  if ($conf['get_browser_language'])
+  {
+    $browser_language = @substr($_SERVER["HTTP_ACCEPT_LANGUAGE"],0,2);
+    if (isset($conf['languages'][$browser_language]))
+    {
+      $_SESSION['language'] = $browser_language;
+    }
+  }
 }
+
 $self_uri = preg_replace('#(\?|&)lang=..#', '', $_SERVER['REQUEST_URI']);
 $self_uri .= strpos($self_uri, '?') ? '&amp;' : '?';
 $tpl->assign('self_uri', $self_uri);
 $tpl->assign('lang', $_SESSION['language']);
 $tpl->assign('languages', $conf['languages']);
+
+load_language('common.lang.php');
+
+// do we have a disclaimer?
+if (is_file($root_path.'language/'.$_SESSION['language'].'/disclaimer.html')
+  or is_file($root_path.'language/'.$conf['default_language'].'/disclaimer.html'))
+{
+  $tpl->assign('has_disclaimer', true);
+}
 
 // PWG Compatibility version set
 if (isset($_POST['filter_submit'])) {
@@ -322,7 +333,7 @@ if (isset($_POST['quickconnect_submit']))
 {
   if ($user_id = check_user_password($_POST['username'], $_POST['password']))
   {
-    log_user($user_id, $_POST['password']);
+    log_user($user_id, $_POST['username'], $_POST['password']);
 
     $page['message']['is_success'] = true;
     $page['message']['message'] = l10n('Identification successful');

@@ -40,7 +40,7 @@ if (isset($_POST['submit']))
   {
     array_push(
       $errors,
-      l10n('confirmation password does not match')
+      l10n('Confirmation password does not match.')
       );
   }
 
@@ -55,7 +55,7 @@ if (isset($_POST['submit']))
   if (count($errors) == 0)
   {
     $user_id = get_userid($_POST['username']);
-    log_user($user_id, $_POST['password']);
+    log_user($user_id, $_POST['username'], $_POST['password']);
     message_success('Registration successful', 'index.php');
   }
   else

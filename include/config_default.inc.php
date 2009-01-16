@@ -102,10 +102,6 @@ $conf['website_description'] = 'PhpWebGallery extensions';
 $conf['website_language'] = 'en';
 $conf['webmaster_email'] = 'team phpwebgallery.net';
 
-// l10n_key_prefix: if the language key has no value, the key is
-// displayed with this prefix.
-$conf['l10n_key_prefix'] = null;
-
 // software: name of the extended software
 $conf['software'] = 'Piwigo';
 
@@ -116,8 +112,6 @@ $conf['rss_nb_items'] = 10;
 // revision add
 $conf['use_agreement'] = false;
 
-$conf['agreement_description'] = 'I accept this terms and conditions agreement that take my intellectual property on my contribution.';
-
 $conf['debug_mode'] = false;
 
 // cookie management
@@ -126,21 +120,28 @@ $conf['cookie_path'] = '/';
 $conf['cookie_seed'] = 'very secret seed';
 $conf['set_cookie'] = 'pun_setcookie';
 
+// Message time redirection (in seconds)
+$conf['time_redirect'] = 5;
+
 // languages
 $conf['languages'] = array(
-  array(
-    'code' => 'en',
-    'label' => 'English',
-    ),
-  array(
-    'code' => 'fr',
-    'label' => 'Français',
-    ),
-  );
+  'en' => 'English',
+  'fr' => 'Français',
+);
+
+// Default language
+$conf['default_language'] = 'en';
+
+// Try to get browser language if true.
+// If false, use $conf['default_language']
+$conf['get_browser_language'] = true;
 
 // +-----------------------------------------------------------------------+
 // |                            debug/performance                          |
 // +-----------------------------------------------------------------------+
+
+// debug_l10n : display a warning message each time an unset language key is accessed
+$conf['debug_l10n'] = false;
 
 // activate template debugging - a new window will appear
 $conf['debug_template'] = false;

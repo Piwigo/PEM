@@ -23,7 +23,7 @@
       <div id="Menus">
         <div class="menu">
           <form method="post" action="{$action}" style="margin:0;padding:0;">
-          Category<br />
+          {'Category'|translate}<br />
           <select name="category">
             <option value="0">-------</option>
 {foreach from=$categories item=category}
@@ -31,10 +31,10 @@
 {/foreach}
           </select><br />
 
-          Search<br />
+          {'Search'|translate}<br />
           <input name="search" type="text" value="{if isset($search)}{$search}{/if}"/><br />
 
-          Version<br />
+          {'Version'|translate}<br />
           <select name="pwg_version">
             <option value="0">-------</option>
 {foreach from=$menu_versions item=version}
@@ -42,7 +42,7 @@
 {/foreach}
           </select>
 
-          Author<br />
+          {'Author'|translate}<br />
           <select name="user">
             <option value="0">-------</option>
 {foreach from=$filter_users item=user}
@@ -51,41 +51,41 @@
           </select>
 
           <p class="filter_buttons">
-            <input type="submit" value="Filter" name="filter_submit" />
-            <input type="submit" value="Reset" name="filter_reset" />
+            <input type="submit" value="{'Filter'|translate}" name="filter_submit" />
+            <input type="submit" value="{'Reset'|translate}" name="filter_reset" />
           </p>
           </form>
         </div>
     
         <div class="menu">
-{if $has_disclaimer}
-          <a href="disclaimer.php">Disclaimer</a><br/>
+{if isset($has_disclaimer)}
+          <a href="disclaimer.php">{'Disclaimer'|translate}</a><br/>
 {/if}
 
 {if !$user_is_logged}
 	<form method="post">
 			<ul class="ident">
-				<li><a href="register.php">Register</a><br /></li>
-				<li><a href="identification.php">Login</a><br /></li>
+				<li><a href="register.php">{'Register'|translate}</a><br /></li>
+				<li><a href="identification.php">{'Login'|translate}</a><br /></li>
 			</ul>
-			Username<br />
+			{'Username'|translate}<br />
 			<input type="text" name="username" />
-			Password<br />
+			{'Password'|translate}<br />
 			<input type="password" name="password" /><br />
 		<div>
 			<p class="filter_buttons">
-				<input type="submit" name="quickconnect_submit" value="Submit" />
+				<input type="submit" name="quickconnect_submit" value="{'Submit'|translate}" />
 			</p>
 		</div>
 	</form>
 {else}
-          <p>Hello {$username}</p>
+          <p>{'Hello %s'|translate|sprintf:$username}</p>
           <ul>
-            <li><a href="identification.php?action=logout">Disconnect</a></li>
-            <li><a href="my.php">Home</a></li>
-            <li><a href="extension_add.php">Add extension</a></li>
+            <li><a href="identification.php?action=logout">{'Disconnect'|translate}</a></li>
+            <li><a href="my.php">{'Home'|translate}</a></li>
+            <li><a href="extension_add.php">{'Add an extension'|translate}</a></li>
   {if $user_is_admin}
-            <li><a href="admin/index.php">Administration</a></li>
+            <li><a href="admin/index.php">{'Administration'|translate}</a></li>
   {/if}
           </ul>
 {/if}
@@ -93,16 +93,16 @@
       </div> <!-- Menus -->
     
       <div id="Content">
-        <div id="quickNav"><a href="index.php">Index</a></div>
+        <div id="quickNav"><a href="index.php">{'Index'|translate}</a></div>
 {if count($languages) > 0}
         <div id="langSelect">
           <select onchange="document.location = this.options[this.selectedIndex].value;">
-  {foreach from=$languages item=language}
+  {foreach from=$languages item=language_name key=language_code}
             <option
-              value="{$self_uri}lang={$language.code}"
-              {if ($lang == $language.code)}selected="selected"{/if}
+              value="{$self_uri}lang={$language_code}"
+              {if ($lang == $language_code)}selected="selected"{/if}
             >
-              {$language.label}
+              {$language_name}
             </option>
   {/foreach}
           </select>
@@ -113,9 +113,9 @@
     </div> <!-- overall -->
     
     <div id="footer">
-      <a href="rss.php" title="notification feed">news feed</a>
-      - page generated in {$generation_time}
-      - powered by <a href="https://gna.org/projects/pem/">PEM</a> {$subversion_revision}
+      <a href="rss.php" title="notification feed">{'news feed'|translate}</a>
+      - {'page generated in %s'|translate|sprintf:$generation_time}
+      - {'powered by'|translate} {$subversion_revision}
     </div> <!-- footer -->
 
     {$footer}

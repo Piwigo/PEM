@@ -39,7 +39,7 @@ if (!isset($user['id']))
 {
   $page['message']['is_success'] = false;
   $page['message']['message'] = l10n(
-    'You must be connected to add or modify an extension'
+    'You must be connected to add, modify or delete an extension.'
     );
   $page['message']['go_back'] = true;
   include($root_path.'include/message.inc.php');
@@ -51,7 +51,7 @@ if (basename($_SERVER['SCRIPT_FILENAME']) == 'extension_mod.php')
 
   if ($user['id'] != $extension_infos['idx_user'] and !isAdmin($user['id']))
   {
-    message_die(l10n('You must be the extension author to modify it'));
+    message_die(l10n('You must be the extension author to modify it.'));
   }
 }
 
