@@ -614,14 +614,14 @@ function create_pagination_bar(
       $pagination_bar.=
         "\n".'&nbsp;'
         .'<a href="'.$url.'1" rel="start" class="FirstActive">'
-        .'&lt;&lt;first'
+        .'&lt;&lt; '.l10n('first')
         .'</a>'
         ;
     }
     else
     {
       $pagination_bar.=
-        "\n".'&nbsp;<span class="FirstInactive">&lt;&lt;first</span>';
+        "\n".'&nbsp;<span class="FirstInactive">&lt;&lt; '.l10n('first').'</span>';
     }
 
     // link on previous page ?
@@ -632,13 +632,13 @@ function create_pagination_bar(
       $pagination_bar.=
         "\n".'&nbsp;'
         .'<a href="'.$url.$previous.'" rel="prev" class="PrevActive">'
-        .'&lt;prev'.'</a>'
+        .'&lt; '.l10n('prev').'</a>'
         ;
     }
     else
     {
       $pagination_bar.=
-        "\n".'&nbsp;<span class="PrevInactive">&lt;prev</span>';
+        "\n".'&nbsp;<span class="PrevInactive">&lt; '.l10n('prev').'</span>';
     }
 
     $min_to_display = $current_page - $conf['paginate_pages_around'];
@@ -687,13 +687,13 @@ function create_pagination_bar(
       
       $pagination_bar.=
         "\n".'&nbsp;'.
-        '<a href="'.$url.$next.'" rel="next" class="NextActive">next&gt;</a>'
+        '<a href="'.$url.$next.'" rel="next" class="NextActive">'.l10n('next').' &gt;</a>'
         ;
     }
     else
     {
       $pagination_bar.=
-        "\n".'&nbsp;<span class="NextInactive">next&gt;</span>'
+        "\n".'&nbsp;<span class="NextInactive">'.l10n('next').' &gt;</span>'
         ;
     }
 
@@ -703,13 +703,13 @@ function create_pagination_bar(
       $pagination_bar.=
         "\n".'&nbsp;'.
         '<a href="'.$url.$nb_pages.'" rel="last" class="LastActive">'
-        .'last&gt;&gt;</a>'
+        .l10n('last').' &gt;&gt;</a>'
         ;
     }
     else
     {
       $pagination_bar.=
-        "\n".'&nbsp;<span class="LastInactive">last&gt;&gt;</span>';
+        "\n".'&nbsp;<span class="LastInactive">'.l10n('last').' &gt;&gt;</span>';
     }
   }
   
