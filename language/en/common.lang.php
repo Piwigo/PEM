@@ -30,6 +30,7 @@ $lang['Add or replace screenshot'] = 'Add or replace screenshot';
 $lang['Administration'] = 'Administration';
 $lang['Agreement'] = 'Agreement';
 $lang['agreement_description'] = 'I accept this terms and conditions agreement that take my intellectual property on my contribution.';
+$lang['Are you sure you want to delete this item?'] = 'Are you sure you want to delete this item?';
 $lang['Author'] = 'Author';
 $lang['Automatic redirection in %s seconds.'] = 'Automatic redirection in %s seconds.';
 $lang['Back to previous page'] = 'Back to previous page';

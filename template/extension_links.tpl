@@ -58,7 +58,7 @@
     <ul class="linkManagement">
   {foreach from=$links item=link}
       <li>
-        <a href="{$link.u_delete}" onclick="return confirm_del();" class="linkAction"><img src="template/images/delete.png"></a>
+        <a href="{$link.u_delete}" onclick="return confirm('{'Are you sure you want to delete this item?'|translate|escape:javascript}');" class="linkAction"><img src="template/images/delete.png"></a>
         <p>
           <strong><a href="{$link.url}">{$link.name}</a></strong>
           {$link.description}

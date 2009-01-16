@@ -30,6 +30,7 @@ $lang['Add an extension'] = 'Ajouter une extension';
 $lang['Administration'] = 'Administration';
 $lang['Agreement'] = 'Accord';
 $lang['agreement_description'] = 'I accept this terms and conditions agreement that take my intellectual property on my contribution.';
+$lang['Are you sure you want to delete this item?'] = 'Etes-vous sûr de vouloir supprimer cet élément?';
 $lang['Author'] = 'Auteur';
 $lang['Automatic redirection in %s seconds.'] = 'Redirection automatique dans %s secondes.';
 $lang['Back to previous page'] = 'Revenir à la page précédente';
