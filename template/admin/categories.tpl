@@ -4,7 +4,7 @@
   <div
     id="category_form_header"
     onclick="revToggleDisplay('category_form_header', 'category_form_content')"
-  {if $category_form_expanded}
+  {if isset($category_form_expanded) and $category_form_expanded}
     class="changelogRevisionHeaderExpanded"
   {else}
     class="changelogRevisionHeaderCollapsed"
@@ -15,7 +15,7 @@
 
   <div
     id="category_form_content"
-  {if !$category_form_expanded}
+  {if !isset($category_form_expanded) or !$category_form_expanded}
       style="display:none"
   {/if}
   >
@@ -26,7 +26,7 @@
       <table>
         <tr>
           <th>Name</th>
-          <td><input type="text" name="name" size="35" maxlength="255" value="{$name}" /></td>
+          <td><textarea rows="4" cols="50" name="name">{if isset($name)}{$name}{/if}</textarea></td>
         </tr>
       </table>
       

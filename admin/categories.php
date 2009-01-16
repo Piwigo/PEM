@@ -117,12 +117,13 @@ while ($cat = $db->fetch_assoc($req))
     $tpl_categories,
     array(
       'id' => $cat['id_category'],
-      'name' => $cat['name'],
+      'name' => get_user_language($cat['name']),
       )
     );
 }
 
 $tpl->assign('categories', $tpl_categories);
+$tpl->assign('f_action', 'categories.php');
 
 // +-----------------------------------------------------------------------+
 // |                           html code display                           |

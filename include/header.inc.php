@@ -71,7 +71,7 @@ foreach($categories as $cat)
       'selected' => $selected,
       'name' => sprintf(
         '%s (%s)',
-        $cat['name'],
+        get_user_language($cat['name']),
         isset($nb_ext_of_category[$id])
         ? $nb_ext_of_category[$id] > 1
           ? $nb_ext_of_category[$id].' extensions'

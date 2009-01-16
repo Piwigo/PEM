@@ -130,6 +130,7 @@ foreach ($versions as $version)
 }
 
 $tpl->assign('versions', $tpl_versions);
+$tpl->assign('f_action', 'versions.php');
 
 // +-----------------------------------------------------------------------+
 // |                           html code display                           |

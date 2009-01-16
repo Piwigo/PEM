@@ -4,7 +4,7 @@
   <div
     id="version_form_header"
     onclick="revToggleDisplay('version_form_header', 'version_form_content')"
-  {if $version_form_expanded}
+  {if isset($version_form_expanded) and $version_form_expanded}
     class="changelogRevisionHeaderExpanded"
   {else}
     class="changelogRevisionHeaderCollapsed"
@@ -15,7 +15,7 @@
 
   <div
     id="version_form_content"
-  {if !$version_form_expanded}
+  {if !isset($version_form_expanded) or !$version_form_expanded}
       style="display:none"
   {/if}
   >
@@ -26,7 +26,7 @@
       <table>
         <tr>
           <th>Name</th>
-          <td><input type="text" name="name" size="35" maxlength="255" value="{$name}" /></td>
+          <td><input type="text" name="name" size="35" maxlength="255" value="{if isset($name)}{$name}{/if}" /></td>
         </tr>
       </table>
       

@@ -205,7 +205,7 @@ foreach($cats as $cat)
   array_push(
     $tpl_extension_categories,
     array(
-      'name' => $cat['name'],
+      'name' => get_user_language($cat['name']),
       'value' => $cat['id_category'],
       'checked' =>
       in_array($cat['id_category'], $selected_categories)
