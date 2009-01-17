@@ -341,7 +341,7 @@ foreach ($versions as $version)
 }
 
 $tpl->assign('versions', $tpl_versions);
-$tpl->assign('f_action', 'revision_add.php?eid='.$page['extension_id']);
+$tpl->assign('f_action', $_SERVER['REQUEST_URI']);
 
 // +-----------------------------------------------------------------------+
 // |                           html code display                           |
