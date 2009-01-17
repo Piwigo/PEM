@@ -119,7 +119,13 @@ foreach ($revision_ids as $revision_id)
       'id' => $revision_id,
       'extension_id' => $extension_id,
       'extension_name' => $extension_infos_of[$extension_id]['name'],
-      'about' => get_user_language($extension_infos_of[$extension_id]['description']),
+      'about' => nl2br(
+        htmlspecialchars(
+          strip_tags(
+            get_user_language($extension_infos_of[$extension_id]['description'])
+            )
+          )
+        ),
       'author' => $author_infos_of[$author_id]['username'],
       'name' => $revision_infos_of[$revision_id]['version'],
       'compatible_versions' => implode(', ', $versions_of[$revision_id]),
