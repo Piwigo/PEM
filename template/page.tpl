@@ -64,7 +64,7 @@
 				<li><a href="identification.php">{'Login'|translate}</a><br /></li>
 			</ul>
 			{'Username'|translate}<br />
-			<input type="text" name="username" />
+			<input type="text" name="username" /><br />
 			{'Password'|translate}<br />
 			<input type="password" name="password" /><br />
 		<div>
