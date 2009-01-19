@@ -35,7 +35,7 @@
 {foreach from=$menu_versions item=version}
             <option value="{$version.id}" {$version.selected}>{$version.name}</option>
 {/foreach}
-          </select>
+          </select><br />
 
           {'Author'|translate}<br />
           <select name="user">
