@@ -125,8 +125,11 @@ $conf['time_redirect'] = 5;
 
 // languages
 $conf['languages'] = array(
+  'de' => 'Deutsch',
   'en' => 'English',
+  'es' => 'Español',
   'fr' => 'Français',
+  'it' => 'Italiano',
 );
 
 // Default language
