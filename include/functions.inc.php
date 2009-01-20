@@ -1058,19 +1058,27 @@ function pun_setcookie($user_id, $password_hash)
   $cookie_seed = $conf['cookie_seed'];
   $cookie_expire = strtotime('+1 year');
 
-  if (!version_compare(PHP_VERSION, '5.2.0', '>=')) {
-    $cookie_path.= '; HttpOnly';
+  if (version_compare(PHP_VERSION, '5.2.0', '>=')) {
+    setcookie(
+      $cookie_name,
+      serialize(array($user_id, md5($cookie_seed.$password_hash))),
+      $cookie_expire,
+      $cookie_path,
+      $cookie_domain,
+      $cookie_secure,
+      true
+      );
   }
-
-  setcookie(
-    $cookie_name,
-    serialize(array($user_id, md5($cookie_seed.$password_hash))),
-    $cookie_expire,
-    $cookie_path,
-    $cookie_domain,
-    $cookie_secure,
-    true
-    );
+  else {
+    setcookie(
+      $cookie_name,
+      serialize(array($user_id, md5($cookie_seed.$password_hash))),
+      $cookie_expire,
+      $cookie_path.'; HttpOnly',
+      $cookie_domain,
+      $cookie_secure
+      );
+  }
 }
 
 /* *
