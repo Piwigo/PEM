@@ -1133,5 +1133,32 @@ function load_language($filename, $dirname = './')
   {
     @include($default_language_file);
   }
-}  
+}
+
+function get_extension_ids_for_categories($category_ids) {
+  if (count($category_ids) == 0) {
+    return array();
+  }
+
+  // strategy is to list images associated to each tag
+  $eids_for_category = array();
+
+  foreach ($category_ids as $cid) {
+    $query = '
+SELECT idx_extension
+  FROM '.EXT_CAT_TABLE.'
+  WHERE idx_category = '.$cid.'
+;';
+    $eids_for_category[$cid] = array_from_query($query, 'idx_extension');
+  }
+  
+  // then we calculate the intersection, the images that are associated to
+  // every tags
+  $eids = array_shift($eids_for_category);
+  foreach ($eids_for_category as $category_ids) {
+    $eids = array_intersect($eids, $category_ids);
+  }
+
+  return array_unique($eids);
+}
 ?>

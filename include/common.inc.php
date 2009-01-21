@@ -150,13 +150,21 @@ if (isset($_POST['filter_submit'])) {
   }
 
   // filter on a category
-  if (isset($_POST['category']) and is_numeric($_POST['category'])) {
-    if ($_POST['category'] != 0) {
-      $_SESSION['filter']['category'] = $_POST['category'];
+  if (isset($_POST['categories']) and is_array($_POST['categories'])) {
+    $_SESSION['filter']['categories'] = array();
+    
+    foreach ($_POST['categories'] as $cid) {
+      if (is_numeric($cid) and $cid != 0) {
+        array_push($_SESSION['filter']['categories'], $cid);
+      }
     }
-    else {
-      unset($_SESSION['filter']['category']);
+
+    if (count($_SESSION['filter']['categories']) == 0) {
+      unset($_SESSION['filter']['categories']);
     }
+  }
+  else {
+    unset($_SESSION['filter']['categories']);
   }
   
   // filter on a user
@@ -284,14 +292,8 @@ SELECT
     $filtered_sets['search'] = array_from_query($query, 'id_extension');
   }
 
-  if (isset($_SESSION['filter']['category'])) {
-    $query = '
-SELECT
-    idx_extension
- FROM '.EXT_CAT_TABLE.'
- WHERE idx_category = '.$_SESSION['filter']['category'].'
-;';
-    $filtered_sets['category'] = array_from_query($query, 'idx_extension');
+  if (isset($_SESSION['filter']['categories'])) {
+    $filtered_sets['categories'] = get_extension_ids_for_categories($_SESSION['filter']['categories']);
   }
 
   if (isset($_SESSION['filter']['user'])) {
@@ -304,20 +306,12 @@ SELECT
     $filtered_sets['user'] = array_from_query($query, 'id_extension');
   }
 
-  $page['filtered_extension_ids'] = array();
-  $is_first_set = true;
+  $page['filtered_extension_ids'] = array_shift($filtered_sets);
   foreach ($filtered_sets as $set) {
-    if ($is_first_set) {
-      $is_first_set = false;
-
-      $page['filtered_extension_ids'] = $set;
-    }
-    else {
-      $page['filtered_extension_ids'] = array_intersect(
-        $page['filtered_extension_ids'],
-        $set
-        );
-    }
+    $page['filtered_extension_ids'] = array_intersect(
+      $page['filtered_extension_ids'],
+      $set
+      );
   }
   
   $page['filtered_extension_ids'] = array_unique(

@@ -56,8 +56,8 @@ $tpl_categories = array();
 foreach($categories as $cat)
 {
   $selected = '';
-  if (isset($_SESSION['filter']['category'])
-      and $_SESSION['filter']['category'] == $cat['id_category'])
+  if (isset($_SESSION['filter']['categories'])
+      and in_array($cat['id_category'], $_SESSION['filter']['categories']))
   {
     $selected = 'selected="selected"';
   }

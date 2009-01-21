@@ -19,8 +19,7 @@
         <div class="menu">
           <form method="post" action="{$action}" style="margin:0;padding:0;">
           {'Category'|translate}<br />
-          <select name="category">
-            <option value="0">-------</option>
+          <select name="categories[]" multiple="true" size="5">
 {foreach from=$categories item=category}
             <option value="{$category.id}" {$category.selected}>{$category.name}</option>
 {/foreach}
