@@ -127,6 +127,13 @@ if (is_file($root_path.'language/'.$_SESSION['language'].'/disclaimer.html')
   $tpl->assign('has_disclaimer', true);
 }
 
+// is the URL prefiltered?
+if (isset($_GET['cid'])) {
+  if (is_numeric($_GET['cid'])) {
+    $_SESSION['filter']['categories'] = array($_GET['cid']);
+  }
+}
+
 // PWG Compatibility version set
 if (isset($_POST['filter_submit'])) {
   // filter on the extended application version
