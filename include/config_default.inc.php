@@ -34,9 +34,9 @@ $conf['db_params'] = array(
   'name' => 'pem',
   'host' => 'localhost',
   'user' => 'root',
-  'pass' => 'X8lqd3GE',
+  'pass' => '',
   'type' => 'mysql',
-  'tables_prefix' => 'pwg_',
+  'tables_prefix' => 'pem_',
   'persistent_connection' => true,
   );
 

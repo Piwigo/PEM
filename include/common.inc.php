@@ -127,6 +127,18 @@ if (is_file($root_path.'language/'.$_SESSION['language'].'/disclaimer.html')
   $tpl->assign('has_disclaimer', true);
 }
 
+// do we have a HELP?
+if (is_file($root_path.'language/'.$_SESSION['language'].'/help_guest.html')
+  or is_file($root_path.'language/'.$conf['default_language'].'/help_guest.html'))
+{
+  $tpl->assign('has_help', true);
+}
+if (is_file($root_path.'language/'.$_SESSION['language'].'/help_user.html')
+  or is_file($root_path.'language/'.$conf['default_language'].'/help_user.html'))
+{
+  $tpl->assign('has_help_user', true);
+}
+
 // is the URL prefiltered?
 if (isset($_GET['cid'])) {
   if (is_numeric($_GET['cid'])) {

@@ -87,7 +87,17 @@
       </div> <!-- Menus -->
     
       <div id="Content">
-        <div id="quickNav"><a href="index.php">{'Index'|translate}</a></div>
+        <div id="quickNav"><a href="index.php"><img class="nav" src="template/images/home.png" alt="{'Index'|translate}"/></a>
+{if !$user_is_logged}
+	{if isset($has_help)}
+          <a href="help_guest.php"><img class="nav" src="template/images/help.png" alt="{'help'|translate}"/></a>
+	{/if}
+{else}
+	{if isset($has_help_user)}
+          <a href="help_user.php"><img class="nav" src="template/images/help.png" alt="{'help'|translate}"/></a>
+	{/if}
+{/if}
+		</div>
 {if count($languages) > 0}
         <div id="langSelect">
           <select onchange="document.location = this.options[this.selectedIndex].value;">

@@ -130,5 +130,5 @@ $lang['You did not upload anything!'] = 'Du hast nichts hochgeladen!';
 $lang['You must be connected to add, modify or delete an extension.'] = 'Du musst angemeldet sein um eine Erweiterung zu bearbeiten oder  l&ouml;schen.';
 $lang['You must be connected to reach this page.'] = 'Du musst angemeldet sein um diese Seite zu sehen.';
 $lang['You must be the extension author to modify it.'] = 'Nur der Autor selbst kann eine Erweiterung weiterbearbeiten.';
-
+$lang['help'] = 'Hilfe';
 ?>

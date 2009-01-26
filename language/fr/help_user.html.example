@@ -1,0 +1,70 @@
+<h2>Aide à l'utilisation de PEM</h2>
+<br>
+<div class="row">
+<h3>Descriptions multilingues</h3>
+
+<p>Les descriptions multilingues se font entre les balises [lang=xx] et [/lang], ou xx est le code de la langue (par exemple fr, en, es, it, etc....)
+Il existe également 2 balises spéciales: [lang=default] et [lang=all]</p>
+
+<ul>
+  <li><b>Exemple d'utilisation</b> :<br>
+  <br>
+[lang=default]description par défaut [/lang]<br>
+[lang=fr]description en francais [/lang]<br>
+[lang=it]description en italien [/lang]<br>
+[lang=all]inclus dans la description, quelle que soit la langue de l'utilisateur[/lang]
+</li>
+</ul>
+
+<p>La description par défaut sera utilisée si la description dans la langue de l'utilisateur n'est pas définie.
+Si [lang=default] n'existe pas, tout ce qui est situé en dehors des balises de langues sera considéré comme description par défaut.</p>
+
+<h3>Créer une Catégorie (Extension)</h3>
+
+<div>Pour mettre une contribution à la disposition de la communauté il faut commencer par créer une catégorie (en réalisant un clic sur Ajout)
+Création de l’extension :<br>
+		<img class="help_user" src="template/images/help/cat.jpg" alt=""/>
+	<ol>
+		<li>Donner un nom qui de préférence permettent de comprendre à quoi sert la contribution.</li>
+		<li>Selectionner le type de catégorie ou vous souhaitez livrer une extension</li>
+		<li>Donner une description, si possible en Anglais et Français, penser à l'utilisation des balises multilingues (pour la traduction: une petite demande sur le forum pour ceux qui ne parle pas la langue de Shakespeare)</li>
+	</ol>
+ 
+	
+</div>
+
+<h3>Créer une Version (révision)</h3>
+
+<div>Une version aussi appelée révision est une évolution pour une même catégorie, par exemple un plugin qui a de nouvelles fonctionalités
+
+		<img class="help_user" src="template/images/help/rev1.jpg" alt=""/>
+	<ol>
+		<li>cette icône permet de voir les différentes évolutions de la catégorie.</li>
+		<li>cette icône permet de modifier les informations de la catégorie.</li>
+		<li>cette icône permet d’effacer la catégorie</li>
+		<li>cette icône permet de gérer des liens externes (par exemple l’emplacement de la discussion sur le forum)</li>
+		<li>cette icône permet de mettre une image pour la catégorie</li>
+		<li>cette icône permet d’ajouter une version</li>
+	</ol>
+	
+		<img class="help_user" src="template/images/help/rev2.jpg" alt=""/>
+	<ol>
+		<li>Numéroter la version exemple 2.0</li>
+		<li>sélectionner l’archive de votre contribution que vous avez préparée au préalable.</li>
+		<li>Bien penser à sélectionner les versions compatibles de PWG.</li>
+		<li>Donner une petite description si possible en Anglais et Français (pour la traduction une petite demande sur le forum pour ceux qui ne parle pas la langue de Shakespeare).</li>
+	</ol>
+</div>
+
+<h3>Modifier une Version</h3>
+<div>
+		<img class="help_user" src="template/images/help/rev3.jpg" alt=""/>
+	<ol>
+		<li>Retour à la catégorie</li>
+		<li>Editer la révision</li>
+		<li>Supprimer la version</li>
+		</ol>
+
+<b>Attention :</b> l’archive d’une version ne peut être modifiée. En cas d’erreur dans l’archive, il faut supprimer la version (à éviter) et en créer une nouvelle. En réalité, dès que vous avez communiqué à propos de votre contribution ne supprimez pas une révision, créez une nouvelle révision. En effet, les utilisateurs de votre contributions pourraient croire utiliser votre dernière révision alors qu’ils sont encore avec une version précédente.
+</div>
+</div>

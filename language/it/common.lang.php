@@ -130,5 +130,5 @@ $lang['You did not upload anything!'] = 'Non potete niente caricare!';
 $lang['You must be connected to add, modify or delete an extension.'] = 'Dovete essere connesso per aggiungere, modificare o cancellare un\'estensione.';
 $lang['You must be connected to reach this page.'] = 'Dovete essere connesso per accedere a questa paggina.';
 $lang['You must be the extension author to modify it.'] = 'Dovete essere l\'autore del\'estensione per modificarla.';
-
+$lang['help'] = 'Aiuto';
 ?>

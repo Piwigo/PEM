@@ -130,5 +130,5 @@ $lang['You did not upload anything!'] = 'You did not upload anything!';
 $lang['You must be connected to add, modify or delete an extension.'] = 'You must be connected to add, modify or delete an extension.';
 $lang['You must be connected to reach this page.'] = 'You must be connected to reach this page.';
 $lang['You must be the extension author to modify it.'] = 'You must be the extension author to modify it.';
-
+$lang['help'] = 'Help';
 ?>

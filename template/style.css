@@ -471,6 +471,14 @@ UL.revActionLinks {
   float: left;
 }
 
+#quickNav img{
+  float: left;
+}
+
+.nav{
+  border:0;
+}
+
 #langSelect {
   float: right;
   margin-left: 10px;
