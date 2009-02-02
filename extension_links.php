@@ -145,6 +145,10 @@ SELECT MAX(rank) AS current_rank
     'idx_extension'   => $page['extension_id'],
     );
 
+  if (!empty($_POST['link_language'])) {
+    $insert['lang'] = $_POST['link_language'];
+  }
+
   mass_inserts(
     LINKS_TABLE,
     array_keys($insert),

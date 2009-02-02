@@ -143,12 +143,18 @@ if ($screenshot_infos = get_extension_screenshot_infos($page['extension_id']))
 }
 
 // Links associated to the current extension
+$lang_id = $conf['default_language'];
+if (isset($_SESSION['language'])) {
+  $lang_id = $_SESSION['language'];
+}
+
 $query = '
 SELECT name,
        url,
        description
   FROM '.LINKS_TABLE.'
   WHERE idx_extension = '.$page['extension_id'].'
+    AND (lang IS NULL OR lang = \''.$lang_id.'\')
   ORDER BY rank ASC
 ;';
 $result = $db->query($query);

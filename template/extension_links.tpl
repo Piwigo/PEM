@@ -42,6 +42,18 @@
           <textarea cols="80" rows="3" name="link_description">{if isset($f_link_description)}{$f_link_description}{/if}</textarea>
         </td>
       </tr>
+      <tr>
+        <th><strong>{'Language'|translate}</strong></th>
+        <td>
+          <input
+            type="text"
+            name="link_language"
+            size="2"
+            maxlength="2"
+            value="{if isset($f_link_language)}{$f_link_language}{/if}"
+          />
+        </td>
+      </tr>
     </table>
 
     <div>
