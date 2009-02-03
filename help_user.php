@@ -27,6 +27,16 @@ require_once($root_path.'include/common.inc.php');
 
 $tpl->set_filename('page', 'page.tpl');
 
+if (!isset($user['id']))
+{
+  $page['message']['is_success'] = false;
+  $page['message']['message'] = l10n(
+    'You must be connected to read help user'
+    );
+  $page['message']['go_back'] = true;
+  include($root_path.'include/message.inc.php');
+}
+
 // +-----------------------------------------------------------------------+
 // |                           html code display                           |
 // +-----------------------------------------------------------------------+
@@ -50,4 +60,7 @@ include($root_path.'include/header.inc.php');
 include($root_path.'include/footer.inc.php');
 $tpl->parse('page');
 $tpl->p();
+
+
+
 ?>

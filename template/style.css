@@ -576,3 +576,8 @@ UL.revActionLinks {
   margin-top: 1em;
   text-align: center;
 }
+
+div.row  img.help_user
+{
+  border:0px;
+}

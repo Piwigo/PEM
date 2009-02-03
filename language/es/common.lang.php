@@ -131,4 +131,6 @@ $lang['You must be connected to add, modify or delete an extension.'] = 'Usted d
 $lang['You must be connected to reach this page.'] = 'Usted debe ser conectado para acceder a esta página.';
 $lang['You must be the extension author to modify it.'] = 'Usted debe ser el autor de la extensión para modificarla.';
 $lang['help'] = 'Ayuda';
+$lang['You must be connected to read help user'] = 'Ustedes deben ser conectados para leer el ayudante usuario';
+$lang['You mustn\'t be connected to read help guest'] = 'Ustedes no deben ser conectados para leer de ayuda del invitado';
 ?>
