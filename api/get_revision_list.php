@@ -25,17 +25,50 @@ define('INTERNAL', true);
 $root_path = '../';
 require_once($root_path.'include/common.inc.php');
 
-$required_params = array('version', 'category_id');
+$required_params = array('version');
 foreach ($required_params as $required_param) {
   if (!isset($_GET[$required_param])) {
     die('"'.$required_param.'" is a required parameter');
   }
 }
 
-$category_id = $_GET['category_id'];
-if ($category_id != abs(intval($category_id)))
-{
-  die('unexpected category identifier');
+$filtered_sets = array();
+if (isset($_GET['categories']) or isset($_GET['category_id'])) {
+  if (isset($_GET['category_id'])) {
+    if ($_GET['category_id'] != abs(intval($_GET['category_id']))) {
+      die('unexpected category identifier');
+    }
+    $categories = $_GET['category_id'];
+  }
+  
+  if (isset($_GET['categories'])) {
+    $categories = $_GET['categories'];
+  
+    if (!preg_match('/^\d+(,\d+)*$/', $categories)) {
+      die('unexpected categories identifier');
+    }
+  }
+
+  $filtered_sets['categories'] = get_extension_ids_for_categories(explode(',', $categories));
+}
+
+if (count($filtered_sets) > 0) {
+  $page['filtered_extension_ids'] = array_shift($filtered_sets);
+  foreach ($filtered_sets as $set) {
+    $page['filtered_extension_ids'] = array_intersect(
+      $page['filtered_extension_ids'],
+      $set
+      );
+  }
+
+  $page['filtered_extension_ids'] = array_unique(
+    $page['filtered_extension_ids']
+    );
+
+  $page['filtered_extension_ids_string'] = implode(
+    ',',
+    $page['filtered_extension_ids']
+    );
 }
 
 $version = $_GET['version'];
@@ -82,10 +115,19 @@ SELECT DISTINCT
     INNER JOIN '.EXT_TABLE.'      AS e  ON e.id_extension = r.idx_extension
     INNER JOIN '.COMP_TABLE.'     AS c  ON c.idx_revision = r.id_revision
     INNER JOIN '.VER_TABLE.'      AS v  ON v.id_version = c.idx_version
-    INNER JOIN '.EXT_CAT_TABLE.'  AS ec ON ec.idx_extension = e.id_extension
     INNER JOIN '.USERS_TABLE.'    AS u  ON u.'.$userid_field.' = e.idx_user
-  WHERE ec.idx_category = '.$category_id.'
-    AND v.id_version IN ( ' . $version . ' )';
+  WHERE v.id_version IN ( ' . $version . ' )';
+
+if (isset($page['filtered_extension_ids'])) {
+  if (count($page['filtered_extension_ids']) > 0) {
+    $query.= '
+    AND e.id_extension IN ('.$page['filtered_extension_ids_string'].')';
+  }
+  else {
+    $query.= '
+    AND 0=1';
+  }
+}
 
 if (isset($extension_include))
 {
