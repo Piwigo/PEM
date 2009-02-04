@@ -114,9 +114,8 @@ SELECT DISTINCT
   FROM '.REV_TABLE.' AS r
     INNER JOIN '.EXT_TABLE.'      AS e  ON e.id_extension = r.idx_extension
     INNER JOIN '.COMP_TABLE.'     AS c  ON c.idx_revision = r.id_revision
-    INNER JOIN '.VER_TABLE.'      AS v  ON v.id_version = c.idx_version
     INNER JOIN '.USERS_TABLE.'    AS u  ON u.'.$userid_field.' = e.idx_user
-  WHERE v.id_version IN ( ' . $version . ' )';
+  WHERE c.idx_version IN ( ' . $version . ' )';
 
 if (isset($page['filtered_extension_ids'])) {
   if (count($page['filtered_extension_ids']) > 0) {
@@ -141,7 +140,7 @@ if (isset($extension_exclude))
 }
 
 $query .= '
-  ORDER BY v.id_version DESC, r.date DESC';
+  ORDER BY r.date DESC';
 
 if (isset($_GET['last_revision_only']) and $_GET['last_revision_only'] == 'true')
 {
