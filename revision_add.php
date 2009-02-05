@@ -182,7 +182,7 @@ if (isset($_POST['submit']))
   {
     // Moves the file to its final destination:
     // upload/extension-X/revision-Y
-    $extension_dir = EXTENSIONS_DIR.'extension-'.$page['extension_id'];
+    $extension_dir = $conf['upload_dir'].'extension-'.$page['extension_id'];
     $revision_dir = $extension_dir.'/revision-'.$page['revision_id'];
     
     if (!is_dir($extension_dir))

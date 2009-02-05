@@ -792,7 +792,9 @@ DELETE
 
 function get_extension_dir($extension_id)
 {
-  return EXTENSIONS_DIR.'extension-'.$extension_id;
+  global $conf;
+
+  return $conf['upload_dir'].'extension-'.$extension_id;
 }
 
 function get_revision_src($extension_id, $revision_id, $url)

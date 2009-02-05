@@ -41,5 +41,4 @@ define(
 define( 'EXTENSIONS_PER_PAGE', 3 );
 define( 'PUN_TURN_OFF_MAINT', 1 );
 define( 'PUN_QUIET_VISIT', 1 );
-define( 'EXTENSIONS_DIR', 'upload/' );
 ?>

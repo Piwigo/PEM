@@ -139,6 +139,9 @@ $conf['default_language'] = 'en';
 // If false, use $conf['default_language']
 $conf['get_browser_language'] = true;
 
+// where are screenshots and zip files uploaded?
+$conf['upload_dir'] = 'upload/';
+
 // +-----------------------------------------------------------------------+
 // |                            debug/performance                          |
 // +-----------------------------------------------------------------------+
