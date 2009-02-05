@@ -1,0 +1,132 @@
+<h2>Contributor's guide</h2>
+<br>
+<div class="row">
+
+  <div id="add_extension" class="changelogRevision">
+
+    <div
+      id="add_extension_header"
+      class="changelogRevisionHeaderCollapsed"
+      onclick="revToggleDisplay('add_extension_header', 'add_extension_content')"
+    >
+      <span class="revisionTitle">Add an extension</span>
+    </div>
+
+    <div
+      id="add_extension_content"
+      class="changelogRevisionContent"
+      style="display:none"
+    >
+<p>To contribute to the project, you need first to create an extension. Click on <a href="extension_add.php">Add an extension</a> in the menu.</p>
+
+<img class="help_user" src="template/images/help/cat.jpg" alt=""/>
+<ol>
+  <li>Give it a name</li>
+  <li>Choose one or more categories</li>
+  <li>Fill in the description. Multilingual tags are available, so the visitor can read the content in his own language.</li>
+</ol>
+
+<p>On the extension displaying page, a button set allows several actions.</p>
+
+<img class="help_user" src="template/images/help/rev1.jpg" alt=""/>
+
+<ol>
+  <li>edit the extension data.</li>
+  <li>delete the extension.</li>
+  <li>manage external links</li>
+  <li>add a picture to illustrate the extension</li>
+  <li>add a revision</li>
+</ol>
+    </div>
+  </div> <!-- add_extension -->
+
+  <div id="add_revision" class="changelogRevision">
+
+    <div
+      id="add_revision_header"
+      class="changelogRevisionHeaderCollapsed"
+      onclick="revToggleDisplay('add_revision_header', 'add_revision_content')"
+    >
+      <span class="revisionTitle">Add a revision</span>
+    </div>
+
+    <div
+      id="add_revision_content"
+      class="changelogRevisionContent"
+      style="display:none"
+    >
+<p>Each revision is an extension new version. Thus, there are several revisions for an extension. To create a new revision, click on the "add a revision" button on the extension displaying page to display a form:</p>
+
+<img class="help_user" src="template/images/help/rev2.jpg" alt=""/>
+
+<ol>
+  <li>Number the revision, for example "2.0"</li>
+  <li>Select the corresponding ZIP archive</li>
+  <li>Choose a list of the extended software versions that are compatible with the extension revision. For example, if the extended software is named "Piwigo" and the extension is "dynamic menu", you should state that revision "2.0" of "dynamic menu" is compatible with versions 2.0.0, 2.0.1 and 2.0.2 of "Piwigo".</li>
+  <li>List the changes brought by this new version. Multilingual tags are available, so the visitor can read the content in his own language.</li>
+</ol>
+    </div>
+  </div> <!-- add_revision -->
+
+  <div id="mod_revision" class="changelogRevision">
+
+    <div
+      id="mod_revision_header"
+      class="changelogRevisionHeaderCollapsed"
+      onclick="revToggleDisplay('mod_revision_header', 'mod_revision_content')"
+    >
+      <span class="revisionTitle">Edit a revision</span>
+    </div>
+
+    <div
+      id="mod_revision_content"
+      class="changelogRevisionContent"
+      style="display:none"
+    >
+		<img class="help_user" src="template/images/help/rev3.jpg" alt=""/>
+	<ol>
+		<li>Modify a revision</li>
+		<li>Delete a revision</li>
+	</ol>
+
+<b>Mind out:</b>
+	<ul>
+		<li>A revision archive cannot be modified. If there is an error in the archive, one must delete the revision and create a new one.</li>
+		<li>If the word about your contribution has already been spread, create a new version rather than suppress the contribution. Otherwise, the users could assume they have your last version though they are in fact using a former one.</li>
+	</ul>
+    </div>
+  </div> <!-- mod_revision -->
+
+  <div id="multilingual" class="changelogRevision">
+
+    <div
+      id="multilingual_header"
+      class="changelogRevisionHeaderCollapsed"
+      onclick="revToggleDisplay('multilingual_header', 'multilingual_content')"
+    >
+      <span class="revisionTitle">Multilingual descriptions</span>
+    </div>
+
+    <div
+      id="multilingual_content"
+      class="changelogRevisionContent"
+      style="display:none"
+    >
+
+<p>Multilingual descriptions must be inserted between [lang=xx] and [/lang] tags, where xx is the language code (for example, fr, en, es, it, etc.)
+There are also 2 special tags: [lang=default] and [lang=all]</p>
+
+<p><strong>Example</strong>:</p>
+<textarea cols="80" rows="10">[lang=en]The description, in english[/lang]
+[lang=fr]La description en français[/lang]
+[lang=ru]Описание на русском языке[/lang]
+[lang=zh]说明在中国[/lang]
+[lang=es]Descripción en español[/lang]
+
+[lang=all]included in the description, whatever the user language is[/lang]</textarea>
+
+<p>If the content is unavailable in the language chosen by the visitor, the PEM default language, i.e. english, will be used instead.</p>
+    </div>
+  </div> <!-- multilingual -->
+
+</div> <!-- row -->
