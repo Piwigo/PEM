@@ -142,6 +142,9 @@ $conf['get_browser_language'] = true;
 // where are screenshots and zip files uploaded?
 $conf['upload_dir'] = 'upload/';
 
+// the template to give to sprintf, must take an integer then a string
+$conf['user_url_template'] = null;
+
 // +-----------------------------------------------------------------------+
 // |                            debug/performance                          |
 // +-----------------------------------------------------------------------+

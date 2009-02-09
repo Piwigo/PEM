@@ -102,7 +102,11 @@ $tpl->assign(
           )
         )
       ),
-    'author' => $author,
+    'author' => sprintf(
+      '<a href="'.$conf['user_url_pattern'].'">%s</a>',
+      $data['idx_user'],
+      $author
+      ),
     'first_date' => l10n('no revision yet'),
     'last_date'  => l10n('no revision yet'),
     'compatible_with' => implode(
@@ -113,6 +117,18 @@ $tpl->assign(
     )
   );
 
+if (!empty($conf['user_url_template'])) {
+  $author_string = sprintf(
+    $conf['user_url_template'],
+    $data['idx_user'],
+    $author
+    );
+}
+else {
+  $author_string = $author;
+}
+
+$tpl->assign(array('author' => $author_string));
   
 if (isset($user['id']))
 {

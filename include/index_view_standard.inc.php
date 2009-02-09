@@ -113,6 +113,17 @@ foreach ($revision_ids as $revision_id)
   $author_id = $extension_infos_of[$extension_id]['idx_user'];
   $screenshot_infos = get_extension_screenshot_infos($extension_id);
   
+  if (!empty($conf['user_url_template'])) {
+    $author_string = sprintf(
+      $conf['user_url_template'],
+      $author_id,
+      $author_infos_of[$author_id]['username']
+      );
+  }
+  else {
+    $author_string = $author_infos_of[$author_id]['username'];
+  }
+
   array_push(
     $revisions,
     array(
@@ -126,7 +137,7 @@ foreach ($revision_ids as $revision_id)
             )
           )
         ),
-      'author' => $author_infos_of[$author_id]['username'],
+      'author' => $author_string,
       'name' => $revision_infos_of[$revision_id]['version'],
       'compatible_versions' => implode(', ', $versions_of[$revision_id]),
       'description' => nl2br(
