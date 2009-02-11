@@ -1163,4 +1163,48 @@ SELECT idx_extension
 
   return array_unique($eids);
 }
+
+function get_categories_of_extension($extension_ids) {
+  global $db;
+  
+  $cat_list_for = array();
+
+  $query = '
+SELECT
+    id_category,
+    name,
+    idx_extension
+  FROM '.EXT_CAT_TABLE.'
+    JOIN '.CAT_TABLE.' ON id_category = idx_category
+  WHERE idx_extension IN ('.implode(',', $extension_ids).')
+;';
+
+  $result = $db->query($query);
+  while ($row = $db->fetch_assoc($result)) {
+    $id_extension = $row['idx_extension'];
+    
+    if (!isset($cat_list_for[$id_extension])) {
+      $cat_list_for[$id_extension] = array();
+    }
+
+    array_push(
+      $cat_list_for[$id_extension],
+      sprintf(
+        '<a href="index.php?cid=%u">%s</a>',
+        $row['id_category'],
+        $row['name']
+        )
+      );
+  }
+
+  $categories_of_extension = array();
+  foreach ($extension_ids as $extension_id) {
+    $categories_of_extension[$extension_id] = implode(
+      ', ',
+      $cat_list_for[$extension_id]
+      );
+  }
+
+  return $categories_of_extension;
+}
 ?>

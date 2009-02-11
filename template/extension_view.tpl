@@ -16,6 +16,7 @@
 
 <ul class="extensionInfos">
   <li><em>{'Author'|translate}:</em> {$author}</li>
+  <li><em>{'Categories'|translate}:</em> {$extension_categories}</li>
   <li><em>{'First revision date'|translate}:</em> {$first_date}</li>
   <li><em>{'Latest revision date'|translate}:</em> {$last_date}</li>
   <li><em>{'Compatible with'|translate}:</em> {$software} releases {$compatible_with}</li>

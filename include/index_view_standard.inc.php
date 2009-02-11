@@ -103,6 +103,7 @@ $author_ids = array_unique(
   );
 
 $download_of_extension = get_download_of_extension($extension_ids);
+$categories_of_extension = get_categories_of_extension($extension_ids);
 
 $author_infos_of = get_user_infos_of($author_ids);
 
@@ -162,6 +163,7 @@ foreach ($revision_ids as $revision_id)
         ),
       'downloads' => isset($download_of_extension[$extension_id]) ?
                        $download_of_extension[$extension_id] : 0,
+      'categories' => $categories_of_extension[$extension_id],
       )
     );
 }

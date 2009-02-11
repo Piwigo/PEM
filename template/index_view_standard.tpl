@@ -22,6 +22,7 @@
 
   <ul>
     <li><em>{'Author'|translate}:</em> {$revision.author}</li>
+    <li><em>{'Categories'|translate}:</em> {$revision.categories}</li>
     <li><em>{'Released on'|translate}:</em> {$revision.date}</li>
     <li><em>{'Compatible with'|translate}:</em> {$software} releases {$revision.compatible_versions}</li>
     <li><em>{'Downloads'|translate}:</em> {$revision.downloads}</li>
