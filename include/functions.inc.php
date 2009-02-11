@@ -1192,7 +1192,7 @@ SELECT
       sprintf(
         '<a href="index.php?cid=%u">%s</a>',
         $row['id_category'],
-        $row['name']
+        get_user_language($row['name'])
         )
       );
   }
