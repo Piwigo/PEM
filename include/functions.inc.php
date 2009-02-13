@@ -1137,28 +1137,43 @@ function load_language($filename, $dirname = './')
   }
 }
 
-function get_extension_ids_for_categories($category_ids) {
+function get_extension_ids_for_categories($category_ids, $mode=null) {
   if (count($category_ids) == 0) {
     return array();
+  }
+
+  if (!in_array($mode, array('or', 'and'))) {
+    $mode = 'and';
   }
 
   // strategy is to list images associated to each category
   $eids_for_category = array();
 
-  foreach ($category_ids as $cid) {
-    $query = '
+  if ($mode == 'and') {
+    foreach ($category_ids as $cid) {
+      $query = '
 SELECT idx_extension
   FROM '.EXT_CAT_TABLE.'
   WHERE idx_category = '.$cid.'
 ;';
-    $eids_for_category[$cid] = array_from_query($query, 'idx_extension');
-  }
+      $eids_for_category[$cid] = array_from_query($query, 'idx_extension');
+    }
   
-  // then we calculate the intersection, the images that are associated to
-  // every tags
-  $eids = array_shift($eids_for_category);
-  foreach ($eids_for_category as $category_ids) {
-    $eids = array_intersect($eids, $category_ids);
+    // then we calculate the intersection, the images that are associated to
+    // every tags
+    $eids = array_shift($eids_for_category);
+    foreach ($eids_for_category as $category_ids) {
+      $eids = array_intersect($eids, $category_ids);
+    }
+  }
+  else {
+    $query = '
+SELECT
+    DISTINCT(idx_extension)
+  FROM '.EXT_CAT_TABLE.'
+  WHERE idx_category IN ('.implode(',', $category_ids).')
+;';
+    $eids = array_from_query($query, 'idx_extension');
   }
 
   return array_unique($eids);
@@ -1330,7 +1345,10 @@ function get_filtered_extension_ids($filter) {
   }
 
   if (isset($filter['category_ids'])) {
-    $filtered_sets['category_ids'] = get_extension_ids_for_categories($filter['category_ids']);
+    $filtered_sets['category_ids'] = get_extension_ids_for_categories(
+      $filter['category_ids'],
+      $filter['category_mode']
+      );
   }
 
   if (isset($filter['id_user'])) {

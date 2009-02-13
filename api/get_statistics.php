@@ -62,6 +62,11 @@ if (isset($_GET['categories'])) {
 }
 
 if (count($filter) > 0) {
+  $filter['category_mode'] = 'and';
+  if (isset($_GET['category_mode']) and $_GET['category_mode'] == 'or') {
+    $filter['category_mode'] = 'or';
+  }
+  
   $page['filtered_extension_ids'] = get_filtered_extension_ids($filter);
 
   if (count($page['filtered_extension_ids']) == 0) {
