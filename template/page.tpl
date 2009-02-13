@@ -19,7 +19,7 @@
         <div class="menu">
           <form method="post" action="{$action}" style="margin:0;padding:0;">
           {'Category'|translate}<br />
-          <select name="categories[]" multiple="true" size="5">
+          <select name="category_ids[]" multiple="true" size="5">
 {foreach from=$categories item=category}
             <option value="{$category.id}" {$category.selected}>{$category.name}</option>
 {/foreach}
@@ -29,7 +29,7 @@
           <input name="search" type="text" value="{if isset($search)}{$search}{/if}"/><br />
 
           {'Version'|translate}<br />
-          <select name="pwg_version">
+          <select name="id_version">
             <option value="0">-------</option>
 {foreach from=$menu_versions item=version}
             <option value="{$version.id}" {$version.selected}>{$version.name}</option>
@@ -37,7 +37,7 @@
           </select><br />
 
           {'Author'|translate}<br />
-          <select name="user">
+          <select name="id_user">
             <option value="0">-------</option>
 {foreach from=$filter_users item=user}
             <option value="{$user.id}" {$user.selected}>{$user.name}</option>

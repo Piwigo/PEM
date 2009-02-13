@@ -1142,7 +1142,7 @@ function get_extension_ids_for_categories($category_ids) {
     return array();
   }
 
-  // strategy is to list images associated to each tag
+  // strategy is to list images associated to each category
   $eids_for_category = array();
 
   foreach ($category_ids as $cid) {
@@ -1206,5 +1206,161 @@ SELECT
   }
 
   return $categories_of_extension;
+}
+
+function get_extension_ids_for_version($id_version) {
+  $query = '
+SELECT
+    DISTINCT id_extension
+  FROM '.EXT_TABLE.' AS e
+    JOIN '.REV_TABLE.' AS r ON r.idx_extension = e.id_extension
+    JOIN '.COMP_TABLE.' AS c ON c.idx_revision = r.id_revision
+  WHERE idx_version = '.$id_version.'
+;';
+  return array_from_query($query, 'id_extension');
+}
+
+function get_extension_ids_for_search($search) {
+  $fields = array('e.name', 'e.description', 'r.description');
+
+  $replace_by = array(
+    '-' => ' ',
+    '^' => ' ',
+    '$' => ' ',
+    ';' => ' ',
+    '#' => ' ',
+    '&' => ' ',
+    '(' => ' ',
+    ')' => ' ',
+    '<' => ' ',
+    '>' => ' ',
+    '`' => '',
+    '\'' => '',
+    '"' => ' ',
+    '|' => ' ',
+    ',' => ' ',
+    '@' => ' ',
+    '_' => '',
+    '?' => ' ',
+    '%' => ' ',
+    '~' => ' ',
+    '.' => ' ',
+    '[' => ' ',
+    ']' => ' ',
+    '{' => ' ',
+    '}' => ' ',
+    ':' => ' ',
+    '\\' => '',
+    '/' => ' ',
+    '=' => ' ',
+    '\'' => ' ',
+    '!' => ' ',
+    '*' => ' ',
+    );
+    
+  // Split words
+  $words = array_unique(
+    preg_split(
+      '/\s+/',
+      str_replace(
+        array_keys($replace_by),
+        array_values($replace_by),
+        $search
+        )
+      )
+    );
+
+  // ((field1 LIKE '%word1%' OR field2 LIKE '%word1%')
+  // AND (field1 LIKE '%word2%' OR field2 LIKE '%word2%'))
+  $word_clauses = array();
+  foreach ($words as $word) {
+    $field_clauses = array();
+    foreach ($fields as $field) {
+      array_push($field_clauses, $field." LIKE '%".$word."%'");
+    }
+    // adds brackets around where clauses
+    array_push(
+      $word_clauses,
+      implode(
+        "\n          OR ",
+        $field_clauses
+        )
+      );
+  }
+  
+  array_walk(
+    $word_clauses,
+    create_function('&$s','$s="(".$s.")";')
+    );
+  
+  $clause = implode(
+    "\n         AND\n         ",
+    $word_clauses
+    );
+  
+  $query = '
+SELECT
+    id_extension
+  FROM '.EXT_TABLE.' AS e
+    JOIN '.REV_TABLE.' AS r ON r.idx_extension = e.id_extension
+  WHERE '.$clause.'
+;';
+  return array_from_query($query, 'id_extension');
+}
+
+function get_extension_ids_for_user($user_id) {
+  $query = '
+SELECT
+    id_extension
+ FROM '.EXT_TABLE.'
+ WHERE idx_user = '.$user_id.'
+;';
+  return array_from_query($query, 'id_extension');
+}
+
+function get_filtered_extension_ids($filter) {
+  $filtered_sets = array();
+
+  if (isset($filter['id_version'])) {
+    $filtered_sets['id_version'] = get_extension_ids_for_version($filter['id_version']);
+  }
+
+  if (isset($filter['search'])) {
+    $filtered_sets['search'] = get_extension_ids_for_search($filter['search']);
+  }
+
+  if (isset($filter['category_ids'])) {
+    $filtered_sets['category_ids'] = get_extension_ids_for_categories($filter['category_ids']);
+  }
+
+  if (isset($filter['id_user'])) {
+    $filtered_sets['id_user'] = get_extension_ids_for_user($filter['id_user']);
+  }
+
+  $filtered_extension_ids = array_shift($filtered_sets);
+  foreach ($filtered_sets as $set) {
+    $filtered_extension_ids = array_intersect(
+      $filtered_extension_ids,
+      $set
+      );
+  }
+
+  return array_unique($filtered_extension_ids);
+}
+
+function compare_field($a, $b) {
+  global $sort_field;
+  
+  if ($a[$sort_field] == $b[$sort_field]) {
+    return 0;
+  }
+
+  return ($a[$sort_field] < $b[$sort_field]) ? -1 : 1;
+}
+
+function sort_by_field($array, $fieldname) {
+  $sort_field = $fieldname;
+  usort($array, 'compare_field');
+  return $array;
 }
 ?>

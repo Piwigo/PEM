@@ -142,18 +142,18 @@ if (is_file($root_path.'language/'.$_SESSION['language'].'/help_user.html')
 // is the URL prefiltered?
 if (isset($_GET['cid'])) {
   if (is_numeric($_GET['cid'])) {
-    $_SESSION['filter']['categories'] = array($_GET['cid']);
+    $_SESSION['filter']['category_ids'] = array($_GET['cid']);
   }
 }
 
 // PWG Compatibility version set
 if (isset($_POST['filter_submit'])) {
   // filter on the extended application version
-  if (isset($_POST['pwg_version']) and is_numeric($_POST['pwg_version'])) {
+  if (isset($_POST['id_version']) and is_numeric($_POST['id_version'])) {
     // If the field is empty, this means that the user wants to cancel the
     // compatibility version setting
-    if (!empty($_POST['pwg_version'])) {
-      $_SESSION['filter']['id_version'] = intval($_POST['pwg_version']);
+    if (!empty($_POST['id_version'])) {
+      $_SESSION['filter']['id_version'] = intval($_POST['id_version']);
     }
     else {
       unset($_SESSION['filter']['id_version']);
@@ -169,30 +169,30 @@ if (isset($_POST['filter_submit'])) {
   }
 
   // filter on a category
-  if (isset($_POST['categories']) and is_array($_POST['categories'])) {
-    $_SESSION['filter']['categories'] = array();
+  if (isset($_POST['category_ids']) and is_array($_POST['category_ids'])) {
+    $_SESSION['filter']['category_ids'] = array();
     
-    foreach ($_POST['categories'] as $cid) {
+    foreach ($_POST['category_ids'] as $cid) {
       if (is_numeric($cid) and $cid != 0) {
-        array_push($_SESSION['filter']['categories'], $cid);
+        array_push($_SESSION['filter']['category_ids'], $cid);
       }
     }
 
-    if (count($_SESSION['filter']['categories']) == 0) {
-      unset($_SESSION['filter']['categories']);
+    if (count($_SESSION['filter']['category_ids']) == 0) {
+      unset($_SESSION['filter']['category_ids']);
     }
   }
   else {
-    unset($_SESSION['filter']['categories']);
+    unset($_SESSION['filter']['category_ids']);
   }
   
   // filter on a user
-  if (isset($_POST['user']) and is_numeric($_POST['user'])) {
-    if ($_POST['user'] != 0) {
-      $_SESSION['filter']['user'] = $_POST['user'];
+  if (isset($_POST['id_user']) and is_numeric($_POST['id_user'])) {
+    if ($_POST['id_user'] != 0) {
+      $_SESSION['filter']['id_user'] = $_POST['id_user'];
     }
     else {
-      unset($_SESSION['filter']['user']);
+      unset($_SESSION['filter']['id_user']);
     }
   }
 }
@@ -209,134 +209,8 @@ if (isset($_POST['filter_reset']) or isset($_POST['filter_submit'])) {
 
 // if a filter is active, we must prepare a filtered list of extensions
 if (isset($_SESSION['filter']) and count($_SESSION['filter']) > 0) {
-  $filtered_sets = array();
+  $page['filtered_extension_ids'] = get_filtered_extension_ids($_SESSION['filter']);
   
-  if (isset($_SESSION['filter']['id_version'])) {
-    $query = '
-SELECT
-    DISTINCT id_extension
-  FROM '.EXT_TABLE.' AS e
-    JOIN '.REV_TABLE.' AS r ON r.idx_extension = e.id_extension
-    JOIN '.COMP_TABLE.' AS c ON c.idx_revision = r.id_revision
-  WHERE idx_version = '.$_SESSION['filter']['id_version'].'
-;';
-    $filtered_sets['version'] = array_from_query($query, 'id_extension');
-  }
-
-  if (isset($_SESSION['filter']['search'])) {
-    $fields = array('e.name', 'e.description', 'r.description');
-
-    $replace_by = array(
-      '-' => ' ',
-      '^' => ' ',
-      '$' => ' ',
-      ';' => ' ',
-      '#' => ' ',
-      '&' => ' ',
-      '(' => ' ',
-      ')' => ' ',
-      '<' => ' ',
-      '>' => ' ',
-      '`' => '',
-      '\'' => '',
-      '"' => ' ',
-      '|' => ' ',
-      ',' => ' ',
-      '@' => ' ',
-      '_' => '',
-      '?' => ' ',
-      '%' => ' ',
-      '~' => ' ',
-      '.' => ' ',
-      '[' => ' ',
-      ']' => ' ',
-      '{' => ' ',
-      '}' => ' ',
-      ':' => ' ',
-      '\\' => '',
-      '/' => ' ',
-      '=' => ' ',
-      '\'' => ' ',
-      '!' => ' ',
-      '*' => ' ',
-      );
-    
-    // Split words
-    $words = array_unique(
-      preg_split(
-        '/\s+/',
-        str_replace(
-          array_keys($replace_by),
-          array_values($replace_by),
-          $_SESSION['filter']['search']
-          )
-        )
-      );
-
-    // ((field1 LIKE '%word1%' OR field2 LIKE '%word1%')
-    // AND (field1 LIKE '%word2%' OR field2 LIKE '%word2%'))
-    $word_clauses = array();
-    foreach ($words as $word) {
-      $field_clauses = array();
-      foreach ($fields as $field) {
-        array_push($field_clauses, $field." LIKE '%".$word."%'");
-      }
-      // adds brackets around where clauses
-      array_push(
-        $word_clauses,
-        implode(
-          "\n          OR ",
-          $field_clauses
-          )
-        );
-    }
-
-    array_walk(
-      $word_clauses,
-      create_function('&$s','$s="(".$s.")";')
-      );
-
-    $clause = implode(
-      "\n         AND\n         ",
-      $word_clauses
-      );
-
-    $query = '
-SELECT
-    id_extension
-  FROM '.EXT_TABLE.' AS e
-    JOIN '.REV_TABLE.' AS r ON r.idx_extension = e.id_extension
-  WHERE '.$clause.'
-;';
-    $filtered_sets['search'] = array_from_query($query, 'id_extension');
-  }
-
-  if (isset($_SESSION['filter']['categories'])) {
-    $filtered_sets['categories'] = get_extension_ids_for_categories($_SESSION['filter']['categories']);
-  }
-
-  if (isset($_SESSION['filter']['user'])) {
-    $query = '
-SELECT
-    id_extension
- FROM '.EXT_TABLE.'
- WHERE idx_user = '.$_SESSION['filter']['user'].'
-;';
-    $filtered_sets['user'] = array_from_query($query, 'id_extension');
-  }
-
-  $page['filtered_extension_ids'] = array_shift($filtered_sets);
-  foreach ($filtered_sets as $set) {
-    $page['filtered_extension_ids'] = array_intersect(
-      $page['filtered_extension_ids'],
-      $set
-      );
-  }
-  
-  $page['filtered_extension_ids'] = array_unique(
-    $page['filtered_extension_ids']
-    );
-
   $page['filtered_extension_ids_string'] = implode(
     ',',
     $page['filtered_extension_ids']

@@ -56,8 +56,8 @@ $tpl_categories = array();
 foreach($categories as $cat)
 {
   $selected = '';
-  if (isset($_SESSION['filter']['categories'])
-      and in_array($cat['id_category'], $_SESSION['filter']['categories']))
+  if (isset($_SESSION['filter']['category_ids'])
+      and in_array($cat['id_category'], $_SESSION['filter']['category_ids']))
   {
     $selected = 'selected="selected"';
   }
@@ -159,8 +159,8 @@ foreach ($user_infos_of as $author) {
   $id = $author['id'];
 
   $selected = '';
-  if (isset($_SESSION['filter']['user'])
-      and $_SESSION['filter']['user'] == $author['id'])
+  if (isset($_SESSION['filter']['id_user'])
+      and $_SESSION['filter']['id_user'] == $author['id'])
   {
     $selected = 'selected="selected"';
   }
