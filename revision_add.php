@@ -195,7 +195,7 @@ if (isset($_POST['submit']))
     }
     
     umask(0000);
-    mkdir($revision_dir, 0777);
+    @mkdir($revision_dir, 0777);
     
     move_uploaded_file(
       $_FILES['revision_file']['tmp_name'],

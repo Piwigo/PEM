@@ -236,23 +236,23 @@ SELECT id_revision,
   ORDER by date DESC
 ;';
 
-  $last_date = '';
+  $first_date = '';
 
   $is_first_revision = true;
   
   $result = $db->query($query);  
   while ($row = $db->fetch_array($result))
   {
-    if (!isset($first_date_set))
+    if (!isset($last_date_set))
     {
       $tpl->assign(
-        'first_date',
+        'last_date',
         date(
           'Y-m-d',
           $row['date']
           )
         );
-      $first_date_set = true;
+      $last_date_set = true;
     }
 
     $expanded = false;
@@ -296,14 +296,14 @@ SELECT id_revision,
         )
       );
 
-    $last_date = $row['date'];
+    $first_date = $row['date'];
   }
 
   $tpl->assign(
-    'last_date',
+    'first_date',
     date(
       'Y-m-d',
-      $last_date
+      $first_date
       )
     );
   
