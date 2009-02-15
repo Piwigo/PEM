@@ -1,4 +1,4 @@
-<h2>Identification</h2>
+<h2>{'Login'|translate}</h2>
 
 <form method="post">
   <fieldset>

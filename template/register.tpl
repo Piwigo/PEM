@@ -1,4 +1,4 @@
-<h2>Registration</h2>
+<h2>{'Register'|translate}</h2>
 
 <form method="post">
   <fieldset>
