@@ -130,6 +130,7 @@ $conf['languages'] = array(
   'es' => 'Español',
   'fr' => 'Français',
   'it' => 'Italiano',
+  'pl' => 'Polski',
 );
 
 // Default language
