@@ -1,0 +1,135 @@
+<h2>Guía del contribuidor</h2>
+<br>
+<div class="row">
+
+  <div id="add_extension" class="changelogRevision">
+
+    <div
+      id="add_extension_header"
+      class="changelogRevisionHeaderCollapsed"
+      onclick="revToggleDisplay('add_extension_header', 'add_extension_content')"
+    >
+      <span class="revisionTitle">Añadir una extensión</span>
+    </div>
+
+    <div
+      id="add_extension_content"
+      class="changelogRevisionContent"
+      style="display:none"
+    >
+<p>Para contribuir al proyecto, la primera etapa consiste en crear una extensión. Hacer clic sobre <a href="extension_add.php">Añadir una extensión</a> en el menú.</p>
+
+<img class="help_user" src="template/images/help/cat.jpg" alt=""/>
+<ol>
+  <li>Dar un nombre</li>
+  <li>Escoger una o varias categorías</li>
+  <li>Cumplir la descripción. Es posible utilizar las balizas multilingües para que el contenido se adapte a la lengua escogida por el visitador.</li>
+</ol>
+
+<p>Sobre la página de visualización de la extensión, una barra de botones da acceso a varias acciones.</p>
+
+<img class="help_user" src="template/images/help/rev1.jpg" alt=""/>
+
+<ol>
+  <li>Modificar las informaciones de la extensión.</li>
+  <li>Suprimir la extensión.</li>
+  <li>Administrar lazos externos</li>
+  <li>Ilustrar la extensión con una imagen</li>
+  <li>Añadir una revisión</li>
+</ol>
+    </div>
+  </div> <!-- add_extension -->
+
+  <div id="add_revision" class="changelogRevision">
+
+    <div
+      id="add_revision_header"
+      class="changelogRevisionHeaderCollapsed"
+      onclick="revToggleDisplay('add_revision_header', 'add_revision_content')"
+    >
+      <span class="revisionTitle">Añadir una revisión</span>
+    </div>
+
+    <div
+      id="add_revision_content"
+      class="changelogRevisionContent"
+      style="display:none"
+    >
+<p>Cada revisión corresponde a la evolución de una extensión. Hay pues varias revisiones por extensión. Para crear una nueva revisión, hacer clic en el botón " añadir una revisión " de la página de visualización de la extensión. Un formulario aparece:</p>
+
+<img class="help_user" src="template/images/help/rev2.jpg" alt=""/>
+
+<ol>
+  <li>Numerar la revisión, por ejemplo " 2.0"</li>
+  <li>Seleccionar el archivo que corresponde, al tamaño ZIP</li>
+  <li>Escoger una lista de versiones del software extenso que serán compatibles con esta revisión de la extensión. Por ejemplo, si el software extenso se nombra "Piwigo" y la extensión " dynamic menudo ", entonces hay que declarar aquí que la revisión " 2.0" de " dynamic menú " es compatible con las versiones 2.0.0, 2.0.1 y 2.0.2 de "Piwigo".</li>
+  <li>Indicar la lista de los cambios anunciados por esta nueva revisión. Es posible utilizar las balizas multilingües para que el contenido se adapte a la lengua escogida por el visitador.</li>
+</ol>
+    </div>
+  </div> <!-- add_revision -->
+
+  <div id="mod_revision" class="changelogRevision">
+
+    <div
+      id="mod_revision_header"
+      class="changelogRevisionHeaderCollapsed"
+      onclick="revToggleDisplay('mod_revision_header', 'mod_revision_content')"
+    >
+      <span class="revisionTitle">Modificar una revisión</span>
+    </div>
+
+    <div
+      id="mod_revision_content"
+      class="changelogRevisionContent"
+      style="display:none"
+    >
+		<img class="help_user" src="template/images/help/rev3.jpg" alt=""/>
+	<ol>
+		<li>Editar la revisión</li>
+		<li>Suprimir la revisión</li>
+	</ol>
+
+<b>Atención:</b>
+	<ul>
+		<li>El archivo de una revisión no puede ser modificado. En caso de error en el archivo, hay que suprimir la revisión y crear una noticia.</li>
+		<li>Tan pronto como usted se comunicó a propósito de su contribución no la suprima. Cree más bien una nueva revisión. En efecto, los usuarios de su contribución podrían creer que utilizan su última revisión mientras que todavía son sobre una versión precedente.</li>
+	</ul>
+    </div>
+  </div> <!-- mod_revision -->
+
+  <div id="multilingual" class="changelogRevision">
+
+    <div
+      id="multilingual_header"
+      class="changelogRevisionHeaderCollapsed"
+      onclick="revToggleDisplay('multilingual_header', 'multilingual_content')"
+    >
+      <span class="revisionTitle">Descripciones multilingües</span>
+    </div>
+
+    <div
+      id="multilingual_content"
+      class="changelogRevisionContent"
+      style="display:none"
+    >
+
+<p>Las descripciones multilingües se hacen entre las balizas [lang=xx] y [/lang], o xx es el código de la lengua (por ejemplo fr, en, es, it, ..) existen también 2 balizas especiales: [lang=default] y [lang=all]</p>
+
+<p><strong>Ejemplo de utilización</strong> :</p>
+<textarea cols="80" rows="10">
+[lang=es]Descripción en español[/lang]
+[lang=en]The description, in english[/lang]
+[lang=fr]La description en français[/lang]
+[lang=ru]Описание на русском языке[/lang]
+[lang=it]La descrizione in italiano[/lang]
+[lang=de]Die Beschreibung auf deutscher Sprache[/lang]
+[lang=zh]说明在中国[/lang]
+
+
+[lang=all]Incluye en la descripción, cualquiera que sea la lengua del usuario[/lang]</textarea>
+
+<p>Si el contenido no está disponible en la lengua escogida por el visitador, es el inglés, la lengua por defecto de PEM, que será utilizado.</p>
+    </div>
+  </div> <!-- multilingual -->
+
+</div> <!-- row -->
