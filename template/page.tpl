@@ -87,14 +87,14 @@
       </div> <!-- Menus -->
     
       <div id="Content">
-        <div id="quickNav"><a href="index.php"><img class="nav" src="template/images/home.png" alt="{'Index'|translate}"/></a>
+        <div id="quickNav"><a href="index.php" title="{'Index'|translate}"><img class="nav" src="template/images/home.png" alt="{'Index'|translate}"/></a>
 {if !$user_is_logged}
 	{if isset($has_help)}
-          <a href="help_guest.php"><img class="nav" src="template/images/help.png" alt="{'help'|translate}"/></a>
+          <a href="help_guest.php" title="{'help'|translate}"><img class="nav" src="template/images/help.png" alt="{'help'|translate}"/></a>
 	{/if}
 {else}
 	{if isset($has_help_user)}
-          <a href="help_user.php"><img class="nav" src="template/images/help.png" alt="{'help'|translate}"/></a>
+          <a href="help_user.php" title="{'help'|translate}"><img class="nav" src="template/images/help.png" alt="{'help'|translate}"/></a>
 	{/if}
 {/if}
 		</div>
