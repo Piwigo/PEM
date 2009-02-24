@@ -12,11 +12,11 @@
     <item>
       <title>{$rev.ext_name}, revision {$rev.name}</title>
       <link>{$rev.url}</link>
-      <description>
+      <description><![CDATA[
         <p><strong>Version</strong>: {$rev.name}</p>
-        <p><strong>Extension description</strong>: {$rev.ext_description}</p>
-        <p><strong>Revision description</strong>: {$rev.description}</p>
-      </description>
+        <p><strong>Extension description</strong>: {$rev.ext_description|nl2br}</p>
+        <p><strong>Revision description</strong>: {$rev.description|nl2br}</p>
+      ]]></description>
       <author>{$rev.ext_author}</author>
     </item>
 {/foreach}
