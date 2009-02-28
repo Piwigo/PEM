@@ -143,10 +143,20 @@ foreach ($versions as $version)
 
 // filter on authors
 $query = '
-SELECT
-    idx_user,
-    COUNT(*) AS counter
-  FROM '.EXT_TABLE.'
+SELECT idx_user, SUM(counter) AS counter 
+  FROM (
+    SELECT
+        idx_user,
+        COUNT(*) AS counter
+      FROM '.EXT_TABLE.'
+      GROUP BY idx_user
+    UNION ALL
+    SELECT
+        idx_user,
+        COUNT(*) AS counter
+      FROM '.AUTHORS_TABLE.'
+      GROUP BY idx_user
+  ) AS t
   GROUP BY idx_user
 ;';
 $nb_ext_of_user = simple_hash_from_query($query, 'idx_user', 'counter');

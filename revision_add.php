@@ -76,7 +76,9 @@ if ($db->num_rows($result) == 0)
 }
 list($page['extension_name'], $ext_user) = $db->fetch_array($result);
 
-if ($user['id'] != $ext_user and !isAdmin($user['id']))
+$authors = get_extension_authors($page['extension_id']);
+
+if (!in_array($user['id'], $authors) and !isAdmin($user['id']))
 {
   message_die(l10n('You must be the extension author to modify it.'));
 }
@@ -158,6 +160,7 @@ if (isset($_POST['submit']))
       'date'           => mktime(),
       'description'    => $_POST['revision_changelog'],
       'url'            => $_FILES['revision_file']['name'],
+      'author'         => $user['id'],
       );
 
     if ($conf['use_agreement'])

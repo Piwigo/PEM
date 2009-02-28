@@ -56,6 +56,32 @@ while ($data = $db->fetch_assoc($req))
 }
 $tpl->assign('extensions', $tpl_extensions);
 
+// Get other extension
+$query = '
+SELECT
+    id_extension,
+    name
+  FROM '.EXT_TABLE.' AS ext
+  INNER JOIN '.AUTHORS_TABLE.' AS aut
+    ON ext.id_extension = aut.idx_extension
+  WHERE aut.idx_user = \''.$user['id'].'\'
+  ORDER BY name DESC
+;';
+$req = $db->query($query);
+
+$tpl_extensions = array();
+while ($data = $db->fetch_assoc($req))
+{
+  array_push(
+    $tpl_extensions,
+    array(
+      'name' => htmlspecialchars(strip_tags($data['name'])),
+      'id' => $data['id_extension']
+      )
+    );
+}
+$tpl->assign('other_extensions', $tpl_extensions);
+
 // +-----------------------------------------------------------------------+
 // |                           html code display                           |
 // +-----------------------------------------------------------------------+

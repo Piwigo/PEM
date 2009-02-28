@@ -95,36 +95,16 @@ $extension_ids = array_unique(
   );
 
 $extension_infos_of = get_extension_infos_of($extension_ids);
-$author_ids = array_unique(
-  array_from_subfield(
-    $extension_infos_of,
-    'idx_user'
-    )
-  );
-
 $download_of_extension = get_download_of_extension($extension_ids);
 $categories_of_extension = get_categories_of_extension($extension_ids);
-
-$author_infos_of = get_user_infos_of($author_ids);
 
 $revisions = array();
 foreach ($revision_ids as $revision_id)
 {
   $extension_id = $revision_infos_of[$revision_id]['idx_extension'];
-  $author_id = $extension_infos_of[$extension_id]['idx_user'];
+  $authors = get_extension_authors($extension_id);
   $screenshot_infos = get_extension_screenshot_infos($extension_id);
   
-  if (!empty($conf['user_url_template'])) {
-    $author_string = sprintf(
-      $conf['user_url_template'],
-      $author_id,
-      $author_infos_of[$author_id]['username']
-      );
-  }
-  else {
-    $author_string = $author_infos_of[$author_id]['username'];
-  }
-
   array_push(
     $revisions,
     array(
@@ -138,7 +118,7 @@ foreach ($revision_ids as $revision_id)
             )
           )
         ),
-      'author' => $author_string,
+      'authors' => get_author_name($authors),
       'name' => $revision_infos_of[$revision_id]['version'],
       'compatible_versions' => implode(', ', $versions_of[$revision_id]),
       'description' => nl2br(

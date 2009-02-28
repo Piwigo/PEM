@@ -95,6 +95,13 @@ if (empty($page['extension_id']))
   message_die(l10n('Incorrect extension identifier'));
 }
 
+$authors = get_extension_authors($page['extension_id']);
+
+if (!in_array($user['id'], $authors) and !isAdmin($user['id']))
+{
+  message_die(l10n('You must be the extension author to modify it.'));
+}
+
 $query = '
 SELECT name
   FROM '.EXT_TABLE.'

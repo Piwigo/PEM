@@ -21,7 +21,7 @@
   <p><a href="{$revision.revision_url}">{'Revision'|translate} {$revision.name}</a></p>
 
   <ul>
-    <li><em>{'Author'|translate}:</em> {$revision.author}</li>
+    <li><em>{if count($revision.authors)>1}{'Authors'|translate}{else}{'Author'|translate}{/if}:</em> {', '|@implode:$revision.authors}</li>
     <li><em>{'Categories'|translate}:</em> {$revision.categories}</li>
     <li><em>{'Released on'|translate}:</em> {$revision.date}</li>
     <li><em>{'Compatible with'|translate}:</em> {$software} releases {$revision.compatible_versions}</li>

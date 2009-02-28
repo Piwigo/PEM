@@ -50,7 +50,9 @@ if (empty($row['idx_user']))
   message_die(l10n('Unknown extension'));
 }
 
-if ($row['idx_user'] != $user['id'] and !isAdmin($user['id']))
+$authors = get_extension_authors($row['idx_extension']);
+
+if (!in_array($user['id'], $authors) and !isAdmin($user['id']))
 {
   message_die(l10n('Deletion forbidden'));
 }

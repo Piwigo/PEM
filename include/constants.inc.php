@@ -29,6 +29,7 @@ define( 'COMP_TABLE',    $conf['db_params']['tables_prefix'].'revisions_compatib
 define( 'EXT_CAT_TABLE', $conf['db_params']['tables_prefix'].'extensions_categories' );
 define( 'USER_INFOS_TABLE', $conf['db_params']['tables_prefix'].'user_infos' );
 define( 'LINKS_TABLE', $conf['db_params']['tables_prefix'].'links' );
+define( 'AUTHORS_TABLE', $conf['db_params']['tables_prefix'].'authors' );
 
 define( 'USERS_TABLE', $conf['users_table'] );
 

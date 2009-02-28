@@ -3,10 +3,15 @@
 {if isset($can_modify)}
 <ul class="actionLinks">
   <li><a href="{$u_modify}" title="{'Modify extension'|translate}"><img src="template/images/modify.png" alt="{'Modify extension'|translate}"></a></li>
-  <li><a href="{$u_delete}" onclick="return confirm('{'Are you sure you want to delete this item?'|translate|escape:javascript}');" title="{'Delete extension'|translate}"><img src="template/images/delete.png" alt="{'Delete extension'|translate}"></a></li>
+  {if isset($u_delete)}
+    <li><a href="{$u_delete}" onclick="return confirm('{'Are you sure you want to delete this item?'|translate|escape:javascript}');" title="{'Delete extension'|translate}"><img src="template/images/delete.png" alt="{'Delete extension'|translate}"></a></li>
+  {/if}
   <li><a href="{$u_links}" title="{'Manage links'|translate}"><img src="template/images/links.png" alt="{'Manage links'|translate}"></a></li>
   <li><a href="{$u_screenshot}" title="{'Manage screenshots'|translate}"><img src="template/images/screenshot.png" alt="{'Manage screenshots'|translate}"></a></li> 
   <li><a href="{$u_add_rev}" title="{'Add a revision'|translate}"><img src="template/images/add_revision.png" alt="{'Add a revision'|translate}"></a></li>
+  {if isset($u_authors)}
+    <li><a href="{$u_authors}" title="{'Manage authors'|translate}"><img src="template/images/authors.png" alt="{'Manage authors'|translate}"></a></li>
+  {/if}
 </ul>
 {/if}
 
@@ -15,7 +20,7 @@
 {/if}
 
 <ul class="extensionInfos">
-  <li><em>{'Author'|translate}:</em> {$author}</li>
+  <li><em>{if count($authors)>1}{'Authors'|translate}{else}{'Author'|translate}{/if}:</em> {', '|@implode:$authors}</li>
   <li><em>{'Categories'|translate}:</em> {$extension_categories}</li>
   <li><em>{'First revision date'|translate}:</em> {$first_date}</li>
   <li><em>{'Latest revision date'|translate}:</em> {$last_date}</li>
@@ -69,6 +74,9 @@
       <a href="{$rev.u_download}" title="{'Download revision'|translate} {$rev.version}" rel="nofollow"><img class="download" src="template/images/download.png" alt="{'Download revision'|translate} {$rev.version}"/></a>
       <p>{'Revision'|translate}: {$rev.version}</p>
       <p>{'Released on'|translate}: {$rev.date}</p>
+      {if !empty($rev.author)}
+      <p>{'Added by'|translate}: {$rev.author}</p>
+      {/if}
       <p>{'Compatible with'|translate}: {$rev.versions_compatible}</p>
       <p>{'Downloads'|translate}: {$rev.downloads}</p>
     

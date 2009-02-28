@@ -171,6 +171,7 @@ if (isset($_POST['filter_submit'])) {
   // filter on a category
   if (isset($_POST['category_ids']) and is_array($_POST['category_ids'])) {
     $_SESSION['filter']['category_ids'] = array();
+    $_SESSION['filter']['category_mode'] = 'and';
     
     foreach ($_POST['category_ids'] as $cid) {
       if (is_numeric($cid) and $cid != 0) {

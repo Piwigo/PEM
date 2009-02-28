@@ -54,13 +54,18 @@ if (!isset($data['id_extension']))
   message_die(l10n('Unknown extension'), 'Error', false );
 }
 
-$user_infos_of = get_user_infos_of(array($data['idx_user']));
-$author = $user_infos_of[ $data['idx_user'] ]['username'];
+$authors = get_extension_authors($page['extension_id']);
 
 $page['user_can_modify'] = false;
-if (isset($user['id']) and (isAdmin($user['id']) or $user['id'] == $data['idx_user']))
+if (isset($user['id']) and (isAdmin($user['id']) or in_array($user['id'], $authors)))
 {
   $page['user_can_modify'] = true;
+}
+
+$page['user_can_manage_authors'] = false;
+if (isset($user['id']) and (isAdmin($user['id']) or $user['id'] == $data['idx_user']))
+{
+  $page['user_can_manage_authors'] = true;
 }
 
 $versions_of_extension = get_versions_of_extension(
@@ -95,7 +100,6 @@ while ($row = $db->fetch_assoc($result)) {
   $downloads_of_revision[ $row['revision_id'] ] = $row['counter'];
 }
 
-
 $tpl->assign(
   array(
     'extension_name' => htmlspecialchars(
@@ -108,11 +112,7 @@ $tpl->assign(
           )
         )
       ),
-    'author' => sprintf(
-      '<a href="'.$conf['user_url_pattern'].'">%s</a>',
-      $data['idx_user'],
-      $author
-      ),
+    'authors' => get_author_name($authors),
     'first_date' => l10n('no revision yet'),
     'last_date'  => l10n('no revision yet'),
     'compatible_with' => implode(
@@ -123,19 +123,6 @@ $tpl->assign(
     'extension_categories' => $categories_of_extension[$page['extension_id']],
     )
   );
-
-if (!empty($conf['user_url_template'])) {
-  $author_string = sprintf(
-    $conf['user_url_template'],
-    $data['idx_user'],
-    $author
-    );
-}
-else {
-  $author_string = $author;
-}
-
-$tpl->assign(array('author' => $author_string));
   
 if (isset($user['id']))
 {
@@ -146,9 +133,17 @@ if (isset($user['id']))
         'can_modify' => $page['user_can_modify'],
         'u_modify' => 'extension_mod.php?eid='.$page['extension_id'],
         'u_add_rev' => 'revision_add.php?eid='.$page['extension_id'],
-        'u_delete' => 'extension_del.php?eid='.$page['extension_id'],
         'u_links' => 'extension_links.php?eid='.$page['extension_id'],
         'u_screenshot'=> 'extension_screenshot.php?eid='.$page['extension_id'],
+        )
+      );
+  }
+  if ($page['user_can_manage_authors'])
+  {
+    $tpl->assign(
+      array(
+        'u_delete' => 'extension_del.php?eid='.$page['extension_id'],
+        'u_authors' => 'extension_authors.php?eid='.$page['extension_id']
         )
       );
   }
@@ -230,7 +225,8 @@ SELECT id_revision,
        version,
        description,
        date,
-       url
+       url,
+       author
   FROM '.REV_TABLE.'
   WHERE id_revision IN ('.implode(',', $revision_ids).')
   ORDER by date DESC
@@ -270,6 +266,12 @@ SELECT id_revision,
     }
 
     $is_first_revision = false;
+
+    $author = '';
+    if (count($authors) > 1 or (isset($row['author']) and $row['author'] != $data['idx_user']))
+    {
+      $author = get_author_name(isset($row['author']) ? $row['author'] : $data['idx_user']);
+    }
     
     array_push(
       $tpl_revisions,
@@ -281,6 +283,7 @@ SELECT id_revision,
           $versions_of[ $row['id_revision'] ]
           ),
         'date' => date('Y-m-d', $row['date']),
+        'author' => $author,
         'u_download' => 'download.php?rid='.$row['id_revision'],
         'description' => nl2br(
           htmlspecialchars(

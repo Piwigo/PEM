@@ -133,4 +133,16 @@ $lang['You must be the extension author to modify it.'] = 'You must be the exten
 $lang['help'] = 'Help';
 $lang['You must be connected to read help user'] = 'You must be connected to read help user';
 $lang['You mustn\'t be connected to read help guest'] = 'You mustn\'t be connected to read help guest';
+
+$lang['Language'] = 'Language';
+$lang['Authors'] = 'Authors';
+$lang['Manage authors'] = 'Manage authors';
+$lang['Add an author'] = 'Add an author';
+$lang['Are you sure you want to remove selected authors?'] = 'Are you sure you want to remove selected authors?';
+$lang['Delete selected users'] = 'Delete selected users';
+$lang['You must select at least one author.'] = 'You must select at least one author.';
+$lang['This user does not exist in database.'] = 'This user does not exist in database.';
+$lang['Added by']  = 'Added by';
+$lang['Other extensions'] = 'Other extensions';
+
 ?>

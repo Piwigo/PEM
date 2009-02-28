@@ -133,4 +133,16 @@ $lang['You must be the extension author to modify it.'] = 'Musisz byćautorem ro
 $lang['help'] = 'Pomoc';
 $lang['You must be connected to read help user'] = 'Musisz być zalogowany aby czytać pomoc dla użytkownika';
 $lang['You mustn\'t be connected to read help guest'] = 'Nie musisz być zalogowany aby przeczytać pomoc dla gości';
+
+/*TODO*/$lang['Language'] = 'Language';
+/*TODO*/$lang['Authors'] = 'Authors';
+/*TODO*/$lang['Manage authors'] = 'Manage authors';
+/*TODO*/$lang['Add an author'] = 'Add an author';
+/*TODO*/$lang['Are you sure you want to remove selected authors?'] = 'Are you sure you want to remove selected authors?';
+/*TODO*/$lang['Delete selected users'] = 'Delete selected users';
+/*TODO*/$lang['You must select at least one author.'] = 'You must select at least one author.';
+/*TODO*/$lang['This user does not exist in database.'] = 'This user does not exist in database.';
+/*TODO*/$lang['Added by']  = 'Added by';
+/*TODO*/$lang['Other extensions'] = 'Other extensions';
+
 ?>

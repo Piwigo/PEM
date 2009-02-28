@@ -766,7 +766,7 @@ function delete_revisions($revision_ids)
 
   foreach ($revision_ids as $revision_id)
   {
-    unlink(
+    @unlink(
       get_revision_src(
         $revision_infos_of[$revision_id]['idx_extension'],
         $revision_id,
@@ -1329,6 +1329,11 @@ SELECT
     id_extension
  FROM '.EXT_TABLE.'
  WHERE idx_user = '.$user_id.'
+UNION ALL
+SELECT
+    idx_extension AS id_extension
+ FROM '.AUTHORS_TABLE.'
+ WHERE idx_user = '.$user_id.'
 ;';
   return array_from_query($query, 'id_extension');
 }
@@ -1380,5 +1385,61 @@ function sort_by_field($array, $fieldname) {
   $sort_field = $fieldname;
   usort($array, 'compare_field');
   return $array;
+}
+
+function get_extension_authors($extension_id)
+{
+  $authors = array();
+
+  $query = '
+SELECT idx_user
+  FROM '.EXT_TABLE.'
+  WHERE id_extension = '.$extension_id.'
+UNION ALL
+SELECT idx_user
+  FROM '.AUTHORS_TABLE.'
+  WHERE idx_extension = '.$extension_id.'
+;';
+
+  return array_from_query($query, 'idx_user');
+}
+
+function get_author_name($ids)
+{
+  global $conf;
+
+  if (is_string($ids))
+  {
+    $authors = array($ids);
+  }
+  else
+  {
+    $authors = $ids;
+  }
+
+  $result = array();
+  foreach($authors as $author)
+  {
+    $user_infos_of = get_user_infos_of(array($author));
+
+    if (!empty($conf['user_url_template']))
+    {
+      $author_string = sprintf(
+        $conf['user_url_template'],
+        $user_infos_of[$author]['id'],
+        $user_infos_of[$author]['username']
+        );
+    }
+    else
+    {
+      $author_string = $user_infos_of[$author]['username'];
+    }
+    array_push($result, $author_string);
+  }
+  if (is_string($ids))
+  {
+    return $result[0];
+  }
+  return $result;
 }
 ?>

@@ -47,9 +47,9 @@ if (!isset($user['id']))
 
 if (basename($_SERVER['SCRIPT_FILENAME']) == 'extension_mod.php')
 {
-  $extension_infos = get_extension_infos_of($page['extension_id']);
+  $authors = get_extension_authors($page['extension_id']);
 
-  if ($user['id'] != $extension_infos['idx_user'] and !isAdmin($user['id']))
+  if (!in_array($user['id'], $authors) and !isAdmin($user['id']))
   {
     message_die(l10n('You must be the extension author to modify it.'));
   }
