@@ -127,21 +127,14 @@ DELETE FROM '.AUTHORS_TABLE.'
 // |                            Form display                               |
 // +-----------------------------------------------------------------------+
 
-$query = '
-SELECT 
-    u.'.$conf['user_fields']['id'].' as id,
-    u.'.$conf['user_fields']['username'].' as username
-  FROM '.$conf['users_table'].' as u
-  INNER JOIN '.AUTHORS_TABLE.' as a
-  ON u.'.$conf['user_fields']['id'].' = a.idx_user
-  WHERE a.idx_extension = '.$page['extension_id'].'
-;';
-$result = $db->query($query);
-
 $authors = get_extension_authors($page['extension_id']);
 
 foreach ($authors as $author_id)
 {
+  if ($author_id == $extension_infos['idx_user'])
+  {
+    continue;
+  }
   $tpl->append('authors', array(
     'ID' => $author_id,
     'NAME' => get_author_name($author_id),
