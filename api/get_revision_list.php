@@ -100,6 +100,35 @@ $username_field = $conf['user_fields']['username'];
 $userid_field = $conf['user_fields']['id'];
 
 $query = '
+SELECT
+    a.idx_extension       AS extension_id,
+    u.'.$username_field.' AS name
+  FROM '.AUTHORS_TABLE.'     AS a
+  INNER JOIN '.USERS_TABLE.' AS u ON a.idx_user = u.'.$userid_field;
+
+if (isset($extension_include))
+{
+  $query .= '
+    WHERE a.idx_extension IN (' . $extension_include . ')';
+}
+if (isset($extension_exclude))
+{
+  $query .= '
+    WHERE a.idx_extension NOT IN (' . $extension_exclude . ')';
+}
+
+$extension_authors = array();
+$result = $db->query($query);
+while ($row = mysql_fetch_assoc($result))
+{
+  if (!isset($extension_authors[$row['extension_id']]))
+  {
+    $extension_authors[$row['extension_id']] = array();
+  }
+  array_push($extension_authors[$row['extension_id']], $row['name']);
+}
+
+$query = '
 SELECT DISTINCT
     r.id_revision         AS revision_id,
     r.version             AS revision_name,
@@ -150,7 +179,6 @@ SELECT t.*
   GROUP BY t.extension_id';
 }
 
-$author_ids = array();
 $extension_ids = array();
 $revision_ids = array();
 $revisions = array();
@@ -176,6 +204,11 @@ while ($row = mysql_fetch_assoc($result)) {
 
   $row['extension_description'] = get_user_language($row['extension_description']);
   $row['revision_description'] = get_user_language($row['revision_description']);
+
+  if (isset($extension_authors[$row['extension_id']]))
+  {
+    $row['author_name'] .= ', ' . implode(', ', $extension_authors[$row['extension_id']]);
+  }
 
   array_push($revisions, $row);
   array_push($extension_ids, $row['extension_id']);
