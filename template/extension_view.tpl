@@ -61,7 +61,7 @@
       onclick="revToggleDisplay('rev{$rev.id}_header', 'rev{$rev.id}_content')"
     >
       <span class="revisionTitle">{'Revision'|translate} {$rev.version}</span>
-      <span class="revisionDate">{'Released on'|translate} {$rev.date}</span>
+      <span class="revisionDate"> {$rev.downloads} {'Downloads'|translate}{if !empty($rev.author)}, {'Added by'|translate} {$rev.author}{/if}, {'Released on'|translate} {$rev.date}</span>
     </div>
 
     <div
@@ -72,13 +72,7 @@
   {/if}
     >
       <a href="{$rev.u_download}" title="{'Download revision'|translate} {$rev.version}" rel="nofollow"><img class="download" src="template/images/download.png" alt="{'Download revision'|translate} {$rev.version}"/></a>
-      <p>{'Revision'|translate}: {$rev.version}</p>
-      <p>{'Released on'|translate}: {$rev.date}</p>
-      {if !empty($rev.author)}
-      <p>{'Added by'|translate}: {$rev.author}</p>
-      {/if}
-      <p>{'Compatible with'|translate}: {$rev.versions_compatible}</p>
-      <p>{'Downloads'|translate}: {$rev.downloads}</p>
+      <p><em>{'Compatible with'|translate}:</em> {$rev.versions_compatible}</p>
     
       <blockquote>
         <p>{$rev.description}</p>
