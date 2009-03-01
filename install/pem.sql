@@ -1,3 +1,9 @@
+DROP TABLE IF EXISTS `pem_authors`;
+CREATE TABLE `pem_authors` (
+  `idx_extension` int(11) NOT NULL default '0',
+  `idx_user` int(11) NOT NULL default '0',
+  PRIMARY KEY  (`idx_extension`,`idx_user`)
+)  DEFAULT CHARSET=utf8;
 DROP TABLE IF EXISTS `pem_categories`;
 CREATE TABLE `pem_categories` (
   `id_category` int(11) NOT NULL auto_increment,
@@ -53,6 +59,7 @@ CREATE TABLE `pem_revisions` (
   `description` text NOT NULL,
   `version` varchar(25) NOT NULL default '',
   `accept_agreement` enum('true','false') default NULL,
+  `author` int(11) NULL default NULL,
   PRIMARY KEY  (`id_revision`)
 )   DEFAULT CHARSET=utf8;
 DROP TABLE IF EXISTS `pem_revisions_compatibilities`;
