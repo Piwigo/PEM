@@ -179,6 +179,14 @@ if (isset($_POST['submit']))
 
     $page['revision_id'] = $db->insert_id();
 
+    if (!in_array($user['id'], $authors))
+    {
+      $query = '
+INSERT INTO '.AUTHORS_TABLE.' (idx_extension, idx_user)
+  VALUES ('.$page['extension_id'].', '.$user['id'].')
+;';
+    $db->query($query);
+    }
   }
 
   if ($file_to_upload)

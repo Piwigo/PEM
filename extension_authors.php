@@ -91,13 +91,9 @@ SELECT '.$conf['user_fields']['id'].'
     message_die(l10n('This user does not exist in database.'));
   }
 
-  $query = '
-SELECT *
-  FROM '.AUTHORS_TABLE.'
-  WHERE idx_user = '.$author_id.'
-  AND idx_extension = '.$page['extension_id'].'
-;';
-  if ($db->num_rows($db->query($query)) == 0)
+  $authors = get_extension_authors($page['extension_id']);
+
+  if (!in_array($author_id, $authors))
   {
     $query = '
 INSERT INTO '.AUTHORS_TABLE.' (idx_extension, idx_user)
