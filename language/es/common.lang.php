@@ -134,15 +134,15 @@ $lang['help'] = 'Ayuda';
 $lang['You must be connected to read help user'] = 'Ustedes deben ser conectados para leer el ayudante usuario';
 $lang['You mustn\'t be connected to read help guest'] = 'Ustedes no deben ser conectados para leer de ayuda del invitado';
 
-/*TODO*/$lang['Language'] = 'Language';
-/*TODO*/$lang['Authors'] = 'Authors';
-/*TODO*/$lang['Manage authors'] = 'Manage authors';
-/*TODO*/$lang['Add an author'] = 'Add an author';
-/*TODO*/$lang['Are you sure you want to remove selected authors?'] = 'Are you sure you want to remove selected authors?';
-/*TODO*/$lang['Delete selected users'] = 'Delete selected users';
-/*TODO*/$lang['You must select at least one author.'] = 'You must select at least one author.';
-/*TODO*/$lang['This user does not exist in database.'] = 'This user does not exist in database.';
-/*TODO*/$lang['Added by']  = 'Added by';
-/*TODO*/$lang['Other extensions'] = 'Other extensions';
+$lang['Language'] = 'Idioma';
+$lang['Authors'] = 'Autores';
+$lang['Manage authors'] = 'Administrar a los autores';
+$lang['Add an author'] = 'Añadir a un autor';
+$lang['Are you sure you want to remove selected authors?'] = '¿ Es seguro de querer suprimir a los usuarios seleccionados?';
+$lang['Delete selected users'] = 'Suprimir a los usuarios seleccionados';
+$lang['You must select at least one author.'] = 'Usted debe seleccionar por lo menos a un autor.';
+$lang['This user does not exist in database.'] = 'El usuario no existe en la base de datos.';
+$lang['Added by']  = 'Añadido por';
+$lang['Other extensions'] = 'Otras extensiones';
 
 ?>

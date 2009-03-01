@@ -63,7 +63,7 @@ $lang['Extension successfuly added. Thank you.'] = 'Rozszerzenie dodane pomyśln
 $lang['Extension successfuly deleted.'] = 'Rozszerzenie usunięte pomyślnie.';
 $lang['File'] = 'Plik';
 $lang['File too big. Filesize must not exceed %s.'] = 'Plik za duży. Rozmiar pliu nie może przekraczać %s.';
-$lang['Filter'] = 'Filtr';
+$lang['Filter'] = 'Filtruj';
 $lang['first'] = 'Pierwsza';
 $lang['First revision date'] = 'Data pierwszej wersji';
 $lang['Hello %s'] = 'Witaj %s';
@@ -144,5 +144,4 @@ $lang['You mustn\'t be connected to read help guest'] = 'Nie musisz być zalogow
 /*TODO*/$lang['This user does not exist in database.'] = 'This user does not exist in database.';
 /*TODO*/$lang['Added by']  = 'Added by';
 /*TODO*/$lang['Other extensions'] = 'Other extensions';
-
 ?>

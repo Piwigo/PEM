@@ -1,0 +1,133 @@
+<h2>Przewodnik publikującego</h2>
+<br>
+<div class="row">
+
+  <div id="add_extension" class="changelogRevision">
+
+    <div
+      id="add_extension_header"
+      class="changelogRevisionHeaderCollapsed"
+      onclick="revToggleDisplay('add_extension_header', 'add_extension_content')"
+    >
+      <span class="revisionTitle">Dodawanie rozszerzeń</span>
+    </div>
+
+    <div
+      id="add_extension_content"
+      class="changelogRevisionContent"
+      style="display:none"
+    >
+<p>Aby publikować w projekcie, najpierw należy dodać rozszerzenie. Kliknij <a href="extension_add.php">Dodaj rozszerzenie</a> w menu.</p>
+
+<img class="help_user" src="template/images/help/cat.jpg" alt=""/>
+<ol>
+  <li>Nadaj mu nazwę</li>
+  <li>Wybierz jedną lub więcej kategorii</li>
+  <li>Uzupełnij opis. Dostępne są tagi wielojęzykowe, aby odwiedzający mógł przeczytać zawartość w swoim własnym języku.</li>
+</ol>
+
+<p>Na stronie wyświetlającej rozszerzenie, przyciski oznaczają różne akcje.</p>
+
+<img class="help_user" src="template/images/help/rev1.jpg" alt=""/>
+
+<ol>
+  <li>edytuj dane rozszerzenia.</li>
+  <li>usuń rozszerzenie.</li>
+  <li>zarządzaj zewnętrznymi linkami</li>
+  <li>dodaj obraz aby zilustrować rozszerzenie</li>
+  <li>dodaj wersję</li>
+</ol>
+    </div>
+  </div> <!-- add_extension -->
+
+  <div id="add_revision" class="changelogRevision">
+
+    <div
+      id="add_revision_header"
+      class="changelogRevisionHeaderCollapsed"
+      onclick="revToggleDisplay('add_revision_header', 'add_revision_content')"
+    >
+      <span class="revisionTitle">Dodawanie wersji</span>
+    </div>
+
+    <div
+      id="add_revision_content"
+      class="changelogRevisionContent"
+      style="display:none"
+    >
+<p>Każda wersja jest traktowana jako nowa wersja rozszerzenia . Może być wiele wersji dla danego rozszerzenia. Aby stworzyć nową wersją, wybierz przycisk "dodaj wersję" na stronie rozszerzeń. Zostanie wyświetlony formularz:</p>
+
+<img class="help_user" src="template/images/help/rev2.jpg" alt=""/>
+
+<ol>
+  <li>Numer wersji, np. "2.0"</li>
+  <li>Wybierz archiwum ZIP</li>
+  <li>Wybierz listę wersji rozszerzonego oprogramowania, z którymi działa rozszerzenie. Na przykład, jeżeli oprogramowanie to Piwigo, a rozszerzenie to "menu dymamiczne", powinieneś wybrać wersję "2.0" "menu dynamiczne" jest kompatybilne z wersjami "Piwigo" 2.0.0, 2.0.1 i 2.0.2.</li>
+  <li>Wypisz zmiany, które wprowadza nowa wersja. Możliwe są tagi wielojęzyczne, aby odwiedzający mógł przeczytać zawartość w swoim włąsnym języku.</li>
+</ol>
+    </div>
+  </div> <!-- add_revision -->
+
+  <div id="mod_revision" class="changelogRevision">
+
+    <div
+      id="mod_revision_header"
+      class="changelogRevisionHeaderCollapsed"
+      onclick="revToggleDisplay('mod_revision_header', 'mod_revision_content')"
+    >
+      <span class="revisionTitle">Edycja wersji</span>
+    </div>
+
+    <div
+      id="mod_revision_content"
+      class="changelogRevisionContent"
+      style="display:none"
+    >
+		<img class="help_user" src="template/images/help/rev3.jpg" alt=""/>
+	<ol>
+		<li>Modyfikuj wersję</li>
+		<li>Usuń wersję</li>
+	</ol>
+
+<b>Zwróć uwagę na:</b>
+	<ul>
+		<li>Archiwum wersji nie może być modyfikowane. Jeżeli jest błąd w wersji archiwalnej, należy usunąć wersję i następnie stworzyć nową.</li>
+		<li>Jeżeli dana wersja została już rozpropagowana, nalezyraczej dodać nową wersję niż edytować starą. W przeciwnym wypadku użytownicy będą myśleli, że używają aktualnej wersji tak naprawdę używając starej.</li>
+	</ul>
+    </div>
+  </div> <!-- mod_revision -->
+
+  <div id="multilingual" class="changelogRevision">
+
+    <div
+      id="multilingual_header"
+      class="changelogRevisionHeaderCollapsed"
+      onclick="revToggleDisplay('multilingual_header', 'multilingual_content')"
+    >
+      <span class="revisionTitle">Opisy wielojęzyczne</span>
+    </div>
+
+    <div
+      id="multilingual_content"
+      class="changelogRevisionContent"
+      style="display:none"
+    >
+
+<p>Opisy wielojęzyczne muszą być umieszczone pomiędzy tagami: [lang=xx] i [/lang] , gdzie xx oznacza dany język (np., pl, fr, en, es, it, itd.)
+Dodatkowo są 2 specjalne tagi: [lang=default] i [lang=all]</p>
+
+<p><strong>Przykład</strong>:</p>
+<textarea cols="80" rows="10">[lang=pl]Opis w języku polskim[/lang]
+[lang=en]The description, in english[/lang]
+[lang=fr]La description en français[/lang]
+[lang=ru]Описание на русском языке[/lang]
+[lang=zh]说明在中国[/lang]
+[lang=es]Descripción en español[/lang]
+
+[lang=all]zawarty w opisie dla dowolnego języka jakiego używa użytkownik[/lang]</textarea>
+
+<p>Jeżeli zawartość nie jest dostępna w języku odwiedzającego, zostaniw użyty język domyślny PEM , np. english.</p>
+    </div>
+  </div> <!-- multilingual -->
+
+</div> <!-- row -->
