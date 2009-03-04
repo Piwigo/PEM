@@ -171,7 +171,6 @@ if (isset($_POST['filter_submit'])) {
   // filter on a category
   if (isset($_POST['category_ids']) and is_array($_POST['category_ids'])) {
     $_SESSION['filter']['category_ids'] = array();
-    $_SESSION['filter']['category_mode'] = 'and';
     
     foreach ($_POST['category_ids'] as $cid) {
       if (is_numeric($cid) and $cid != 0) {
@@ -179,12 +178,17 @@ if (isset($_POST['filter_submit'])) {
       }
     }
 
-    if (count($_SESSION['filter']['category_ids']) == 0) {
+    if (count($_SESSION['filter']['category_ids']) > 0) {
+      $_SESSION['filter']['category_mode'] = 'and';
+    }
+    else {
       unset($_SESSION['filter']['category_ids']);
+      unset($_SESSION['filter']['category_mode']);
     }
   }
   else {
     unset($_SESSION['filter']['category_ids']);
+    unset($_SESSION['filter']['category_mode']);
   }
   
   // filter on a user
