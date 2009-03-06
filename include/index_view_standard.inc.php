@@ -150,7 +150,7 @@ foreach ($revision_ids as $revision_id)
 $tpl->assign('revisions', $revisions);
 
 $tpl->assign(
-  'pagination_bar',
+  'navbar',
   create_pagination_bar(
     'index.php',
     get_nb_pages(

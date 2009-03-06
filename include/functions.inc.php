@@ -583,24 +583,16 @@ function array_from_subfield($hash, $field)
   return $array;
 }
 
-function create_pagination_bar(
-  $base_url, $nb_pages, $current_page, $param_name
-  )
+function create_pagination_bar($base_url, $nb_pages, $current_page, $param_name)
 {
   global $conf;
 
-  $url =
-    $base_url.
-    (preg_match('/\?/', $base_url) ? '&amp;' : '?').
-    $param_name.'='
-    ;
-
-  $pagination_bar = '';
+  $navbar = array();
+  $pages_around = $conf['paginate_pages_around'];
+  $url = $base_url.(preg_match('/\?/', $base_url) ? '&amp;' : '?').$param_name.'=';
 
   // current page detection
-  if (!isset($current_page)
-      or !is_numeric($current_page)
-      or $current_page < 0)
+  if (!isset($current_page) or !is_numeric($current_page) or $current_page < 0)
   {
     $current_page = 1;
   }
@@ -608,112 +600,34 @@ function create_pagination_bar(
   // navigation bar useful only if more than one page to display !
   if ($nb_pages > 1)
   {
-    // link to first page?
+    $navbar['CURRENT_PAGE'] = $current_page;
+
+    // link to first and previous page?
     if ($current_page > 1)
     {
-      $pagination_bar.=
-        "\n".'&nbsp;'
-        .'<a href="'.$url.'1" rel="start" class="FirstActive">'
-        .'&lt;&lt; '.l10n('first')
-        .'</a>'
-        ;
+      $navbar['URL_FIRST'] = $url . 1;
+      $navbar['URL_PREV'] = $url . ($current_page - 1);
     }
-    else
-    {
-      $pagination_bar.=
-        "\n".'&nbsp;<span class="FirstInactive">&lt;&lt; '.l10n('first').'</span>';
-    }
-
-    // link on previous page ?
-    if ($current_page > 1)
-    {
-      $previous = $current_page - 1;
-      
-      $pagination_bar.=
-        "\n".'&nbsp;'
-        .'<a href="'.$url.$previous.'" rel="prev" class="PrevActive">'
-        .'&lt; '.l10n('prev').'</a>'
-        ;
-    }
-    else
-    {
-      $pagination_bar.=
-        "\n".'&nbsp;<span class="PrevInactive">&lt; '.l10n('prev').'</span>';
-    }
-
-    $min_to_display = $current_page - $conf['paginate_pages_around'];
-    $max_to_display = $current_page + $conf['paginate_pages_around'];
-    $last_displayed_page = null;
-
-    for ($page_number = 1; $page_number <= $nb_pages; $page_number++)
-    {
-      if ($page_number == 1
-          or $page_number == $nb_pages
-          or ($page_number >= $min_to_display
-              and $page_number <= $max_to_display)
-        )
-      {
-        if (isset($last_displayed_page)
-            and $last_displayed_page != $page_number - 1
-          )
-        {
-          $pagination_bar.=
-            "\n".'&nbsp;<span class="inactive">...</span>'
-            ;
-        }
-        
-        if ($page_number == $current_page)
-        {
-          $pagination_bar.=
-            "\n".'&nbsp;'
-            .'<span class="currentPage">'.$page_number.'</span>'
-            ;
-        }
-        else
-        {
-          $pagination_bar.=
-            "\n".'&nbsp;'
-            .'<a href="'.$url.$page_number.'">'.$page_number.'</a>'
-            ;
-        }
-        $last_displayed_page = $page_number;
-      }
-    }
-    
     // link on next page?
     if ($current_page < $nb_pages)
     {
-      $next = $current_page + 1;
-      
-      $pagination_bar.=
-        "\n".'&nbsp;'.
-        '<a href="'.$url.$next.'" rel="next" class="NextActive">'.l10n('next').' &gt;</a>'
-        ;
-    }
-    else
-    {
-      $pagination_bar.=
-        "\n".'&nbsp;<span class="NextInactive">'.l10n('next').' &gt;</span>'
-        ;
+      $navbar['URL_NEXT'] = $url . ($current_page + 1);
+      $navbar['URL_LAST'] = $url . $nb_pages;
     }
 
-    // link to last page?
-    if ($current_page != $nb_pages)
+    // pages to display
+    $navbar['pages'] = array();
+    $navbar['pages'][1] = $url;
+    $navbar['pages'][$nb_pages] = $url.$nb_pages;
+
+    for ($i = max($current_page - $pages_around, 2), $stop = min($current_page + $pages_around + 1, $nb_pages);
+         $i < $stop; $i++)
     {
-      $pagination_bar.=
-        "\n".'&nbsp;'.
-        '<a href="'.$url.$nb_pages.'" rel="last" class="LastActive">'
-        .l10n('last').' &gt;&gt;</a>'
-        ;
+      $navbar['pages'][$i] = $url.$i;
     }
-    else
-    {
-      $pagination_bar.=
-        "\n".'&nbsp;<span class="LastInactive">'.l10n('last').' &gt;&gt;</span>';
-    }
+    ksort($navbar['pages']);
   }
-  
-  return $pagination_bar;
+  return $navbar;
 }
 
 
