@@ -189,6 +189,14 @@ if (isset($_POST['submit_add']))
     message_die(l10n('You did not upload anything!'));
   }
 
+  $extension_dir = get_extension_dir($page['extension_id']);
+  if (!is_dir($extension_dir)) {
+    umask(0000);
+    if (!mkdir($extension_dir, 0777)) {
+      die("problem during ".$extension_dir." creation");
+    }
+  }
+  
   $temp_name = get_extension_dir($page['extension_id']).'/screenshot.tmp';
   if (!move_uploaded_file($_FILES['picture']['tmp_name'], $temp_name))
   {
