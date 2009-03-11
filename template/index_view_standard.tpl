@@ -35,7 +35,7 @@
 {/foreach}
 
 <div class="pages">
-  <div class="paginationBar">{$pagination_bar}</div>
+  {if !empty($navbar) }{include file='navigation_bar.tpl'}{/if}
   <div class="Results">({$nb_total} {'extensions'|translate})</div>
 </div>
 <div style="clear : both;"></div>
