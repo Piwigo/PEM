@@ -31,7 +31,7 @@ if (isset($_GET['rid']) and is_numeric($_GET['rid']))
 }
 else
 {
-  message_die(l10n('Incorrect revision identifier'));
+  message_die('Incorrect revision identifier');
 }
 
 // Checks if the user who wants to delete the revision is really its author
@@ -47,20 +47,20 @@ $row = $db->fetch_assoc($req);
 
 if (empty($row['idx_user']))
 {
-  message_die(l10n('Unknown extension'));
+  message_die('Unknown extension');
 }
 
 $authors = get_extension_authors($row['idx_extension']);
 
 if (!in_array($user['id'], $authors) and !isAdmin($user['id']))
 {
-  message_die(l10n('Deletion forbidden'));
+  message_die('Deletion forbidden');
 }
 
 delete_revisions(array($page['revision_id']));
 
 message_success(
-  l10n('Revision successfuly deleted.'),
+  'Revision successfuly deleted.',
   'extension_view.php?eid='.$row['idx_extension']
   );
 ?>

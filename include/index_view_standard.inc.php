@@ -77,8 +77,8 @@ $revision_ids = array_slice(
 if (count($revision_ids) == 0)
 {
   message_die(
-    l10n('No extension match your filter'),
-    l10n('Most recent extensions'),
+    'No extension match your filter',
+    'Most recent extensions',
     false
     );
 }

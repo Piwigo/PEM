@@ -45,7 +45,7 @@ function message_die($message, $title = 'Error', $go_back = true)
   $page['message'] = array(
     'title' => l10n($title),
     'is_success' => false,
-    'message' => $message,
+    'message' => l10n($message),
     'go_back' => $go_back
     );
   include($root_path.'include/message.inc.php');
@@ -62,7 +62,7 @@ function message_success(
   
   $page['message']['title'] = l10n($title);
   $page['message']['is_success'] = true;
-  $page['message']['message'] = $message;
+  $page['message']['message'] = l10n($message);
   $page['message']['redirect'] = $redirect;
   include($root_path.'include/message.inc.php');
 }

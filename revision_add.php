@@ -30,7 +30,7 @@ require_once($root_path.'include/common.inc.php');
   
 if (!isset($user['id']))
 {
-  message_die(l10n('You must be connected to reach this page.'));
+  message_die('You must be connected to reach this page.');
 }
 
 $tpl->set_filenames(
@@ -58,7 +58,7 @@ else
 
 if (empty($page['extension_id']))
 {
-  message_die(l10n('Incorrect extension identifier'));
+  message_die('Incorrect extension identifier');
 }
 
 $query = '
@@ -72,7 +72,7 @@ $result = $db->query($query);
 
 if ($db->num_rows($result) == 0)
 {
-  message_die(l10n('Unknown extension'));
+  message_die('Unknown extension');
 }
 list($page['extension_name'], $ext_user) = $db->fetch_array($result);
 
@@ -80,7 +80,7 @@ $authors = get_extension_authors($page['extension_id']);
 
 if (!in_array($user['id'], $authors) and !isAdmin($user['id']))
 {
-  message_die(l10n('You must be the extension author to modify it.'));
+  message_die('You must be the extension author to modify it.');
 }
 
 // +-----------------------------------------------------------------------+
@@ -106,7 +106,7 @@ if (isset($_POST['submit']))
     // Check file extension
     if (strtolower(substr($_FILES['revision_file']['name'], -3)) != 'zip')
     {
-      message_die(l10n('Only *.zip files are allowed'));
+      message_die('Only *.zip files are allowed');
     }
   
     // Check file size
@@ -131,7 +131,7 @@ if (isset($_POST['submit']))
   {
     if (empty($_POST[$field]))
     {
-      message_die(l10n('Some fields are missing'));
+      message_die('Some fields are missing');
     }
   }
   
@@ -240,7 +240,7 @@ DELETE
     );
       
   message_success(
-    l10n('Revision successfuly added. Thank you.'),
+    'Revision successfuly added. Thank you.',
     sprintf(
       'extension_view.php?eid=%u&amp;rid=%u#rev%u',
       $page['extension_id'],

@@ -51,7 +51,7 @@ if (basename($_SERVER['SCRIPT_FILENAME']) == 'extension_mod.php')
 
   if (!in_array($user['id'], $authors) and !isAdmin($user['id']))
   {
-    message_die(l10n('You must be the extension author to modify it.'));
+    message_die('You must be the extension author to modify it.');
   }
 }
 

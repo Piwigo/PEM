@@ -71,7 +71,7 @@ if (isset($_POST['submit_edit'])) {
 if (isset($_GET['edit'])) {
   $page['category_id'] = abs(intval($_GET['edit']));
   if ($page['category_id'] != $_GET['edit']) {
-    message_die(l10n('edit URL parameter is incorrect'), 'Error', false);
+    message_die('edit URL parameter is incorrect', 'Error', false);
   }
 
   $tpl->assign('category_form_title', l10n('Modify a category'));
@@ -94,7 +94,7 @@ SELECT
 if (isset($_GET['delete'])) {
   $page['category_id'] = abs(intval($_GET['delete']));
   if ($page['category_id'] != $_GET['delete']) {
-    message_die(l10n('edit URL parameter is incorrect'), 'Error', false);
+    message_die('edit URL parameter is incorrect', 'Error', false);
   }
 
   delete_category($page['category_id']);

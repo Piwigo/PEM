@@ -35,7 +35,7 @@ else if (isset($_GET['eid']))
 }
 else
 {
-  message_die(l10n('undefined extension identifier'));
+  message_die('undefined extension identifier');
 }
 
 include($root_path.'extension_add.php');

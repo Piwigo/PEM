@@ -51,7 +51,7 @@ $data = $db->fetch_assoc($db->query($query));
   
 if (!isset($data['id_extension']))
 {
-  message_die(l10n('Unknown extension'), 'Error', false );
+  message_die('Unknown extension', 'Error', false );
 }
 
 $authors = get_extension_authors($page['extension_id']);

@@ -104,7 +104,7 @@ function resize_picture(
     }
     default:
     {
-      message_die(l10n('Can only resize PNG and JPEG files'));
+      message_die('Can only resize PNG and JPEG files');
     }
   }
 
@@ -143,7 +143,7 @@ function resize_picture(
 
 if (!isset($user['id']))
 {
-  message_die(l10n('You must be connected to reach this page.'));
+  message_die('You must be connected to reach this page.');
 }
 
 // We need a valid extension
@@ -154,14 +154,14 @@ $page['extension_id'] =
 
 if (empty($page['extension_id']))
 {
-  message_die(l10n('Incorrect extension identifier'));
+  message_die('Incorrect extension identifier');
 }
 
 $authors = get_extension_authors($page['extension_id']);
 
 if (!in_array($user['id'], $authors) and !isAdmin($user['id']))
 {
-  message_die(l10n('You must be the extension author to modify it.'));
+  message_die('You must be the extension author to modify it.');
 }
 
 $query = '
@@ -174,7 +174,7 @@ $result = $db->query($query);
 
 if ($db->num_rows($result) == 0)
 {
-  message_die(l10n('Unknown extension'));
+  message_die('Unknown extension');
 }
 list($page['extension_name']) = $db->fetch_array($result);
 
@@ -186,7 +186,7 @@ if (isset($_POST['submit_add']))
 {
   if (!isset($_FILES['picture']))
   {
-    message_die(l10n('You did not upload anything!'));
+    message_die('You did not upload anything!');
   }
 
   $extension_dir = get_extension_dir($page['extension_id']);
@@ -200,7 +200,7 @@ if (isset($_POST['submit_add']))
   $temp_name = get_extension_dir($page['extension_id']).'/screenshot.tmp';
   if (!move_uploaded_file($_FILES['picture']['tmp_name'], $temp_name))
   {
-    message_die(l10n('Problem during upload'));
+    message_die('Problem during upload');
   }
 
   list($width, $height, $type) = getimagesize($temp_name);
@@ -209,7 +209,7 @@ if (isset($_POST['submit_add']))
   // $type == 3 means PNG
   if (!in_array($type, array(2, 3)))
   {
-    message_die(l10n('You can only upload PNG and JPEG files as screenshot.'));
+    message_die('You can only upload PNG and JPEG files as screenshot.');
     unlink($temp_name);
   }
 

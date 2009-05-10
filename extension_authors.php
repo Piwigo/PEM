@@ -35,9 +35,7 @@ $tpl->set_filenames(
 
 if (!isset($user['id']))
 {
-  message_die(
-    l10n('You must be connected to add, modify or delete an extension.')
-    );
+  message_die('You must be connected to add, modify or delete an extension.');
 }
 
 // We need a valid extension
@@ -48,14 +46,14 @@ $page['extension_id'] =
 
 if (empty($page['extension_id']))
 {
-  message_die(l10n('Incorrect extension identifier'));
+  message_die('Incorrect extension identifier');
 }
 
 $extension_infos = get_extension_infos_of($page['extension_id']);
 
 if ($user['id'] != $extension_infos['idx_user'] and !isAdmin($user['id']))
 {
-  message_die(l10n('You must be the extension author to modify it.'));
+  message_die('You must be the extension author to modify it.');
 }
 
 $query = '
@@ -67,7 +65,7 @@ $result = $db->query($query);
 
 if ($db->num_rows($result) == 0)
 {
-  message_die(l10n('Incorrect extension identifier'));
+  message_die('Incorrect extension identifier');
 }
 list($page['extension_name']) = $db->fetch_array($result);
 
@@ -88,7 +86,7 @@ SELECT '.$conf['user_fields']['id'].'
 
   if (empty($author_id))
   {
-    message_die(l10n('This user does not exist in database.'));
+    message_die('This user does not exist in database.');
   }
 
   $authors = get_extension_authors($page['extension_id']);
@@ -107,7 +105,7 @@ if (isset($_POST['submit_delete']))
 {
   if (!isset($_POST['author_id']))
   {
-    message_die(l10n('You must select at least one author.'));
+    message_die('You must select at least one author.');
   }
   $author_delete = mysql_real_escape_string(implode(',', $_POST['author_id']));
 

@@ -35,7 +35,7 @@ else if (isset($_GET['rid']))
 }
 else
 {
-  message_die(l10n('undefined revision identifier'));
+  message_die('undefined revision identifier');
 }
 
 include($root_path.'revision_add.php');

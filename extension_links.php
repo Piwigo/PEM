@@ -79,9 +79,7 @@ function save_order_links($sorted_link_ids)
 
 if (!isset($user['id']))
 {
-  message_die(
-    l10n('You must be connected to add, modify or delete an extension.')
-    );
+  message_die('You must be connected to add, modify or delete an extension.');
 }
 
 // We need a valid extension
@@ -92,14 +90,14 @@ $page['extension_id'] =
 
 if (empty($page['extension_id']))
 {
-  message_die(l10n('Incorrect extension identifier'));
+  message_die('Incorrect extension identifier');
 }
 
 $authors = get_extension_authors($page['extension_id']);
 
 if (!in_array($user['id'], $authors) and !isAdmin($user['id']))
 {
-  message_die(l10n('You must be the extension author to modify it.'));
+  message_die('You must be the extension author to modify it.');
 }
 
 $query = '
@@ -111,7 +109,7 @@ $result = $db->query($query);
 
 if ($db->num_rows($result) == 0)
 {
-  message_die(l10n('Incorrect extension identifier'));
+  message_die('Incorrect extension identifier');
 }
 list($page['extension_name']) = $db->fetch_array($result);
 
@@ -123,12 +121,12 @@ if (isset($_POST['submit_add']))
 {
   if (!preg_match('/^https?:/', $_POST['link_url']))
   {
-    message_die(l10n('Incorrect URL'));
+    message_die('Incorrect URL');
   }
 
   if (empty($_POST['link_name']))
   {
-    message_die(l10n('Link name must not be empty'));
+    message_die('Link name must not be empty');
   }
 
   // find next rank
