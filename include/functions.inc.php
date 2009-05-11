@@ -518,7 +518,8 @@ SELECT
     idx_extension,
     description,
     url,
-    accept_agreement
+    accept_agreement,
+    author
   FROM '.REV_TABLE.'
   WHERE id_revision IN ('.implode(',', $revision_ids).')
 ;';

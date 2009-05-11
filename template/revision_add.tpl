@@ -35,6 +35,14 @@
           </div>
         </td>
       </tr>
+{if $authors|@count > 1}
+      <tr>
+        <th>{'Author'|translate}</th>
+        <td>
+          {html_radios name="author" values=$authors output=$authors|@get_author_name selected=$selected_author}
+        </td>
+      </tr>
+{/if}
       <tr>
         <th>{'Notes'|translate}</th>
         <td>

@@ -141,13 +141,14 @@ if (isset($_POST['submit']))
       REV_TABLE,
       array(
         'primary' => array('id_revision'),
-        'update'  => array('version', 'description'),
+        'update'  => array('version', 'description', 'author'),
         ),
       array(
         array(
           'id_revision'    => $page['revision_id'],
           'version'        => $_POST['revision_version'],
           'description'    => $_POST['revision_changelog'],
+          'author'         => isset($_POST['author']) ? $_POST['author'] : $user['id'],
           ),
         )
       );
@@ -160,7 +161,7 @@ if (isset($_POST['submit']))
       'date'           => mktime(),
       'description'    => $_POST['revision_changelog'],
       'url'            => $_FILES['revision_file']['name'],
-      'author'         => $user['id'],
+      'author'         => isset($_POST['author']) ? $_POST['author'] : $user['id'],
       );
 
     if ($conf['use_agreement'])
@@ -178,15 +179,6 @@ if (isset($_POST['submit']))
       );
 
     $page['revision_id'] = $db->insert_id();
-
-    if (!in_array($user['id'], $authors))
-    {
-      $query = '
-INSERT INTO '.AUTHORS_TABLE.' (idx_extension, idx_user)
-  VALUES ('.$page['extension_id'].', '.$user['id'].')
-;';
-    $db->query($query);
-    }
   }
 
   if ($file_to_upload)
@@ -254,14 +246,6 @@ DELETE
 // |                            Form display                               |
 // +-----------------------------------------------------------------------+
 
-$tpl->assign(
-  array(
-    'extension_name' => $page['extension_name'],
-    'use_agreement' => $conf['use_agreement'],
-    'agreement_description' => l10n('agreement_description'),
-    )
-  );
-
 if (isset($_POST['submit']))
 {
   $version = @$_POST['revision_version'];
@@ -286,6 +270,7 @@ else if (basename($_SERVER['SCRIPT_FILENAME']) == 'revision_mod.php')
   $version = $revision_infos_of[ $page['revision_id'] ]['version'];
   $description = $revision_infos_of[ $page['revision_id'] ]['description'];
   $selected_versions = $version_ids_of_revision[ $page['revision_id'] ];
+  $selected_author = $revision_infos_of[ $page['revision_id'] ]['author'];
 
   $accept_agreement = get_boolean(
     $revision_infos_of[ $page['revision_id'] ]['accept_agreement'],
@@ -306,6 +291,13 @@ else
   $version = '';
   $description = '';
   $selected_versions = array();
+  $selected_author = $user['id'];
+
+  // if an admin want to add a revision
+  if (!in_array($user['id'], $authors))
+  {
+    array_push($authors, $user['id']);
+  }
 
   // by default the contributor accepts the agreement
   $accept_agreement_checked = 'checked="checked"';
@@ -316,6 +308,11 @@ else
 
 $tpl->assign(
   array(
+    'extension_name' => $page['extension_name'],
+    'use_agreement' => $conf['use_agreement'],
+    'agreement_description' => l10n('agreement_description'),
+    'authors' => $authors,
+    'selected_author' => $selected_author,
     'name' => $version,
     'description' => $description,
     'accept_agreement_checked' => $accept_agreement_checked,
