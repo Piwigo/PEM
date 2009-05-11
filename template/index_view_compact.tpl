@@ -1,13 +1,13 @@
 <div id="viewSelect">
   <select onchange="document.location = this.options[this.selectedIndex].value;">
-    <option value="index.php?view=standard">{'standard view'|translate}</option>
-    <option value="index.php?view=compact" selected="selected">{'compact view'|translate}</option>
+    <option value="index.php?view=standard">{'standard view'|@translate}</option>
+    <option value="index.php?view=compact" selected="selected">{'compact view'|@translate}</option>
   </select>
 </div>
 
-<h2>{'Most recent extensions'|translate}</h2>
+<h2>{'Most recent extensions'|@translate}</h2>
 <div class="pages">
-  <div class="Results">({$nb_total} {'extensions'|translate})</div>
+  <div class="Results">({$nb_total} {'extensions'|@translate})</div>
 </div>
 
 {if count($revisions) > 0}
@@ -21,6 +21,6 @@
 {/if}
 
 <div class="pages">
-  <div class="Results">({$nb_total} {'extensions'|translate})</div>
+  <div class="Results">({$nb_total} {'extensions'|@translate})</div>
 </div>
 <div style="clear : both;"></div>

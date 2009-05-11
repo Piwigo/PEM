@@ -1,18 +1,18 @@
 <h2>{$extension_name}</h2>
 
-<h3>{'Manage links'|translate}</h3>
+<h3>{'Manage links'|@translate}</h3>
 
 <ul class="actionLinks">
-  <li><a href="{$u_extension}" title="{'See extension'|translate}"><img src="template/images/see_extension.png" alt="{'See extension'|translate}"></a></li>
+  <li><a href="{$u_extension}" title="{'See extension'|@translate}"><img src="template/images/see_extension.png" alt="{'See extension'|@translate}"></a></li>
 </ul>
 
 <form method="post" action="{$f_action}" enctype="multipart/form-data">
   <fieldset>
-    <legend>{'Add a link'|translate}</legend>
+    <legend>{'Add a link'|@translate}</legend>
 
     <table>
       <tr>
-        <th><strong>{'Name'|translate} *</strong></th>
+        <th><strong>{'Name'|@translate} *</strong></th>
         <td>
           <input
             type="text"
@@ -23,7 +23,7 @@
         </td>
       </tr>
       <tr>
-        <th><strong>{'URL'|translate} *</strong></th>
+        <th><strong>{'URL'|@translate} *</strong></th>
         <td>
           <input
             type="text"
@@ -37,13 +37,13 @@
       <tr><td>
       </td></tr>
       <tr>
-        <th>{'Description'|translate}</th>
+        <th>{'Description'|@translate}</th>
         <td>
           <textarea cols="80" rows="3" name="link_description">{if isset($f_link_description)}{$f_link_description}{/if}</textarea>
         </td>
       </tr>
       <tr>
-        <th><strong>{'Language'|translate}</strong></th>
+        <th><strong>{'Language'|@translate}</strong></th>
         <td>
           <input
             type="text"
@@ -57,7 +57,7 @@
     </table>
 
     <div>
-      <input type="submit" value="{'Submit'|translate}" name="submit_add" />
+      <input type="submit" value="{'Submit'|@translate}" name="submit_add" />
     </div>
   </fieldset>
 </form>
@@ -65,20 +65,20 @@
 {if count($links) > 0}
 <form method="post" action="{$f_action}" enctype="multipart/form-data">
   <fieldset>
-    <legend>{'Manage links'|translate}</legend>
+    <legend>{'Manage links'|@translate}</legend>
 
     <ul class="linkManagement">
   {foreach from=$links item=link}
       <li>
-        <a href="{$link.u_delete}" onclick="return confirm('{'Are you sure you want to delete this item?'|translate|escape:javascript}');" class="linkAction" title="{'Delete link'|translate}">
-        <img src="template/images/delete.png" alt="{'Delete link'|translate}"></a>
+        <a href="{$link.u_delete}" onclick="return confirm('{'Are you sure you want to delete this item?'|@translate|escape:javascript}');" class="linkAction" title="{'Delete link'|@translate}">
+        <img src="template/images/delete.png" alt="{'Delete link'|@translate}"></a>
         <p>
           <strong><a href="{$link.url}">{$link.name}</a></strong>
           {$link.description}
         </p>
         <p>
           <label>
-            {'Rank'|translate}:
+            {'Rank'|@translate}:
             <input type="text" name="linkRank[{$link.id}]" value="{$link.rank}" size="4"/>
           </label>
         </p>
@@ -87,7 +87,7 @@
     </ul>
 
     <div>
-      <input type="submit" value="{'Submit'|translate}" name="submit_order" />
+      <input type="submit" value="{'Submit'|@translate}" name="submit_order" />
     </div>
   </fieldset>
 </form>

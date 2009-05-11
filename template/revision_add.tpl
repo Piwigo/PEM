@@ -2,11 +2,11 @@
 
 <form method="post" action="{$f_action}" enctype="multipart/form-data">
   <fieldset>
-    <legend>{'Add a revision'|translate}</legend>
+    <legend>{'Add a revision'|@translate}</legend>
 
     <table>
       <tr>
-        <th>{'Version'|translate}</th>
+        <th>{'Version'|@translate}</th>
         <td>
           <input
             type="text"
@@ -18,13 +18,13 @@
         </td>
       </tr>
       <tr>
-        <th>{'File'|translate}</th>
+        <th>{'File'|@translate}</th>
         <td>
           <input type="file" name="revision_file" size="35" />
         </td>
       </tr>
       <tr>
-        <th>{'Compatibility'|translate}</th>
+        <th>{'Compatibility'|@translate}</th>
         <td>
           <div class="checkboxBox">
 {foreach from=$versions item=version}
@@ -37,21 +37,21 @@
       </tr>
 {if $authors|@count > 1}
       <tr>
-        <th>{'Author'|translate}</th>
+        <th>{'Author'|@translate}</th>
         <td>
           {html_radios name="author" values=$authors output=$authors|@get_author_name selected=$selected_author}
         </td>
       </tr>
 {/if}
       <tr>
-        <th>{'Notes'|translate}</th>
+        <th>{'Notes'|@translate}</th>
         <td>
           <textarea cols="80" rows="10" name="revision_changelog">{$description}</textarea>
         </td>
       </tr>
 {if $use_agreement}
       <tr>
-        <th>{'Agreement'|translate}</th>
+        <th>{'Agreement'|@translate}</th>
         <td>
           <label><input type="checkbox" name="accept_agreement" {$accept_agreement_checked}>{$agreement_description}</label>
         </td>
@@ -60,7 +60,7 @@
     </table>
 
     <div>
-      <input type="submit" value="{'Submit'|translate}" name="submit" />
+      <input type="submit" value="{'Submit'|@translate}" name="submit" />
     </div>
   </fieldset>
 </form>
