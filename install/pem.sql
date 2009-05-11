@@ -59,7 +59,7 @@ CREATE TABLE `pem_revisions` (
   `description` text NOT NULL,
   `version` varchar(25) NOT NULL default '',
   `accept_agreement` enum('true','false') default NULL,
-  `author` int(11) NULL default NULL,
+  `author` int(11) NOT NULL default '0',
   PRIMARY KEY  (`id_revision`)
 )   DEFAULT CHARSET=utf8;
 DROP TABLE IF EXISTS `pem_revisions_compatibilities`;

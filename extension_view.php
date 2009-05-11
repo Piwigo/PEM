@@ -267,12 +267,6 @@ SELECT id_revision,
 
     $is_first_revision = false;
 
-    $author = '';
-    if (count($authors) > 1 or (isset($row['author']) and $row['author'] != $data['idx_user']))
-    {
-      $author = get_author_name(isset($row['author']) ? $row['author'] : $data['idx_user']);
-    }
-    
     array_push(
       $tpl_revisions,
       array(
@@ -283,7 +277,8 @@ SELECT id_revision,
           $versions_of[ $row['id_revision'] ]
           ),
         'date' => date('Y-m-d', $row['date']),
-        'author' => $author,
+        'author' => (count($authors) > 1 or $row['author'] != $data['idx_user']) ?
+                      get_author_name($row['author']) : '',
         'u_download' => 'download.php?rid='.$row['id_revision'],
         'description' => nl2br(
           htmlspecialchars(
