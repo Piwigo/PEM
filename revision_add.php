@@ -293,18 +293,14 @@ else
   $selected_versions = array();
   $selected_author = $user['id'];
 
-  // if an admin want to add a revision
-  if (!in_array($user['id'], $authors))
-  {
-    array_push($authors, $user['id']);
-  }
-
   // by default the contributor accepts the agreement
   $accept_agreement_checked = 'checked="checked"';
 }
 
-// echo '<pre>'; print_r($version); echo '</pre>';
-// echo '<pre>'; echo "#".$version."#"; echo '</pre>';
+if (!in_array($selected_author, $authors))
+{
+  array_push($authors, $selected_author);
+}
 
 $tpl->assign(
   array(
