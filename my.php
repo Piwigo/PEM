@@ -39,7 +39,7 @@ SELECT
     name
   FROM '.EXT_TABLE.'
   WHERE idx_user = \''.$user['id'].'\'
-  ORDER BY name DESC
+  ORDER BY name ASC
 ;';
 $req = $db->query($query);
 
@@ -65,7 +65,7 @@ SELECT
   INNER JOIN '.AUTHORS_TABLE.' AS aut
     ON ext.id_extension = aut.idx_extension
   WHERE aut.idx_user = \''.$user['id'].'\'
-  ORDER BY name DESC
+  ORDER BY name ASC
 ;';
 $req = $db->query($query);
 
