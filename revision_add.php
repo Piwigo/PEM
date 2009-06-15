@@ -148,7 +148,7 @@ if (isset($_POST['submit']))
           'id_revision'    => $page['revision_id'],
           'version'        => $_POST['revision_version'],
           'description'    => $_POST['revision_changelog'],
-          'author'         => isset($_POST['author']) ? $_POST['author'] : $user['id'],
+          'author'         => isset($_POST['author']) ? $_POST['author'] : $revision_infos_of[$page['revision_id']]['author'],
           ),
         )
       );
