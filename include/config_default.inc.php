@@ -158,7 +158,7 @@ $conf['allow_svn_file_creation'] = false;
 $conf['svn_path'] = 'svn';
 
 // Comment automaticaly inserted into archive
-$conf['archive_comment'] = "File automaticaly created from SVN repository.\n\nURL: %s \nRevision: %s";
+$conf['archive_comment'] = "File automatically created from SVN repository.\n\nURL: %s \nRevision: %s";
 
 // +-----------------------------------------------------------------------+
 // |                            debug/performance                          |
