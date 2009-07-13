@@ -25,7 +25,7 @@ require_once($root_path.'include/common.inc.php');
 $tpl->set_filenames(
   array(
     'page' => 'page.tpl',
-    'extension_links' => 'extension_authors.tpl'
+    'extension_authors' => 'extension_authors.tpl'
   )
 );
 
@@ -147,7 +147,7 @@ $tpl->assign(
 // |                           html code display                           |
 // +-----------------------------------------------------------------------+
 
-$tpl->assign_var_from_handle('main_content', 'extension_links');
+$tpl->assign_var_from_handle('main_content', 'extension_authors');
 include($root_path.'include/header.inc.php');
 include($root_path.'include/footer.inc.php');
 $tpl->parse('page');

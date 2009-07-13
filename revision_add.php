@@ -64,7 +64,10 @@ if (empty($page['extension_id']))
 $query = '
 SELECT
     name,
-    idx_user
+    idx_user,
+    svn_url,
+    archive_root_dir,
+    archive_name
   FROM '.EXT_TABLE.'
   WHERE id_extension = '.$page['extension_id'].'
 ;';
@@ -74,7 +77,7 @@ if ($db->num_rows($result) == 0)
 {
   message_die('Unknown extension');
 }
-list($page['extension_name'], $ext_user) = $db->fetch_array($result);
+list($page['extension_name'], $ext_user, $svn_url, $archive_root_dir, $archive_name) = $db->fetch_array($result);
 
 $authors = get_extension_authors($page['extension_id']);
 
@@ -89,19 +92,21 @@ if (!in_array($user['id'], $authors) and !isAdmin($user['id']))
 
 if (isset($_POST['submit']))
 {
-  // The file is mandatory only when we add a revision, not when we modify
-  // it
-  if (basename($_SERVER['SCRIPT_FILENAME']) == 'revision_add.php'
-      or !empty($_FILES['revision_file']['name']))
+  // The file is mandatory only when we add a revision, not when we modify it
+  if (basename($_SERVER['SCRIPT_FILENAME']) != 'revision_add.php')
   {
-    $file_to_upload = true;
+    $file_to_upload = 'none';
+  }
+  elseif (isset($_POST['file_type']) and $_POST['file_type'] == 'svn')
+  {
+    $file_to_upload = 'svn';
   }
   else
   {
-    $file_to_upload = false;
+    $file_to_upload = 'user';
   }
 
-  if ($file_to_upload)
+  if ($file_to_upload == 'user')
   {
     // Check file extension
     if (strtolower(substr($_FILES['revision_file']['name'], -3)) != 'zip')
@@ -117,8 +122,42 @@ if (isset($_POST['submit']))
           l10n('File too big. Filesize must not exceed %s.'),
           ini_get('upload_max_filesize')
         )
-        );
+      );
     }
+  }
+
+  if ($file_to_upload == 'svn')
+  {
+    $temp_svn_path = $conf['local_data_dir'] . '/svn_import';
+
+    if (!is_dir($temp_svn_path))
+    {
+      umask(0000);
+      if (!mkdir($temp_svn_path, 0777))
+      {
+        die("problem during ".$temp_svn_path." creation");
+      }
+    }
+
+    // Create random path
+    $temp_svn_path .= '/' . md5(uniqid(rand(), true));
+
+    // SVN export
+    $svn_command = $conf['svn_path'] . ' export';
+    $svn_command .= is_numeric($_POST['svn_revision']) ? ' -r'.$_POST['svn_revision'] : '';
+    $svn_command .= ' ' . escapeshellarg($svn_url);
+    $svn_command .= ' ' . $temp_svn_path;
+
+    exec($svn_command, $svn_infos);
+
+    if (empty($svn_infos))
+    {
+      message_die('An error occured during SVN export.');
+    }
+
+    $archive_name = str_replace('%', @$_POST['revision_version'], $archive_name);
+    $svn_revision = preg_replace('/exported revision (\d+)\./i', '$1', end($svn_infos));
+    $archive_comment = sprintf($conf['archive_comment'], $svn_url, $svn_revision);
   }
 
   $required_fields = array(
@@ -131,6 +170,7 @@ if (isset($_POST['submit']))
   {
     if (empty($_POST[$field]))
     {
+      @deltree($temp_svn_path);
       message_die('Some fields are missing');
     }
   }
@@ -160,7 +200,7 @@ if (isset($_POST['submit']))
       'idx_extension'  => $page['extension_id'],
       'date'           => mktime(),
       'description'    => $_POST['revision_changelog'],
-      'url'            => $_FILES['revision_file']['name'],
+      'url'            => ($file_to_upload == 'user' ? $_FILES['revision_file']['name'] : $archive_name),
       'author'         => isset($_POST['author']) ? $_POST['author'] : $user['id'],
       );
 
@@ -181,7 +221,7 @@ if (isset($_POST['submit']))
     $page['revision_id'] = $db->insert_id();
   }
 
-  if ($file_to_upload)
+  if ($file_to_upload != 'none')
   {
     // Moves the file to its final destination:
     // upload/extension-X/revision-Y
@@ -199,11 +239,24 @@ if (isset($_POST['submit']))
     
     umask(0000);
     @mkdir($revision_dir, 0777);
-    
-    move_uploaded_file(
-      $_FILES['revision_file']['tmp_name'],
-      $revision_dir.'/'.$_FILES['revision_file']['name']
+
+    if ($file_to_upload == 'user')
+    {
+      move_uploaded_file(
+        $_FILES['revision_file']['tmp_name'],
+        $revision_dir.'/'.$_FILES['revision_file']['name']
       );
+    }
+    else
+    {
+      // Create zip archive
+      include_once($root_path.'include/pclzip.lib.php');
+      $zip = new PclZip($revision_dir.'/'.$archive_name);
+      $zip->create($temp_svn_path,
+        PCLZIP_OPT_REMOVE_PATH, $temp_svn_path,
+        PCLZIP_OPT_ADD_PATH, $archive_root_dir,
+        PCLZIP_OPT_COMMENT, $archive_comment);
+    }
   }
 
   $query = '
@@ -312,6 +365,7 @@ $tpl->assign(
     'name' => $version,
     'description' => $description,
     'accept_agreement_checked' => $accept_agreement_checked,
+    'file_needed' => (basename($_SERVER['SCRIPT_FILENAME']) == 'revision_add.php' ? true : false),
     )
   );
   
@@ -342,6 +396,12 @@ foreach ($versions as $version)
         : '',
       )
     );
+}
+
+if (basename($_SERVER['SCRIPT_FILENAME']) == 'revision_add.php' and $conf['allow_svn_file_creation']
+  and !empty($svn_url) and !empty($archive_root_dir) and !empty($archive_name))
+{
+  $tpl->assign('allow_svn_file_creation', true);
 }
 
 $tpl->assign('versions', $tpl_versions);

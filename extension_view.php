@@ -62,10 +62,10 @@ if (isset($user['id']) and (isAdmin($user['id']) or in_array($user['id'], $autho
   $page['user_can_modify'] = true;
 }
 
-$page['user_can_manage_authors'] = false;
+$user['extension_owner'] = false;
 if (isset($user['id']) and (isAdmin($user['id']) or $user['id'] == $data['idx_user']))
 {
-  $page['user_can_manage_authors'] = true;
+  $user['extension_owner'] = true;
 }
 
 $versions_of_extension = get_versions_of_extension(
@@ -138,7 +138,7 @@ if (isset($user['id']))
         )
       );
   }
-  if ($page['user_can_manage_authors'])
+  if ($user['extension_owner'])
   {
     $tpl->assign(
       array(
@@ -146,6 +146,11 @@ if (isset($user['id']))
         'u_authors' => 'extension_authors.php?eid='.$page['extension_id']
         )
       );
+  }
+  if ($conf['allow_svn_file_creation'] and $user['extension_owner'])
+  {
+    $tpl->assign('u_svn', 'extension_svn.php?eid='.$page['extension_id']);
+      
   }
 }
 

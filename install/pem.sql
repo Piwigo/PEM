@@ -30,6 +30,9 @@ CREATE TABLE `pem_extensions` (
   `idx_user` int(11) NOT NULL default '0',
   `name` varchar(255) NOT NULL default '',
   `description` text NOT NULL,
+  `svn_url` varchar(255) NULL default NULL,
+  `archive_root_dir` varchar(255) NULL default NULL,
+  `archive_name` varchar(255) NULL default NULL,
   PRIMARY KEY  (`id_extension`)
 )   DEFAULT CHARSET=utf8;
 DROP TABLE IF EXISTS `pem_extensions_categories`;

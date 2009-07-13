@@ -1357,4 +1357,29 @@ function get_author_name($ids)
   }
   return $result;
 }
+
+function deltree($path)
+{
+  if (is_dir($path))
+  {
+    $fh = opendir($path);
+    while ($file = readdir($fh))
+    {
+      if ($file != '.' and $file != '..')
+      {
+        $pathfile = $path . '/' . $file;
+        if (is_dir($pathfile))
+        {
+          deltree($pathfile);
+        }
+        else
+        {
+          @unlink($pathfile);
+        }
+      }
+    }
+    closedir($fh);
+    return @rmdir($path);
+  }
+}
 ?>

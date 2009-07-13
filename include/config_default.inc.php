@@ -97,10 +97,10 @@ $conf['screenshot_maxheight'] = 800;
 $conf['thumbnail_maxheight']  = 150;
 $conf['thumbnail_maxwidth']   = 150;
 
-$conf['website_url'] = 'http://phpwebgallery.net/ext';
-$conf['website_description'] = 'PhpWebGallery extensions';
+$conf['website_url'] = 'http://piwigo.org/ext';
+$conf['website_description'] = 'Piwigo extensions';
 $conf['website_language'] = 'en';
-$conf['webmaster_email'] = 'team phpwebgallery.net';
+$conf['webmaster_email'] = 'team piwigo.org';
 
 // software: name of the extended software
 $conf['software'] = 'Piwigo';
@@ -145,6 +145,20 @@ $conf['upload_dir'] = 'upload/';
 
 // the template to give to sprintf, must take an integer then a string
 $conf['user_url_template'] = null;
+
+// +-----------------------------------------------------------------------+
+// |                             SVN parameters                            |
+// +-----------------------------------------------------------------------+
+
+// If true, allow users to configure an SVN reposity URL
+// Then, users can create archive automaticaly from a specific revision
+$conf['allow_svn_file_creation'] = false;
+
+// You can configure path to svn command on your server
+$conf['svn_path'] = 'svn';
+
+// Comment automaticaly inserted into archive
+$conf['archive_comment'] = "File automaticaly created from SVN repository.\n\nURL: %s \nRevision: %s";
 
 // +-----------------------------------------------------------------------+
 // |                            debug/performance                          |
