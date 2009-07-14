@@ -153,6 +153,7 @@ if (!empty($svn_url))
 
 $tpl->assign(
   array(
+    'extension_name' => $page['extension_name'],
     'u_extension' => 'extension_view.php?eid='.$page['extension_id'],
     'f_action' => 'extension_svn.php?eid='.$page['extension_id'],
     'SVN_URL' => (!empty($svn_url) ? $svn_url : ''),

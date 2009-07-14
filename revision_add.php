@@ -398,14 +398,20 @@ foreach ($versions as $version)
     );
 }
 
+$tpl->assign(
+  array(
+    'versions' => $tpl_versions,
+    'f_action' => $_SERVER['REQUEST_URI'],
+    'u_extension' => 'extension_view.php?eid='.$page['extension_id'],
+    'page_title' => (basename($_SERVER['SCRIPT_FILENAME']) == 'revision_add.php' ? l10n('Add a revision') : l10n('Modify revision')),
+  )
+);
+
 if (basename($_SERVER['SCRIPT_FILENAME']) == 'revision_add.php' and $conf['allow_svn_file_creation']
   and !empty($svn_url) and !empty($archive_root_dir) and !empty($archive_name))
 {
   $tpl->assign('allow_svn_file_creation', true);
 }
-
-$tpl->assign('versions', $tpl_versions);
-$tpl->assign('f_action', $_SERVER['REQUEST_URI']);
 
 // +-----------------------------------------------------------------------+
 // |                           html code display                           |

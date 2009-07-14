@@ -1,8 +1,14 @@
 <h2>{$extension_name}</h2>
 
+<h3>{$page_title}</h3>
+
+<ul class="actionLinks">
+  <li><a href="{$u_extension}" title="{'See extension'|@translate}"><img src="template/images/see_extension.png" alt="{'See extension'|@translate}"></a></li>
+</ul>
+
 <form method="post" action="{$f_action}" enctype="multipart/form-data">
   <fieldset>
-    <legend>{'Add a revision'|@translate}</legend>
+    <legend>{$page_title}</legend>
 
     <table>
       <tr>

@@ -138,6 +138,7 @@ foreach ($authors as $author_id)
 
 $tpl->assign(
   array(
+    'extension_name' => $page['extension_name'],
     'u_extension' => 'extension_view.php?eid='.$page['extension_id'],
     'f_action' => 'extension_authors.php?eid='.$page['extension_id'],
     )
