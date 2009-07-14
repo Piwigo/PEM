@@ -254,8 +254,7 @@ if (isset($_POST['submit']))
       $zip = new PclZip($revision_dir.'/'.$archive_name);
       $zip->create($temp_svn_path,
         PCLZIP_OPT_REMOVE_PATH, $temp_svn_path,
-        PCLZIP_OPT_ADD_PATH, $archive_root_dir,
-        PCLZIP_OPT_COMMENT, $archive_comment);
+        PCLZIP_OPT_ADD_PATH, $archive_root_dir);
     }
   }
 
