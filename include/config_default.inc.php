@@ -157,7 +157,11 @@ $conf['allow_svn_file_creation'] = false;
 // You can configure path to svn command on your server
 $conf['svn_path'] = 'svn';
 
+// Filename for archive comment.
+$conf['archive_comment_filename'] = 'pem_metadata.txt';
+
 // Comment automaticaly inserted into archive
+// If $conf['archive_comment'] is empty, no file will be added to archive
 $conf['archive_comment'] = "File automatically created from SVN repository.\n\nURL: %s \nRevision: %s";
 
 // +-----------------------------------------------------------------------+

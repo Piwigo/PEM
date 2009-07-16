@@ -128,8 +128,13 @@ if (isset($_POST['submit']))
 
   if ($file_to_upload == 'svn')
   {
-    $temp_svn_path = $conf['local_data_dir'] . '/svn_import';
+    $svn_url = $_POST['svn_url'];
+    if (empty($svn_url))
+    {
+      message_die('Some fields are missing');
+    }
 
+    $temp_svn_path = $conf['local_data_dir'] . '/svn_import';
     if (!is_dir($temp_svn_path))
     {
       umask(0000);
@@ -157,7 +162,14 @@ if (isset($_POST['submit']))
 
     $archive_name = str_replace('%', @$_POST['revision_version'], $archive_name);
     $svn_revision = preg_replace('/exported revision (\d+)\./i', '$1', end($svn_infos));
-    $archive_comment = sprintf($conf['archive_comment'], $svn_url, $svn_revision);
+
+    if (!empty($conf['archive_comment']) and !file_exists($temp_svn_path.'/'.$conf['archive_comment_filename']))
+    {
+      file_put_contents(
+        $temp_svn_path.'/'.$conf['archive_comment_filename'],
+        sprintf($conf['archive_comment'], $svn_url, $svn_revision)
+      );
+    }
   }
 
   $required_fields = array(
@@ -409,7 +421,12 @@ $tpl->assign(
 if (basename($_SERVER['SCRIPT_FILENAME']) == 'revision_add.php' and $conf['allow_svn_file_creation']
   and !empty($svn_url) and !empty($archive_root_dir) and !empty($archive_name))
 {
-  $tpl->assign('allow_svn_file_creation', true);
+  $tpl->assign(
+    array(
+      'allow_svn_file_creation' => true,
+      'SVN_URL' => $svn_url,
+    )
+  );
 }
 
 // +-----------------------------------------------------------------------+

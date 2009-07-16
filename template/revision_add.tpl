@@ -36,7 +36,8 @@
               <input type="file" name="revision_file" size="35" />
             </div>
             <div id="svn_type" style="display: none;">
-              {'SVN revision'|@translate} : <input type="text" name="svn_revision" value="HEAD" size="5">
+              {'URL'|@translate} <input type="text" name="svn_url" value="{$SVN_URL}" size="65"> &nbsp;
+              {'Revision'|@translate} <input type="text" name="svn_revision" value="HEAD" size="5">
             </div>
           {else}
             <input type="file" name="revision_file" size="35" />

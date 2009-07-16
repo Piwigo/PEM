@@ -75,7 +75,7 @@ list($page['extension_name'], $svn_url, $root_dir, $archive_name) = $db->fetch_a
 
 if (isset($_POST['submit']))
 {
-  if (empty($svn_url) or $svn_url != $_POST['url'])
+  if (empty($svn_url))
   {
     $svn_url = mysql_real_escape_string($_POST['url']);
     $root_dir = ltrim(strrchr(rtrim($svn_url, '/\\'), '/'), '/\\');
@@ -92,6 +92,7 @@ if (isset($_POST['submit']))
       message_die('Characters not allowed in archive name.');
     }
 
+    $svn_url = mysql_real_escape_string($_POST['url']);
     $root_dir = mysql_real_escape_string($_POST['root_dir']);
     $archive_name = mysql_real_escape_string($_POST['archive_name']);
 
@@ -138,17 +139,14 @@ if (!empty($svn_url))
   {
     $svn_infos = array(l10n('Unable to retrieve SVN data!'));
   }
-  else
-  {
-    $tpl->assign(
-      array(
-        'ROOT_DIR' => $root_dir,
-        'ARCHIVE_NAME' => $archive_name,
-        )
-      );
-  }
 
-  $tpl->assign('SVN_INFOS', $svn_infos);
+  $tpl->assign(
+    array(
+      'SVN_INFOS' => $svn_infos,
+      'ROOT_DIR' => $root_dir,
+      'ARCHIVE_NAME' => $archive_name,
+    )
+  );
 }
 
 $tpl->assign(
