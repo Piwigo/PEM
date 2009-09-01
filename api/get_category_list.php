@@ -27,16 +27,28 @@ require_once($root_path.'include/common.inc.php');
 
 $query = '
 SELECT
-    idx_category AS id,
-    name,
+    idx_category,
     COUNT(*) AS counter
   FROM '.EXT_CAT_TABLE.'
-    JOIN '.CAT_TABLE.' ON idx_category = id_category
   GROUP BY idx_category
 ;';
+$nb_ext_of_category = simple_hash_from_query($query, 'idx_category', 'counter');
+
+$query = '
+SELECT
+    id_category AS id,
+    name
+  FROM '.CAT_TABLE.'
+  ORDER BY name ASC
+;';
 $output = array_of_arrays_from_query($query);
-foreach ($output as $id => $category) {
-  $output[$id]['name'] = get_user_language($output[$id]['name']);
+foreach ($output as $i => $category) {
+  $output[$i]['name'] = get_user_language($output[$i]['name']);
+  
+  $output[$i]['counter'] = 0;
+  if (isset($nb_ext_of_category[ $category['id'] ])) {
+    $output[$i]['counter'] = $nb_ext_of_category[ $category['id'] ];
+  }
 }
 
 $format = 'json';
