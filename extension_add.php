@@ -37,12 +37,7 @@ $tpl->set_filenames(
   
 if (!isset($user['id']))
 {
-  $page['message']['is_success'] = false;
-  $page['message']['message'] = l10n(
-    'You must be connected to add, modify or delete an extension.'
-    );
-  $page['message']['go_back'] = true;
-  include($root_path.'include/message.inc.php');
+  message_die('You must be connected to add, modify or delete an extension.');
 }
 
 if (basename($_SERVER['SCRIPT_FILENAME']) == 'extension_mod.php')
@@ -69,12 +64,7 @@ if (isset($_POST['submit']))
   {
     if (empty($_POST[$field]))
     {
-      $page['message']['is_success'] = false;
-      $page['message']['message'] = l10n(
-        'Some fields are missing'
-        );
-      $page['message']['go_back'] = true;
-      include($root_path.'include/message.inc.php');
+      message_die('Some fields are missing');
     }
   }
     
@@ -123,13 +113,8 @@ DELETE
   }
   mass_inserts(EXT_CAT_TABLE, array_keys($inserts[0]), $inserts);
   
-  $page['message']['is_success'] = true;
-  $page['message']['message'] = l10n(
-    'Extension successfuly added. Thank you.'
-    );
-  $page['message']['redirect'] =
-    'extension_view.php?eid='.$page['extension_id'];
-  include($root_path.'include/message.inc.php');
+  message_success('Extension successfuly added. Thank you.',
+    'extension_view.php?eid='.$page['extension_id']);
 }
 
 // Get the category listing

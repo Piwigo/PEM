@@ -38,17 +38,11 @@ if (isset($_POST['submit']))
   {
     log_user($user_id, $_POST['username'], $_POST['password']);
 
-    $page['message']['is_success'] = true;
-    $page['message']['message'] = l10n('Identification successful');
-    $page['message']['redirect'] = 'my.php';
-    include($root_path.'include/message.inc.php');
+    message_success('Identification successful', 'my.php');
   }
   else
   {
-    $page['message']['is_success'] = false;
-    $page['message']['message'] = l10n('Incorrect username/password');
-    $page['message']['go_back'] = true;
-    include($root_path.'include/message.inc.php');
+    message_die('Incorrect username/password');
   }
 }
 
@@ -73,11 +67,7 @@ if (isset($_GET['action']))
       setcookie($conf['user_cookie_name'], false, 0, $conf['cookie_path']);
 
       // redirect to index
-      $page['message']['is_success'] = true;
-      $page['message']['message'] = l10n('Logout successful');
-      $page['message']['redirect'] = 'index.php';
-      include($root_path.'include/message.inc.php');
-
+      message_success('Logout successful', 'index.php');
       break;
     }
   }

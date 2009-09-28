@@ -29,12 +29,7 @@ $tpl->set_filename('page', 'page.tpl');
 
 if (isset($user['id']))
 {
-  $page['message']['is_success'] = false;
-  $page['message']['message'] = l10n(
-    'You mustn\'t be connected to read help guest'
-    );
-  $page['message']['go_back'] = true;
-  include($root_path.'include/message.inc.php');
+  message_die('You mustn\'t be connected to read help guest');
 }
 
 // +-----------------------------------------------------------------------+
