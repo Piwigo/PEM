@@ -43,7 +43,8 @@ $query = '
 SELECT description,
        name,
        idx_user,
-       id_extension
+       id_extension,
+       languages
   FROM '.EXT_TABLE.'
   WHERE id_extension = '.$page['extension_id'].'
 ;';
@@ -76,7 +77,11 @@ $categories_of_extension = get_categories_of_extension(
   array($page['extension_id'])
   );
 
-// print_array($categories_of_extension);
+// Extension languages
+$available_languages = explode(',', $data['languages']);
+$available_languages = array_flip($available_languages);
+$available_languages = array_intersect_key($conf['ext_languages'], $available_languages);
+$tpl->assign('available_languages', $available_languages);
   
 // download statistics
 $query = '

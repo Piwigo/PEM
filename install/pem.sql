@@ -30,6 +30,7 @@ CREATE TABLE `pem_extensions` (
   `idx_user` int(11) NOT NULL default '0',
   `name` varchar(255) NOT NULL default '',
   `description` text NOT NULL,
+  `languages` varchar(255) NULL DEFAULT NULL,
   `svn_url` varchar(255) NULL default NULL,
   `archive_root_dir` varchar(255) NULL default NULL,
   `archive_name` varchar(255) NULL default NULL,

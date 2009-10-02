@@ -104,6 +104,10 @@ foreach ($revision_ids as $revision_id)
   $extension_id = $revision_infos_of[$revision_id]['idx_extension'];
   $authors = get_extension_authors($extension_id);
   $screenshot_infos = get_extension_screenshot_infos($extension_id);
+
+  $available_languages = explode(',', $extension_infos_of[$extension_id]['languages']);
+  $available_languages = array_flip($available_languages);
+  $available_languages = array_intersect_key($conf['ext_languages'], $available_languages);
   
   array_push(
     $revisions,
@@ -121,6 +125,7 @@ foreach ($revision_ids as $revision_id)
       'authors' => get_author_name($authors),
       'name' => $revision_infos_of[$revision_id]['version'],
       'compatible_versions' => implode(', ', $versions_of[$revision_id]),
+      'available_languages' => $available_languages,
       'description' => nl2br(
         htmlspecialchars(
           strip_tags(

@@ -136,6 +136,10 @@ $conf['languages'] = array(
 // Default language
 $conf['default_language'] = 'en';
 
+// Languages available for extensions
+// Keep empty to disable extensions languages
+$conf['ext_languages'] = $conf['languages'];
+
 // Try to get browser language if true.
 // If false, use $conf['default_language']
 $conf['get_browser_language'] = true;

@@ -220,6 +220,11 @@ div.row
   clear : both;
 }
 
+.row li, .extensionInfos li
+{
+  margin: 2px 0;
+}
+
 A.screenshot {
   display: block;
   float: right;
@@ -580,4 +585,11 @@ UL.revActionLinks {
 div.row  img.help_user
 {
   border:0px;
+}
+
+.icon {
+  vertical-align: middle;
+  border: 0 none !important;
+  margin: 0 2px !important;
+  padding: 0 !important;
 }

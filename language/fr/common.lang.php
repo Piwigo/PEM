@@ -161,4 +161,6 @@ $lang['Use SVN file creation'] = 'Créer une archive par SVN';
 $lang['SVN revision'] = 'Révision SVN';
 $lang['An error occured during SVN export.'] = 'Une erreur est survenue pendant l\'export SVN';
 
+$lang['Available languages'] = 'Langues disponibles';
+
 ?>

@@ -161,4 +161,6 @@ $lang['help'] = 'Hilfe';
 /*TODO*/$lang['SVN revision'] = 'SVN revision';
 /*TODO*/$lang['An error occured during SVN export.'] = 'An error occured during SVN export.';
 
+/*TODO*/$lang['Available languages'] = 'Available languages';
+
 ?>

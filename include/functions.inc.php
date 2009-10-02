@@ -552,7 +552,8 @@ function get_extension_infos_of($extension_ids)
 SELECT id_extension,
        name,
        idx_user,
-       description
+       description,
+       languages
   FROM '.EXT_TABLE.'
   WHERE id_extension IN ('.$ids_string.')
 ;';
