@@ -145,22 +145,22 @@ $lang['This user does not exist in database.'] = 'Użytkownik nie istnieje w baz
 $lang['Added by']  = 'Dodane przez';
 $lang['Other extensions'] = 'Inne rozszerzenia';
 
-/*TODO*/$lang['SVN configuration'] = 'SVN configuration';
-/*TODO*/$lang['Repository URL'] = 'Repository URL';
-/*TODO*/$lang['Archive root directory'] = 'Archive root directory';
-/*TODO*/$lang['Archive name'] = 'Archive name';
-/*TODO*/$lang['% will be replaced by version number'] = '% will be replaced by version number';
-/*TODO*/$lang['Delete SVN data'] = 'Delete SVN data';
-/*TODO*/$lang['Are you sure you want to remove SVN data?'] = 'Are you sure you want to remove SVN data?';
-/*TODO*/$lang['SVN informations'] = 'SVN informations';
-/*TODO*/$lang['Unable to retrieve SVN data!'] = 'Unable to retrieve SVN data!';
-/*TODO*/$lang['Characters not allowed in archive root directory.'] = 'Characters not allowed in archive root directory.';
-/*TODO*/$lang['Characters not allowed in archive name.'] = 'Characters not allowed in archive name.';
-/*TODO*/$lang['Upload a file'] = 'Upload a file';
-/*TODO*/$lang['Use SVN file creation'] = 'Use SVN file creation';
-/*TODO*/$lang['SVN revision'] = 'SVN revision';
-/*TODO*/$lang['An error occured during SVN export.'] = 'An error occured during SVN export.';
+$lang['SVN configuration'] = 'Konfiguracja SVN';
+$lang['Repository URL'] = 'Adres URL repozytorium';
+$lang['Archive root directory'] = 'Główny katalog archiwum';
+$lang['Archive name'] = 'Nazwa archiwum';
+$lang['% will be replaced by version number'] = '% będzie zastąpiony numerem wersji';
+$lang['Delete SVN data'] = 'Usuń dane SVN';
+$lang['Are you sure you want to remove SVN data?'] = 'Czy na pewno chcesz usunąć dane SVN?';
+$lang['SVN informations'] = 'Informacje o SVN';
+$lang['Unable to retrieve SVN data!'] = 'Nie można pobrać danych SVN!';
+$lang['Characters not allowed in archive root directory.'] = 'Niedozwolone znaki głównym katalogu archiwum.';
+$lang['Characters not allowed in archive name.'] = 'Niedozwolone znaki w nazwie archiwum.';
+$lang['Upload a file'] = 'Wgraj plik';
+$lang['Use SVN file creation'] = 'Użyj tworzenia pliku SVN';
+$lang['SVN revision'] = 'Wersja SVN';
+$lang['An error occured during SVN export.'] = 'Błąd podczas eksportu SVN.';
 
-/*TODO*/$lang['Available languages'] = 'Available languages';
+$lang['Available languages'] = 'Dostępne języki';
 
 ?>
