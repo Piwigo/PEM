@@ -84,6 +84,7 @@ if (count($revision_ids) == 0)
 }
 
 $versions_of = get_versions_of_revision($revision_ids);
+$languages_of = get_languages_of_revision($revision_ids);
 
 // retrieve revisions information
 $revision_infos_of = get_revision_infos_of($revision_ids);
@@ -104,7 +105,7 @@ foreach ($revision_ids as $revision_id)
   $extension_id = $revision_infos_of[$revision_id]['idx_extension'];
   $authors = get_extension_authors($extension_id);
   $screenshot_infos = get_extension_screenshot_infos($extension_id);
-  
+
   array_push(
     $revisions,
     array(
@@ -121,6 +122,8 @@ foreach ($revision_ids as $revision_id)
       'authors' => get_author_name($authors),
       'name' => $revision_infos_of[$revision_id]['version'],
       'compatible_versions' => implode(', ', $versions_of[$revision_id]),
+      'languages' => isset($languages_of[$revision_id]) ?
+          $languages_of[$revision_id] : array(),
       'description' => nl2br(
         htmlspecialchars(
           strip_tags(

@@ -581,3 +581,11 @@ div.row  img.help_user
 {
   border:0px;
 }
+
+.icon
+{
+  vertical-align: middle;
+  margin: 2px !important;
+  padding: 0 !important;
+  border: 0 none !important;
+}

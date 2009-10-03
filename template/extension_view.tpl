@@ -28,6 +28,13 @@
   <li><em>{'First revision date'|@translate}:</em> {$first_date}</li>
   <li><em>{'Latest revision date'|@translate}:</em> {$last_date}</li>
   <li><em>{'Compatible with'|@translate}:</em> {$software} releases {$compatible_with}</li>
+  {if !empty($ext_languages)}
+  <li><em>{'Available languages'|@translate}:</em>
+      {foreach from=$ext_languages item=language}
+        <img class="icon" src="language/{$language.code}/icon.jpg" alt="{$language.name}" title="{$language.name}">
+      {/foreach}
+  </li>
+  {/if}
   <li><em>{'Downloads'|@translate}:</em> {$extension_downloads}</li>
 </ul>
 
@@ -76,6 +83,13 @@
     >
       <a href="{$rev.u_download}" title="{'Download revision'|@translate} {$rev.version}" rel="nofollow"><img class="download" src="template/images/download.png" alt="{'Download revision'|@translate} {$rev.version}"/></a>
       <p><em>{'Compatible with'|@translate}:</em> {$rev.versions_compatible}</p>
+  {if !empty($rev.languages)}
+      <p><em>{'Available languages'|@translate}:</em>
+        {foreach from=$rev.languages item=language}
+          <img class="icon" src="language/{$language.code}/icon.jpg" alt="{$language.name}" title="{$language.name}">
+        {/foreach}
+      </p>
+  {/if}
   {if !empty($rev.author)}
       <p><em>{'Added by'|@translate}:</em> {$rev.author}</p>
   {/if}

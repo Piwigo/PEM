@@ -76,6 +76,10 @@ $categories_of_extension = get_categories_of_extension(
   array($page['extension_id'])
   );
 
+$languages_of_extension = get_languages_of_extension(
+  array($page['extension_id'])
+  );
+
 // print_array($categories_of_extension);
   
 // download statistics
@@ -119,6 +123,7 @@ $tpl->assign(
         ', ',
         $versions_of_extension[$page['extension_id']]
       ),
+    'ext_languages' => $languages_of_extension[$page['extension_id']],
     'extension_downloads' => $extension_downloads,
     'extension_categories' => $categories_of_extension[$page['extension_id']],
     )
@@ -222,6 +227,7 @@ $tpl_revisions = array();
 if (count($revision_ids) > 0)
 {
   $versions_of = get_versions_of_revision($revision_ids);
+  $languages_of = get_languages_of_revision($revision_ids);
   
   $revisions = array();
   
@@ -281,6 +287,8 @@ SELECT id_revision,
           ', ',
           $versions_of[ $row['id_revision'] ]
           ),
+        'languages' => isset($languages_of[$row['id_revision']]) ?
+          $languages_of[$row['id_revision']] : array(),
         'date' => date('Y-m-d', $row['date']),
         'author' => (count($authors) > 1 or $row['author'] != $data['idx_user']) ?
                       get_author_name($row['author']) : '',

@@ -95,7 +95,13 @@ $tpl = new template($root_path . 'template/');
 $tpl->assign('software', $conf['software']);
 
 // Language selection
-$languages = get_interface_languages();
+$query = 'SELECT code, name FROM '.LANG_TABLE.' WHERE interface = "true" ORDER BY name;';
+$result = $db->query($query);
+$languages = array();
+while ($row = mysql_fetch_assoc($result))
+{
+  $languages[$row['code']] = $row['name'];
+}
 if (isset($_GET['lang'])) {
   $_SESSION['language'] = $_GET['lang'];
 }
@@ -106,9 +112,13 @@ if (empty($_SESSION['language']))
   if ($conf['get_browser_language'])
   {
     $browser_language = @substr($_SERVER["HTTP_ACCEPT_LANGUAGE"],0,2);
-    if (isset($languages[$browser_language]))
+    foreach ($languages as $language_code => $language_name)
     {
-      $_SESSION['language'] = $browser_language;
+      if (substr($language_code, 0, 2) == $browser_language)
+      {
+        $_SESSION['language'] = $language_code;
+        break;
+      }
     }
   }
 }

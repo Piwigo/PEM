@@ -71,6 +71,19 @@
           <textarea cols="80" rows="10" name="revision_changelog">{$description}</textarea>
         </td>
       </tr>
+{if !empty($extensions_languages)}
+      <tr>
+        <th>{'Available languages'|@translate}</th>
+        <td>
+          <div class="checkboxBox">
+            {foreach from=$extensions_languages item=lang}
+            <label><input type="checkbox" name="extensions_languages[]" value="{$lang.id}" title="{$lang.name}" {$lang.checked} />
+              <img src="language/{$lang.code}/icon.jpg" alt="{$lang.name}" title="{$lang.name}">&nbsp;</label>
+            {/foreach}
+          </div>
+        </td>
+      </tr>
+{/if}
 {if $use_agreement}
       <tr>
         <th>{'Agreement'|@translate}</th>

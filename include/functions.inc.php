@@ -38,6 +38,11 @@ function pem_version_compare($a, $b)
   return version_compare($a['version'], $b['version']);
 }
 
+function name_compare($a, $b)
+{
+  return strcmp(strtolower($a['name']), strtolower($b['name']));
+}
+
 function message_die($message, $title = 'Error', $go_back = true)
 {
   global $root_path, $tpl, $db, $user, $page, $conf;
@@ -1383,23 +1388,55 @@ function deltree($path)
   }
 }
 
-function get_interface_languages()
+function get_languages_data()
 {
-  global $db;
+  global $db, $languages_data;
 
-  $query = 'SELECT code, name FROM '.LANG_TABLE.' WHERE interface = "true";';
-  $result = $db->query($query);
-
-  $languages = array();
-  while ($row = mysql_fetch_assoc($result))
+  if (!isset($languages_data))
   {
-    $languages[$row['code']] = $row['name'];
-  }
+    $query = '
+  SELECT id_language, code, name
+    FROM '.LANG_TABLE.'
+  ;';
+    $result = $db->query($query);
+    $languages_data = array();
 
-  return $languages;
+    while ($row = mysql_fetch_assoc($result))
+    {
+      $languages_data[ $row['id_language'] ] = $row;
+    }
+  }
+  return $languages_data;
 }
 
 function get_languages_of_revision($revision_ids)
+{
+  global $db;
+
+  $languages_of = array();
+  $languages_ids_of = get_language_ids_of_revision($revision_ids);
+  $languages_data = get_languages_data();
+
+  foreach ($revision_ids as $revision_id)
+  {
+    if (!empty($languages_ids_of[$revision_id]))
+    {
+      $languages_of[$revision_id] = array();
+
+      foreach ($languages_ids_of[$revision_id] as $language_id)
+      {
+        array_push(
+          $languages_of[$revision_id],
+          $languages_data[$language_id]
+          );
+      }
+    }
+  }
+
+  return $languages_of;
+}
+
+function get_language_ids_of_revision($revision_ids)
 {
   global $db;
 
@@ -1408,25 +1445,26 @@ function get_languages_of_revision($revision_ids)
     return array();
   }
   
-  $version_of = array();
+  $languages_of = array();
   
   $query = '
 SELECT rv.idx_revision,
-       l.code
+       l.id_language
   FROM '.REV_LANG_TABLE.' AS rv
   INNER JOIN '.LANG_TABLE.' AS l
     ON rv.idx_language = l.id_language
   WHERE idx_revision IN ('.implode(',', $revision_ids).')
+  ORDER BY l.name
 ;';
   
   $result = $db->query($query);
   
   while ($row = $db->fetch_array($result))
   {
-    $version_ids_of[ $row['idx_revision'] ][] = $row['code'];
+    $languages_of[ $row['idx_revision'] ][] = $row['id_language'];
   }
 
-  return $version_ids_of;
+  return $languages_of;
 }
 
 function get_languages_of_extension($extension_ids)
@@ -1461,7 +1499,8 @@ SELECT id_revision,
       );
   }
 
-  $languages_of_revision = get_version_ids_of_revision($revision_ids);
+  $languages_data = get_languages_data();
+  $languages_of_revision = get_language_ids_of_revision($revision_ids);
   $languages_of_extension = array();
 
   foreach ($extension_ids as $extension_id)
@@ -1471,15 +1510,23 @@ SELECT id_revision,
     if (isset($revisions_of[$extension_id])) {
       foreach ($revisions_of[$extension_id] as $revision_id)
       {
-        $languages_of_extension[$extension_id] = array_merge(
-          $languages_of_extension[$extension_id],
-          $languages_of_revision[$revision_id]
-          );
+        if (isset($languages_of_revision[$revision_id]))
+        {
+          $languages_of_extension[$extension_id] = array_merge(
+            $languages_of_extension[$extension_id],
+            $languages_of_revision[$revision_id]
+            );
+        }
       }
     }
-
     $languages_of_extension[$extension_id] =
       array_unique($languages_of_extension[$extension_id]);
+
+    foreach ($languages_of_extension[$extension_id] as $key => $language_id)
+    {
+      $languages_of_extension[$extension_id][$key] = $languages_data[$language_id];
+    }
+    usort($languages_of_extension[$extension_id], 'name_compare');
   }
 
   return $languages_of_extension;

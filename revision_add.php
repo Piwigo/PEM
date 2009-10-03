@@ -294,7 +294,35 @@ DELETE
     array_keys($inserts[0]),
     $inserts
     );
-      
+
+  $query = '
+DELETE
+  FROM '.REV_LANG_TABLE.'
+  WHERE idx_revision = '.$page['revision_id'].'
+;';
+  $db->query($query);
+
+  // Inserts the revisions <-> languages
+  $inserts = array();
+  if (!empty($_POST['extensions_languages']))
+  {
+    foreach ($_POST['extensions_languages'] as $language_id)
+    {
+      array_push(
+        $inserts,
+        array(
+          'idx_revision'  => $page['revision_id'],
+          'idx_language'  => $language_id,
+          )
+        );
+    }
+    mass_inserts(
+      REV_LANG_TABLE,
+      array_keys($inserts[0]),
+      $inserts
+      );
+  }
+
   message_success(
     'Revision successfuly added. Thank you.',
     sprintf(
@@ -310,24 +338,13 @@ DELETE
 // |                            Form display                               |
 // +-----------------------------------------------------------------------+
 
-if (isset($_POST['submit']))
-{
-  $version = @$_POST['revision_version'];
-  $description = @$_POST['revision_description'];
-  $selected_versions = $_POST['compatible_versions'];
-
-  if (isset($_POST['accept_agreement']))
-  {
-    $accept_agreement_checked = 'checked="checked"';
-  }
-  else
-  {
-    $accept_agreement_checked = '';
-  }
-}
-else if (basename($_SERVER['SCRIPT_FILENAME']) == 'revision_mod.php')
+if (basename($_SERVER['SCRIPT_FILENAME']) == 'revision_mod.php')
 {
   $version_ids_of_revision = get_version_ids_of_revision(
+    array($page['revision_id'])
+    );
+
+  $language_ids_of_revision = get_language_ids_of_revision(
     array($page['revision_id'])
     );
 
@@ -335,6 +352,8 @@ else if (basename($_SERVER['SCRIPT_FILENAME']) == 'revision_mod.php')
   $description = $revision_infos_of[ $page['revision_id'] ]['description'];
   $selected_versions = $version_ids_of_revision[ $page['revision_id'] ];
   $selected_author = $revision_infos_of[ $page['revision_id'] ]['author'];
+  $selected_languages = !empty($language_ids_of_revision[$page['revision_id']]) ?
+    $language_ids_of_revision[$page['revision_id']] : array();
 
   $accept_agreement = get_boolean(
     $revision_infos_of[ $page['revision_id'] ]['accept_agreement'],
@@ -356,6 +375,21 @@ else
   $description = '';
   $selected_versions = array();
   $selected_author = $user['id'];
+  $selected_languages = array();
+
+  // Get selected languages of last revision
+  $query = '
+SELECT MAX(id_revision) as id
+  FROM '.REV_TABLE.'
+  WHERE idx_extension = '.$page['extension_id'].';';
+
+  if ($last_rev = mysql_fetch_assoc($db->query($query))
+    and !empty($last_rev['id']))
+  {
+    $language_ids_of_revision = get_language_ids_of_revision(array($last_rev['id']));
+    $selected_languages = !empty($language_ids_of_revision[$last_rev['id']]) ?
+      $language_ids_of_revision[$last_rev['id']] : array();
+  }
 
   // by default the contributor accepts the agreement
   $accept_agreement_checked = 'checked="checked"';
@@ -409,9 +443,35 @@ foreach ($versions as $version)
     );
 }
 
+// Get extensions language listing
+$query = '
+SELECT
+    id_language,
+    code,
+    name
+  FROM '.LANG_TABLE.'
+  WHERE extensions = "true"
+  ORDER BY name
+;';
+$extensions_languages = array_of_arrays_from_query($query);
+$tpl_languages = array();
+foreach($extensions_languages as $ext_lang)
+{
+  array_push(
+    $tpl_languages,
+    array(
+      'id' => $ext_lang['id_language'],
+      'code' => $ext_lang['code'],
+      'name' => $ext_lang['name'],
+      'checked' => in_array($ext_lang['id_language'], $selected_languages) ? 'checked="checked"' : '',
+      )
+    );
+}
+
 $tpl->assign(
   array(
     'versions' => $tpl_versions,
+    'extensions_languages' => $tpl_languages,
     'f_action' => $_SERVER['REQUEST_URI'],
     'u_extension' => 'extension_view.php?eid='.$page['extension_id'],
     'page_title' => (basename($_SERVER['SCRIPT_FILENAME']) == 'revision_add.php' ? l10n('Add a revision') : l10n('Modify revision')),
