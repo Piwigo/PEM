@@ -67,21 +67,14 @@ if (isset($_POST['submit']))
       message_die('Some fields are missing');
     }
   }
-
-  // Ext languages
-  if (!empty($_POST['ext_languages']))
-  {
-    $ext_languages = implode(',', $_POST['ext_languages']);
-  }
-
+    
   if (basename($_SERVER['SCRIPT_FILENAME']) == 'extension_mod.php')
   {
     // Update the extension
     $query = '
 UPDATE '.EXT_TABLE.'
   SET name = \''.$_POST['extension_name'].'\',
-      description = \''.$_POST['extension_description'].'\',
-      languages = '.(isset($ext_languages) ? '"'.$ext_languages.'"' : 'NULL').'
+      description = \''.$_POST['extension_description'].'\'
   WHERE id_extension = '.$page['extension_id'].'
 ;';
     $db->query($query);
@@ -101,7 +94,6 @@ DELETE
       'idx_user'   => $user['id'],
       'name'         => $_POST['extension_name'],
       'description'  => $_POST['extension_description'],
-      'languages'    => isset($ext_languages) ? $ext_languages : null,
       );
     mass_inserts(EXT_TABLE, array_keys($insert), array($insert));
     $page['extension_id'] = $db->insert_id();
@@ -150,8 +142,7 @@ else if (basename($_SERVER['SCRIPT_FILENAME']) == 'extension_mod.php')
 {
   $query = '
 SELECT name,
-       description,
-       languages
+       description
   FROM '.EXT_TABLE.'
   WHERE id_extension = '.$page['extension_id'].'
 ;';
@@ -177,14 +168,12 @@ SELECT idx_category
   $selected_categories = $extension['categories'];
   $name = $extension['name'];
   $description = $extension['description'];
-  $selected_languages = explode(',', $extension['languages']);
 }
 else
 {
   $name = '';
   $description = '';
   $selected_categories = array();
-  $selected_languages = array();
 }
 
 $tpl->assign(
@@ -203,26 +192,14 @@ foreach($cats as $cat)
     array(
       'name' => get_user_language($cat['name']),
       'value' => $cat['id_category'],
-      'checked' => in_array($cat['id_category'], $selected_categories) ? 'checked="checked"' : '',
+      'checked' =>
+      in_array($cat['id_category'], $selected_categories)
+        ? 'checked="checked"'
+        : '',
       )
     );
 }
 $tpl->assign('extension_categories', $tpl_extension_categories);
-
-// Display languages
-$tpl_extension_languages = array();
-foreach($conf['ext_languages'] as $language_code => $language_name)
-{
-  array_push(
-    $tpl_extension_languages,
-    array(
-      'code' => $language_code,
-      'name' => $language_name,
-      'checked' => in_array($language_code, $selected_languages) ? 'checked="checked"' : '',
-      )
-    );
-}
-$tpl->assign('extension_languages', $tpl_extension_languages);
 
 if (basename($_SERVER['SCRIPT_FILENAME']) == 'extension_mod.php')
 {

@@ -25,9 +25,6 @@
     <li><em>{'Categories'|@translate}:</em> {$revision.categories}</li>
     <li><em>{'Released on'|@translate}:</em> {$revision.date}</li>
     <li><em>{'Compatible with'|@translate}:</em> {$software} releases {$revision.compatible_versions}</li>
-    {if !empty($revision.available_languages)}
-    <li><em>{'Available languages'|@translate}:</em> {foreach from=$revision.available_languages key=language_code item=language_name}<img class="icon" src="language/{$language_code}/icon.jpg" alt="{$language_name}" title="{$language_name}"> {/foreach}</li>
-    {/if}
     <li><em>{'Downloads'|@translate}:</em> {$revision.downloads}</li>
   </ul>
 

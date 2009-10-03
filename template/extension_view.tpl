@@ -28,9 +28,6 @@
   <li><em>{'First revision date'|@translate}:</em> {$first_date}</li>
   <li><em>{'Latest revision date'|@translate}:</em> {$last_date}</li>
   <li><em>{'Compatible with'|@translate}:</em> {$software} releases {$compatible_with}</li>
-  {if !empty($available_languages)}
-  <li><em>{'Available languages'|@translate}:</em> {foreach from=$available_languages key=language_code item=language_name}<img class="icon" src="language/{$language_code}/icon.jpg" alt="{$language_name}" title="{$language_name}"> {/foreach}</li>
-  {/if}
   <li><em>{'Downloads'|@translate}:</em> {$extension_downloads}</li>
 </ul>
 
