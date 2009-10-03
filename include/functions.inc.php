@@ -1037,7 +1037,7 @@ function get_user_language($desc)
 /**
  * includes a language file
  */
-function load_language($filename, $dirname = './')
+function load_language($filename, $no_fallback = false, $dirname = './')
 {
   global $conf, $lang;
 
@@ -1052,7 +1052,7 @@ function load_language($filename, $dirname = './')
   {
     @include($selected_language_file);
   }
-  elseif (file_exists( $default_language_file))
+  elseif (!$no_fallback and file_exists( $default_language_file))
   {
     @include($default_language_file);
   }

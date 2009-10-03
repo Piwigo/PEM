@@ -130,6 +130,7 @@ $tpl->assign('lang', $_SESSION['language']);
 $tpl->assign('languages', $languages);
 
 load_language('common.lang.php');
+load_language('local.lang.php', true);
 
 // do we have a disclaimer?
 if (is_file($root_path.'language/'.$_SESSION['language'].'/disclaimer.html')
