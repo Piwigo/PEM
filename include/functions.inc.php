@@ -1382,4 +1382,106 @@ function deltree($path)
     return @rmdir($path);
   }
 }
+
+function get_interface_languages()
+{
+  global $db;
+
+  $query = 'SELECT code, name FROM '.LANG_TABLE.' WHERE interface = "true";';
+  $result = $db->query($query);
+
+  $languages = array();
+  while ($row = mysql_fetch_assoc($result))
+  {
+    $languages[$row['code']] = $row['name'];
+  }
+
+  return $languages;
+}
+
+function get_languages_of_revision($revision_ids)
+{
+  global $db;
+
+  if (count($revision_ids) == 0)
+  {
+    return array();
+  }
+  
+  $version_of = array();
+  
+  $query = '
+SELECT rv.idx_revision,
+       l.code
+  FROM '.REV_LANG_TABLE.' AS rv
+  INNER JOIN '.LANG_TABLE.' AS l
+    ON rv.idx_language = l.id_language
+  WHERE idx_revision IN ('.implode(',', $revision_ids).')
+;';
+  
+  $result = $db->query($query);
+  
+  while ($row = $db->fetch_array($result))
+  {
+    $version_ids_of[ $row['idx_revision'] ][] = $row['code'];
+  }
+
+  return $version_ids_of;
+}
+
+function get_languages_of_extension($extension_ids)
+{
+  global $db;
+  
+  // first we find the revisions associated to each extension
+  $query = '
+SELECT id_revision,
+       idx_extension
+  FROM '.REV_TABLE.'
+  WHERE idx_extension IN ('.implode(',', $extension_ids).')
+;';
+
+  $revision_ids = array();
+  $revisions_of = array();
+
+  $result = $db->query($query);
+  while ($row = $db->fetch_array($result))
+  {
+    // add the revision id to the list of all revisions
+    array_push($revision_ids, $row['id_revision']);
+
+    // add the revision id to the list of revision to a particular extension.
+    if (!isset($revisions_of[ $row['idx_extension'] ]))
+    {
+      $revisions_of[ $row['idx_extension'] ] = array();
+    }
+    array_push(
+      $revisions_of[ $row['idx_extension'] ],
+      $row['id_revision']
+      );
+  }
+
+  $languages_of_revision = get_version_ids_of_revision($revision_ids);
+  $languages_of_extension = array();
+
+  foreach ($extension_ids as $extension_id)
+  {
+    $languages_of_extension[$extension_id] = array();
+
+    if (isset($revisions_of[$extension_id])) {
+      foreach ($revisions_of[$extension_id] as $revision_id)
+      {
+        $languages_of_extension[$extension_id] = array_merge(
+          $languages_of_extension[$extension_id],
+          $languages_of_revision[$revision_id]
+          );
+      }
+    }
+
+    $languages_of_extension[$extension_id] =
+      array_unique($languages_of_extension[$extension_id]);
+  }
+
+  return $languages_of_extension;
+}
 ?>

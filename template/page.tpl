@@ -98,7 +98,7 @@
 	{/if}
 {/if}
 		</div>
-{if count($languages) > 0}
+{if count($languages) > 1}
         <div id="langSelect">
           <select onchange="document.location = this.options[this.selectedIndex].value;">
   {foreach from=$languages item=language_name key=language_code}

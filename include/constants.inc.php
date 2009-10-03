@@ -30,6 +30,8 @@ define( 'EXT_CAT_TABLE', $conf['db_params']['tables_prefix'].'extensions_categor
 define( 'USER_INFOS_TABLE', $conf['db_params']['tables_prefix'].'user_infos' );
 define( 'LINKS_TABLE', $conf['db_params']['tables_prefix'].'links' );
 define( 'AUTHORS_TABLE', $conf['db_params']['tables_prefix'].'authors' );
+define( 'LANG_TABLE', $conf['db_params']['tables_prefix'].'languages' );
+define( 'REV_LANG_TABLE', $conf['db_params']['tables_prefix'].'revisions_languages' );
 
 define( 'USERS_TABLE', $conf['users_table'] );
 

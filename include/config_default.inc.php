@@ -123,18 +123,8 @@ $conf['set_cookie'] = 'pun_setcookie';
 // Message time redirection (in seconds)
 $conf['time_redirect'] = 5;
 
-// languages
-$conf['languages'] = array(
-  'de' => 'Deutsch',
-  'en' => 'English',
-  'es' => 'Español',
-  'fr' => 'Français',
-  'it' => 'Italiano',
-  'pl' => 'Polski',
-);
-
 // Default language
-$conf['default_language'] = 'en';
+$conf['default_language'] = 'en_UK';
 
 // Try to get browser language if true.
 // If false, use $conf['default_language']

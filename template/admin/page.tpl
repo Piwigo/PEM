@@ -23,7 +23,8 @@
       <ul>
         <li><a href="categories.php">Categories</a></li>
         <li><a href="versions.php">Versions</a></li>
-      <ul>
+        <li><a href="languages.php">Languages</a></li>
+      </ul>
     </div>
   </div>
 

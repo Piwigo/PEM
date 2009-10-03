@@ -4,6 +4,7 @@ CREATE TABLE `pem_authors` (
   `idx_user` int(11) NOT NULL default '0',
   PRIMARY KEY  (`idx_extension`,`idx_user`)
 )  DEFAULT CHARSET=utf8;
+
 DROP TABLE IF EXISTS `pem_categories`;
 CREATE TABLE `pem_categories` (
   `id_category` int(11) NOT NULL auto_increment,
@@ -12,6 +13,7 @@ CREATE TABLE `pem_categories` (
   `description` text NOT NULL,
   PRIMARY KEY  (`id_category`)
 )   DEFAULT CHARSET=utf8;
+
 DROP TABLE IF EXISTS `pem_download_log`;
 CREATE TABLE `pem_download_log` (
   `IP` varchar(15) NOT NULL default '',
@@ -24,6 +26,7 @@ CREATE TABLE `pem_download_log` (
   KEY `download_log_i3` (`day`),
   KEY `download_log_i4` (`idx_revision`)
 )  DEFAULT CHARSET=utf8;
+
 DROP TABLE IF EXISTS `pem_extensions`;
 CREATE TABLE `pem_extensions` (
   `id_extension` int(11) NOT NULL auto_increment,
@@ -35,12 +38,26 @@ CREATE TABLE `pem_extensions` (
   `archive_name` varchar(255) NULL default NULL,
   PRIMARY KEY  (`id_extension`)
 )   DEFAULT CHARSET=utf8;
+
 DROP TABLE IF EXISTS `pem_extensions_categories`;
 CREATE TABLE `pem_extensions_categories` (
   `idx_category` int(11) NOT NULL default '0',
   `idx_extension` int(11) NOT NULL default '0',
   PRIMARY KEY  (`idx_category`,`idx_extension`)
 )  DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `pem_languages`;
+CREATE TABLE IF NOT EXISTS `pem_languages` (
+  `id_language` int(11) NOT NULL AUTO_INCREMENT,
+  `code` varchar(5) NOT NULL,
+  `name` varchar(50) NOT NULL,
+  `interface` enum('true','false') NOT NULL default 'false',
+  `extensions` enum('true','false') NOT NULL default 'false',
+  PRIMARY KEY (`id_language`),
+  KEY `interface` (`languages_i2`),
+  KEY `extensions` (`languages_i3`)
+)  DEFAULT CHARSET=utf8;
+
 DROP TABLE IF EXISTS `pem_links`;
 CREATE TABLE `pem_links` (
   `id_link` int(10) unsigned NOT NULL auto_increment,
@@ -53,6 +70,7 @@ CREATE TABLE `pem_links` (
   PRIMARY KEY  (`id_link`),
   KEY `idx_extension` (`idx_extension`)
 )   DEFAULT CHARSET=utf8;
+
 DROP TABLE IF EXISTS `pem_revisions`;
 CREATE TABLE `pem_revisions` (
   `id_revision` int(11) NOT NULL auto_increment,
@@ -65,6 +83,7 @@ CREATE TABLE `pem_revisions` (
   `author` int(11) NOT NULL default '0',
   PRIMARY KEY  (`id_revision`)
 )   DEFAULT CHARSET=utf8;
+
 DROP TABLE IF EXISTS `pem_revisions_compatibilities`;
 CREATE TABLE `pem_revisions_compatibilities` (
   `idx_revision` int(11) NOT NULL default '0',
@@ -72,6 +91,14 @@ CREATE TABLE `pem_revisions_compatibilities` (
   PRIMARY KEY  (`idx_revision`,`idx_version`),
   KEY `idx_version_only` (`idx_version`)
 )  DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `pem_revisions_languages`;
+CREATE TABLE `pem_revisions_languages` (
+  `idx_revision` int(11) NOT NULL default '0',
+  `idx_language` int(11) NOT NULL default '0',
+  PRIMARY KEY  (`idx_revision`,`idx_language`)
+)  DEFAULT CHARSET=utf8;
+
 DROP TABLE IF EXISTS `pem_user_infos`;
 CREATE TABLE `pem_user_infos` (
   `idx_user` smallint(5) NOT NULL default '0',
@@ -79,6 +106,7 @@ CREATE TABLE `pem_user_infos` (
   `registration_date` datetime NOT NULL default '0000-00-00 00:00:00',
   UNIQUE KEY `user_infos_ui1` (`idx_user`)
 )  DEFAULT CHARSET=utf8;
+
 DROP TABLE IF EXISTS `pem_users`;
 CREATE TABLE `pem_users` (
   `id_user` smallint(5) NOT NULL auto_increment,
@@ -88,6 +116,7 @@ CREATE TABLE `pem_users` (
   PRIMARY KEY  (`id_user`),
   UNIQUE KEY `users_ui1` (`username`)
 )  DEFAULT CHARSET=utf8;
+
 DROP TABLE IF EXISTS `pem_versions`;
 CREATE TABLE `pem_versions` (
   `id_version` int(11) NOT NULL auto_increment,

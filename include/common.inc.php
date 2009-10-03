@@ -95,6 +95,7 @@ $tpl = new template($root_path . 'template/');
 $tpl->assign('software', $conf['software']);
 
 // Language selection
+$languages = get_interface_languages();
 if (isset($_GET['lang'])) {
   $_SESSION['language'] = $_GET['lang'];
 }
@@ -105,7 +106,7 @@ if (empty($_SESSION['language']))
   if ($conf['get_browser_language'])
   {
     $browser_language = @substr($_SERVER["HTTP_ACCEPT_LANGUAGE"],0,2);
-    if (isset($conf['languages'][$browser_language]))
+    if (isset($languages[$browser_language]))
     {
       $_SESSION['language'] = $browser_language;
     }
@@ -116,7 +117,7 @@ $self_uri = preg_replace('#(\?|&)lang=..#', '', $_SERVER['REQUEST_URI']);
 $self_uri .= strpos($self_uri, '?') ? '&amp;' : '?';
 $tpl->assign('self_uri', $self_uri);
 $tpl->assign('lang', $_SESSION['language']);
-$tpl->assign('languages', $conf['languages']);
+$tpl->assign('languages', $languages);
 
 load_language('common.lang.php');
 
