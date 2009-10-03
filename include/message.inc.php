@@ -22,13 +22,11 @@ if (!defined('INTERNAL'))
 {
   die('No right to do that, sorry. :)');
 }
-
-$tpl->set_filenames(
-  array(
-    'page' => 'page.tpl',
-    'message' => 'message.tpl'
-  )
-);
+if (!isset($tpl->files['page']))
+{
+  $tpl->set_filename('page', 'page.tpl');
+}
+$tpl->set_filename('message', 'message.tpl');
   
 if ($page['message']['is_success'])
 {

@@ -29,7 +29,7 @@ $tpl->assign(
   );
 
 ob_start();
-include($conf['footer_filepath']);
+include($root_path.$conf['footer_filepath']);
 $footer = ob_get_contents();
 ob_end_clean();
 

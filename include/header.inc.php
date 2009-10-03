@@ -199,7 +199,7 @@ $tpl->assign('filter_users', $tpl_filter_users);
 if (isset($conf['specific_header_filepath']))
 {
   ob_start();
-  include($conf['specific_header_filepath']);
+  include($root_path.$conf['specific_header_filepath']);
   $specific_header = ob_get_contents();
   ob_end_clean();
   $tpl->assign('specific_header', $specific_header);
@@ -207,7 +207,7 @@ if (isset($conf['specific_header_filepath']))
 
 if (isset($conf['banner_filepath'])) {
   ob_start();
-  include($conf['banner_filepath']);
+  include($root_path.$conf['banner_filepath']);
   $banner = ob_get_contents();
   ob_end_clean();
   $tpl->assign('banner', $banner);
