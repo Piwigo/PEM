@@ -54,8 +54,8 @@ CREATE TABLE IF NOT EXISTS `pem_languages` (
   `interface` enum('true','false') NOT NULL default 'false',
   `extensions` enum('true','false') NOT NULL default 'false',
   PRIMARY KEY (`id_language`),
-  KEY `interface` (`languages_i2`),
-  KEY `extensions` (`languages_i3`)
+  KEY `languages_i2` (`interface`),
+  KEY `languages_i3` (`extensions`)
 )  DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `pem_links`;

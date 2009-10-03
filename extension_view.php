@@ -76,10 +76,6 @@ $categories_of_extension = get_categories_of_extension(
   array($page['extension_id'])
   );
 
-$languages_of_extension = get_languages_of_extension(
-  array($page['extension_id'])
-  );
-
 // print_array($categories_of_extension);
   
 // download statistics
@@ -123,7 +119,6 @@ $tpl->assign(
         ', ',
         $versions_of_extension[$page['extension_id']]
       ),
-    'ext_languages' => $languages_of_extension[$page['extension_id']],
     'extension_downloads' => $extension_downloads,
     'extension_categories' => $categories_of_extension[$page['extension_id']],
     )

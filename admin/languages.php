@@ -52,6 +52,7 @@ if (isset($_POST['submit']))
   {
     $db->query('UPDATE '.LANG_TABLE.' SET extensions = "true" WHERE code IN ("'.implode('","', $_POST['ext_languages']).'");');
   }
+  message_success('Configuration saved.', 'languages.php');
 }
 
 // +-----------------------------------------------------------------------+
