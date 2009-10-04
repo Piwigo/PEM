@@ -94,7 +94,9 @@ if (isset($_GET['extension_exclude']))
   }
 }
 
-$_SESSION['language'] = isset($_GET['lang']) ? $_GET['lang'] : 'en';
+$_SESSION['language'] = isset($_GET['lang']) and isset($interface_languages[$_GET['lang']]) ?
+  $interface_languages[$_GET['lang']] :
+  array('code' => $conf['default_language']);
 
 $username_field = $conf['user_fields']['username'];
 $userid_field = $conf['user_fields']['id'];

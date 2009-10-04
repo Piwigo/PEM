@@ -42,18 +42,19 @@
           <textarea cols="80" rows="3" name="link_description">{if isset($f_link_description)}{$f_link_description}{/if}</textarea>
         </td>
       </tr>
+      {if !empty($languages)}
       <tr>
         <th><strong>{'Language'|@translate}</strong></th>
         <td>
-          <input
-            type="text"
-            name="link_language"
-            size="2"
-            maxlength="2"
-            value="{if isset($f_link_language)}{$f_link_language}{/if}"
-          />
+          <select name="link_language">
+            <option value="default">---------------</option>
+            {foreach from=$languages item=language}
+            <option value="{$language.id}">{$language.name}</option>
+            {/foreach}
+          </select>
         </td>
       </tr>
+      {/if}
     </table>
 
     <div>

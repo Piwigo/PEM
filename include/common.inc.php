@@ -95,40 +95,56 @@ $tpl = new template($root_path . 'template/');
 $tpl->assign('software', $conf['software']);
 
 // Language selection
-$query = 'SELECT code, name FROM '.LANG_TABLE.' WHERE interface = "true" ORDER BY name;';
+$query = '
+SELECT id_language AS id,
+       code,
+       name
+  FROM '.LANG_TABLE.'
+  WHERE interface = "true"
+  ORDER BY name
+;';
 $result = $db->query($query);
-$languages = array();
+$interface_languages = array();
 while ($row = mysql_fetch_assoc($result))
 {
-  $languages[$row['code']] = $row['name'];
+  $interface_languages[$row['code']] = $row;
 }
-if (isset($_GET['lang'])) {
-  $_SESSION['language'] = $_GET['lang'];
+if (isset($_GET['lang']))
+{
+  $_SESSION['language'] = @$interface_languages[$_GET['lang']];
 }
 if (empty($_SESSION['language']))
 {
-  $_SESSION['language'] = $conf['default_language'];
+  if (isset($interface_languages[$conf['default_language']]))
+  {
+    $_SESSION['language'] = $interface_languages[$conf['default_language']];
+  }
+  else
+  {
+    $_SESSION['language'] = array('code' => $conf['default_language']);
+  }
 
   if ($conf['get_browser_language'])
   {
     $browser_language = @substr($_SERVER["HTTP_ACCEPT_LANGUAGE"],0,2);
-    foreach ($languages as $language_code => $language_name)
+    foreach ($interface_languages as $language)
     {
-      if (substr($language_code, 0, 2) == $browser_language)
+      if (substr($language['code'], 0, 2) == $browser_language)
       {
-        $_SESSION['language'] = $language_code;
+        $_SESSION['language'] = $interface_languages[$language['code']];
         break;
       }
     }
   }
 }
 
-$self_uri = preg_replace('#(\?|&)lang=..#', '', $_SERVER['REQUEST_URI']);
+$self_uri = preg_replace('#(\?|&)lang=.._..#', '', $_SERVER['REQUEST_URI']);
 $self_uri .= strpos($self_uri, '?') ? '&amp;' : '?';
 $tpl->assign('self_uri', $self_uri);
-$tpl->assign('lang', $_SESSION['language']);
-$tpl->assign('languages', $languages);
+$tpl->assign('lang', $_SESSION['language']['code']);
+$tpl->assign('languages', $interface_languages);
 
+$lang = array();
 load_language('common.lang.php');
 load_language('local.lang.php', true);
 

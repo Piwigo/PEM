@@ -166,36 +166,34 @@ if ($screenshot_infos = get_extension_screenshot_infos($page['extension_id']))
 }
 
 // Links associated to the current extension
-$lang_id = $conf['default_language'];
-if (isset($_SESSION['language'])) {
-  $lang_id = $_SESSION['language'];
-}
-
-$query = '
-SELECT name,
-       url,
-       description
-  FROM '.LINKS_TABLE.'
-  WHERE idx_extension = '.$page['extension_id'].'
-    AND (lang IS NULL OR lang = \''.$lang_id.'\')
-  ORDER BY rank ASC
-;';
-$result = $db->query($query);
-
-$tpl_links = array();
-
-while ($row = $db->fetch_array($result))
+if (isset($_SESSION['language']['id']))
 {
-  array_push(
-    $tpl_links,
-    array(
-      'name' => $row['name'],
-      'url' => $row['url'],
-      'description' => get_user_language($row['description']),
-      )
-    );
+  $query = '
+  SELECT name,
+         url,
+         description
+    FROM '.LINKS_TABLE.'
+    WHERE idx_extension = '.$page['extension_id'].'
+      AND (idx_language IS NULL OR idx_language = '.$_SESSION['language']['id'].')
+    ORDER BY rank ASC
+  ;';
+  $result = $db->query($query);
+
+  $tpl_links = array();
+
+  while ($row = $db->fetch_array($result))
+  {
+    array_push(
+      $tpl_links,
+      array(
+        'name' => $row['name'],
+        'url' => $row['url'],
+        'description' => get_user_language($row['description']),
+        )
+      );
+  }
+  $tpl->assign('links', $tpl_links);
 }
-$tpl->assign('links', $tpl_links);
 
 // which revisions to display?
 $revision_ids = array();

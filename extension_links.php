@@ -151,7 +151,7 @@ SELECT MAX(rank) AS current_rank
     );
 
   if (!empty($_POST['link_language'])) {
-    $insert['lang'] = $_POST['link_language'];
+    $insert['idx_language'] = $_POST['link_language'];
   }
 
   mass_inserts(

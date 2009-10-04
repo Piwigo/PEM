@@ -101,12 +101,12 @@
 {if count($languages) > 1}
         <div id="langSelect">
           <select onchange="document.location = this.options[this.selectedIndex].value;">
-  {foreach from=$languages item=language_name key=language_code}
+  {foreach from=$languages item=language}
             <option
-              value="{$self_uri}lang={$language_code}"
-              {if ($lang == $language_code)}selected="selected"{/if}
+              value="{$self_uri}lang={$language.code}"
+              {if ($lang == $language.code)}selected="selected"{/if}
             >
-              {$language_name}
+              {$language.name}
             </option>
   {/foreach}
           </select>

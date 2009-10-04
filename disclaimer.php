@@ -33,7 +33,7 @@ $tpl->set_filename('page', 'page.tpl');
 
 $disclaimer = '';
 
-$selected_language_file = $root_path.'language/'.$_SESSION['language'].'/disclaimer.html';
+$selected_language_file = $root_path.'language/'.$_SESSION['language']['code'].'/disclaimer.html';
 $default_language_file = $root_path.'language/'.$conf['default_language'].'/disclaimer.html';
 
 if (is_file($selected_language_file))

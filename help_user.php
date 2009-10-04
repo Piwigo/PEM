@@ -38,7 +38,7 @@ if (!isset($user['id']))
 
 $help_user = '';
 
-$selected_language_file = $root_path.'language/'.$_SESSION['language'].'/help_user.html';
+$selected_language_file = $root_path.'language/'.$_SESSION['language']['code'].'/help_user.html';
 $default_language_file = $root_path.'language/'.$conf['default_language'].'/help_user.html';
 
 if (is_file($selected_language_file))

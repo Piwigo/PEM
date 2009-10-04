@@ -1006,7 +1006,7 @@ function get_user_language($desc)
   global $conf;
 
   $languages = array(
-    @substr($_SESSION['language'], 0, 2),
+    @substr($_SESSION['language']['code'], 0, 2),
     'default',
     substr($conf['default_language'], 0, 2)
   );
@@ -1041,11 +1041,9 @@ function load_language($filename, $no_fallback = false, $dirname = './')
 {
   global $conf, $lang;
 
-  $lang = array();
-
   $dirname .= 'language/';
 
-  $selected_language_file = $dirname . $_SESSION['language'] . '/' . $filename;
+  $selected_language_file = $dirname . $_SESSION['language']['code'] . '/' . $filename;
   $default_language_file = $dirname . $conf['default_language'] . '/' . $filename;
 
   if (file_exists($selected_language_file))

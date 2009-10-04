@@ -118,11 +118,16 @@ if (!empty($add))
   $db->query($query);
 }
 
-// Delete useless languages in DB
+// unactive missing languages in database
 $del = array_diff_key($db_languages, $languages);
 if (!empty($del))
 {
-  $query = 'DELETE FROM '.LANG_TABLE.' WHERE id_language IN ('.implode(',', $del).');';
+  $query = '
+UPDATE '.LANG_TABLE.'
+  SET interface = "false",
+      extensions = "false"
+  WHERE id_language IN ('.implode(',', $del).')
+;';
   $db->query($query);
 }
 
