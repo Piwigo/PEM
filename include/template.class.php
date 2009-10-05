@@ -240,11 +240,11 @@ class Template {
   {
     if ( count($this->html_head_elements) )
     {
-      $search = "\n</head>";
+      $search = "</head>";
       $pos = strpos( $this->output, $search );
       if ($pos !== false)
       {
-        $this->output = substr_replace( $this->output, "\n".implode( "\n", $this->html_head_elements ), $pos, 0 );
+        $this->output = substr_replace( $this->output, implode( "\n", $this->html_head_elements )."\n", $pos, 0 );
       } //else maybe error or warning ?
       $this->html_head_elements = array();
     }

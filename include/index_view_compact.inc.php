@@ -94,9 +94,7 @@ foreach ($revision_ids as $revision_id)
       'name' => $revision_infos_of[$revision_id]['version'],
       'description' => nl2br(
         htmlspecialchars(
-          strip_tags(
-            get_user_language($revision_infos_of[$revision_id]['description'])
-            )
+          strip_tags($revision_infos_of[$revision_id]['description'])
           )
         ),
       'date' => date('Y-m-d', $revision_infos_of[$revision_id]['date']),

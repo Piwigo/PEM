@@ -115,14 +115,7 @@ if (isset($_GET['lang']))
 }
 if (empty($_SESSION['language']))
 {
-  if (isset($interface_languages[$conf['default_language']]))
-  {
-    $_SESSION['language'] = $interface_languages[$conf['default_language']];
-  }
-  else
-  {
-    $_SESSION['language'] = array('code' => $conf['default_language']);
-  }
+  $_SESSION['language'] = $interface_languages[$conf['default_language']];
 
   if ($conf['get_browser_language'])
   {

@@ -39,16 +39,8 @@ $tpl->set_filenames(
 );
 
 // Gets extension informations
-$query = '
-SELECT description,
-       name,
-       idx_user,
-       id_extension
-  FROM '.EXT_TABLE.'
-  WHERE id_extension = '.$page['extension_id'].'
-;';
-$data = $db->fetch_assoc($db->query($query));
-  
+$data = get_extension_infos_of($page['extension_id']);
+
 if (!isset($data['id_extension']))
 {
   message_die('Unknown extension', 'Error', false );
@@ -107,9 +99,7 @@ $tpl->assign(
       ),
     'description' => nl2br(
       htmlspecialchars(
-        strip_tags(
-          get_user_language($data['description'])
-          )
+        strip_tags($data['description'])
         )
       ),
     'authors' => get_author_name($authors),
@@ -166,34 +156,31 @@ if ($screenshot_infos = get_extension_screenshot_infos($page['extension_id']))
 }
 
 // Links associated to the current extension
-if (isset($_SESSION['language']['id']))
+$query = '
+SELECT name,
+       url,
+       description
+  FROM '.LINKS_TABLE.'
+  WHERE idx_extension = '.$page['extension_id'].'
+    AND (idx_language IS NULL OR idx_language = '.$_SESSION['language']['id'].')
+  ORDER BY rank ASC
+;';
+$result = $db->query($query);
+
+$tpl_links = array();
+
+while ($row = $db->fetch_array($result))
 {
-  $query = '
-  SELECT name,
-         url,
-         description
-    FROM '.LINKS_TABLE.'
-    WHERE idx_extension = '.$page['extension_id'].'
-      AND (idx_language IS NULL OR idx_language = '.$_SESSION['language']['id'].')
-    ORDER BY rank ASC
-  ;';
-  $result = $db->query($query);
-
-  $tpl_links = array();
-
-  while ($row = $db->fetch_array($result))
-  {
-    array_push(
-      $tpl_links,
-      array(
-        'name' => $row['name'],
-        'url' => $row['url'],
-        'description' => get_user_language($row['description']),
-        )
-      );
-  }
-  $tpl->assign('links', $tpl_links);
+  array_push(
+    $tpl_links,
+    array(
+      'name' => $row['name'],
+      'url' => $row['url'],
+      'description' => get_user_language($row['description']),
+      )
+    );
 }
+$tpl->assign('links', $tpl_links);
 
 // which revisions to display?
 $revision_ids = array();
@@ -223,15 +210,19 @@ if (count($revision_ids) > 0)
   $languages_of = get_languages_of_revision($revision_ids);
   
   $revisions = array();
-  
+
   $query = '
 SELECT id_revision,
        version,
-       description,
+       r.description  as default_description,
        date,
        url,
-       author
-  FROM '.REV_TABLE.'
+       author,
+       rt.description
+  FROM '.REV_TABLE.' AS r
+  LEFT JOIN '.REV_TRANS_TABLE.' AS rt
+    ON r.id_revision = rt.idx_revision
+    AND rt.idx_language = '.$_SESSION['language']['id'].'
   WHERE id_revision IN ('.implode(',', $revision_ids).')
   ORDER by date DESC
 ;';
@@ -243,6 +234,10 @@ SELECT id_revision,
   $result = $db->query($query);  
   while ($row = $db->fetch_array($result))
   {
+    if (empty($row['description']))
+    {
+      $row['description'] = $row['default_description'];
+    }
     if (!isset($last_date_set))
     {
       $tpl->assign(
@@ -287,9 +282,7 @@ SELECT id_revision,
                       get_author_name($row['author']) : '',
         'u_download' => 'download.php?rid='.$row['id_revision'],
         'description' => nl2br(
-          htmlspecialchars(
-            get_user_language($row['description'])
-            )
+          htmlspecialchars($row['description'])
           ),
         'can_modify' => $page['user_can_modify'],
         'u_modify' => 'revision_mod.php?rid='.$row['id_revision'],

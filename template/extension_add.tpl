@@ -21,7 +21,20 @@
       </tr>
       <tr>
         <th>{'Description'|@translate}</th>
-        <td><textarea cols="80" rows="10" name="extension_description">{$extension_description}</textarea></td>
+        <td>
+          <select onchange="show_lang_desc(this.options[this.selectedIndex].value);">
+          {foreach from=$languages item=language}
+            <option value="{$language.id}" {if $default_language == $language.id}selected="selected"{/if}>{$language.name}</option>
+          {/foreach}
+          </select>
+          {foreach from=$languages item=language}
+          <span id="desc_{$language.id}" class="desc">
+            <input type="radio" name="default_description" value="{$language.id}" {if $default_language == $language.id}checked="ckecked"{/if}>{'Default description'|@translate}
+            <br>
+            <textarea cols="80" rows="10" name="extension_descriptions[{$language.id}]">{$extension_descriptions[$language.id]}</textarea>
+          </span>
+          {/foreach}
+        </td>
       </tr>
     </table>
 
@@ -30,3 +43,17 @@
     </div>
   </fieldset>
 </form>
+
+{known_script id="jquery" src="template/jquery.min.js"}
+
+<script type="text/javascript">
+{literal}
+function show_lang_desc(lang)
+{
+  $(".desc").hide();
+  $("#desc_"+lang).show();
+}
+{/literal}
+
+show_lang_desc({$default_language});
+</script>

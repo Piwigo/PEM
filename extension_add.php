@@ -56,7 +56,6 @@ if (isset($_POST['submit']))
   // Checks that all the fields have been well filled
   $required_fields = array(
     'extension_name',
-    'extension_description',
     'extension_category',
     );
   
@@ -67,6 +66,11 @@ if (isset($_POST['submit']))
       message_die('Some fields are missing');
     }
   }
+
+  if (empty($_POST['extension_descriptions'][@$_POST['default_description']]))
+  {
+    message_die('Default description can not be empty');
+  }
     
   if (basename($_SERVER['SCRIPT_FILENAME']) == 'extension_mod.php')
   {
@@ -74,11 +78,19 @@ if (isset($_POST['submit']))
     $query = '
 UPDATE '.EXT_TABLE.'
   SET name = \''.$_POST['extension_name'].'\',
-      description = \''.$_POST['extension_description'].'\'
+      description = \''.$_POST['extension_descriptions'][$_POST['default_description']].'\',
+      idx_language = '.$_POST['default_description'].'
   WHERE id_extension = '.$page['extension_id'].'
 ;';
     $db->query($query);
 
+    $query = '
+DELETE
+  FROM '.EXT_TRANS_TABLE.'
+  WHERE idx_extension = '.$page['extension_id'].'
+;';
+    $db->query($query);
+    
     $query = '
 DELETE
   FROM '.EXT_CAT_TABLE.'
@@ -93,10 +105,33 @@ DELETE
     $insert = array(
       'idx_user'   => $user['id'],
       'name'         => $_POST['extension_name'],
-      'description'  => $_POST['extension_description'],
+      'description'  => $_POST['extension_descriptions'][$_POST['default_description']],
+      'idx_language' => $_POST['default_description'],
       );
     mass_inserts(EXT_TABLE, array_keys($insert), array($insert));
     $page['extension_id'] = $db->insert_id();
+  }
+
+  // Insert translations
+  $inserts = array();
+  foreach ($_POST['extension_descriptions'] as $lang_id => $desc)
+  {
+    if ($lang_id == $_POST['default_description'] or empty($desc))
+    {
+      continue;
+    }
+    array_push(
+      $inserts,
+      array(
+        'idx_extension'  => $page['extension_id'],
+        'idx_language'   => $lang_id,
+        'description'    => $desc,
+        )
+      );
+  }
+  if (!empty($inserts))
+  {
+    mass_inserts(EXT_TRANS_TABLE, array_keys($inserts[0]), $inserts);
   }
   
   // Inserts the extensions <-> categories link
@@ -132,22 +167,35 @@ while($data = $db->fetch_assoc($req))
   array_push($cats, $data);
 }
 
-if (isset($_POST['submit']))
-{
-  $name = @$_POST['extension_name'];
-  $description = @$_POST['extension_description'];
-  $selected_categories = $_POST['extension_category'];
-}
-else if (basename($_SERVER['SCRIPT_FILENAME']) == 'extension_mod.php')
+if (basename($_SERVER['SCRIPT_FILENAME']) == 'extension_mod.php')
 {
   $query = '
 SELECT name,
-       description
+       description,
+       idx_language
   FROM '.EXT_TABLE.'
   WHERE id_extension = '.$page['extension_id'].'
 ;';
   $result = $db->query($query);
-  $extension = $db->fetch_array($result);
+  while ($row = mysql_fetch_assoc($result))
+  {
+    $extension['name'] = $row['name'];
+    $extension['descriptions'][$row['idx_language']] = $row['description'];
+    $extension['default_language'] = $row['idx_language'];
+  }
+
+  $query = '
+SELECT idx_language,
+       description
+  FROM '.EXT_TRANS_TABLE.'
+  WHERE idx_extension = '.$page['extension_id'].'
+;';
+  $result = $db->query($query);
+  while($row = mysql_fetch_assoc($result))
+  {
+    $extension['descriptions'][$row['idx_language']] = $row['description'];
+  }
+
   $extension['categories'] = array();
 
   $query = '
@@ -167,19 +215,22 @@ SELECT idx_category
 
   $selected_categories = $extension['categories'];
   $name = $extension['name'];
-  $description = $extension['description'];
+  $descriptions = $extension['descriptions'];
+  $default_language = $extension['default_language'];
 }
 else
 {
   $name = '';
-  $description = '';
+  $descriptions = array();
   $selected_categories = array();
+  $default_language = $interface_languages[$conf['default_language']]['id'];
 }
 
 $tpl->assign(
   array(
     'extension_name' => $name,
-    'extension_description' => $description,
+    'extension_descriptions' => $descriptions,
+    'default_language' => $default_language,
     )
   );
 

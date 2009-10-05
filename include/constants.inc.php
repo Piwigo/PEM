@@ -32,6 +32,8 @@ define( 'LINKS_TABLE', $conf['db_params']['tables_prefix'].'links' );
 define( 'AUTHORS_TABLE', $conf['db_params']['tables_prefix'].'authors' );
 define( 'LANG_TABLE', $conf['db_params']['tables_prefix'].'languages' );
 define( 'REV_LANG_TABLE', $conf['db_params']['tables_prefix'].'revisions_languages' );
+define( 'EXT_TRANS_TABLE', $conf['db_params']['tables_prefix'].'extensions_translations' );
+define( 'REV_TRANS_TABLE', $conf['db_params']['tables_prefix'].'revisions_translations' );
 
 define( 'USERS_TABLE', $conf['users_table'] );
 

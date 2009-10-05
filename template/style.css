@@ -284,6 +284,10 @@ div.nav_right
   white-space: nowrap;
 }
 
+TABLE TD {
+  padding: 6px 0;
+}
+
 TABLE.revisions {
   border-collapse: collapse;
   margin: 0 auto;

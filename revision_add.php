@@ -173,7 +173,6 @@ if (isset($_POST['submit']))
   }
 
   $required_fields = array(
-    'revision_changelog',
     'revision_version',
     'compatible_versions',
     );
@@ -186,6 +185,11 @@ if (isset($_POST['submit']))
       message_die('Some fields are missing');
     }
   }
+  if (empty($_POST['revision_descriptions'][@$_POST['default_description']]))
+  {
+    @deltree($temp_svn_path);
+    message_die('Default description can not be empty');
+  }
   
   if (basename($_SERVER['SCRIPT_FILENAME']) == 'revision_mod.php')
   {
@@ -193,17 +197,24 @@ if (isset($_POST['submit']))
       REV_TABLE,
       array(
         'primary' => array('id_revision'),
-        'update'  => array('version', 'description', 'author'),
+        'update'  => array('version', 'description', 'idx_language', 'author'),
         ),
       array(
         array(
           'id_revision'    => $page['revision_id'],
           'version'        => $_POST['revision_version'],
-          'description'    => $_POST['revision_changelog'],
+          'description'    => $_POST['revision_descriptions'][$_POST['default_description']],
+          'idx_language'   => $_POST['default_description'],
           'author'         => isset($_POST['author']) ? $_POST['author'] : $revision_infos_of[$page['revision_id']]['author'],
           ),
         )
       );
+    $query = '
+DELETE
+  FROM '.REV_TRANS_TABLE.'
+  WHERE idx_revision = '.$page['revision_id'].'
+;';
+    $db->query($query);
   }
   else
   {
@@ -211,7 +222,8 @@ if (isset($_POST['submit']))
       'version'        => $_POST['revision_version'],
       'idx_extension'  => $page['extension_id'],
       'date'           => mktime(),
-      'description'    => $_POST['revision_changelog'],
+      'description'    => $_POST['revision_descriptions'][$_POST['default_description']],
+      'idx_language'   => $_POST['default_description'],
       'url'            => ($file_to_upload == 'user' ? $_FILES['revision_file']['name'] : $archive_name),
       'author'         => isset($_POST['author']) ? $_POST['author'] : $user['id'],
       );
@@ -268,6 +280,28 @@ if (isset($_POST['submit']))
         PCLZIP_OPT_REMOVE_PATH, $temp_svn_path,
         PCLZIP_OPT_ADD_PATH, $archive_root_dir);
     }
+  }
+
+  // Insert translations
+  $inserts = array();
+  foreach ($_POST['revision_descriptions'] as $lang_id => $desc)
+  {
+    if ($lang_id == $_POST['default_description'] or empty($desc))
+    {
+      continue;
+    }
+    array_push(
+      $inserts,
+      array(
+        'idx_revision'  => $page['revision_id'],
+        'idx_language'   => $lang_id,
+        'description'    => $desc,
+        )
+      );
+  }
+  if (!empty($inserts))
+  {
+    mass_inserts(REV_TRANS_TABLE, array_keys($inserts[0]), $inserts);
   }
 
   $query = '
@@ -349,7 +383,6 @@ if (basename($_SERVER['SCRIPT_FILENAME']) == 'revision_mod.php')
     );
 
   $version = $revision_infos_of[ $page['revision_id'] ]['version'];
-  $description = $revision_infos_of[ $page['revision_id'] ]['description'];
   $selected_versions = $version_ids_of_revision[ $page['revision_id'] ];
   $selected_author = $revision_infos_of[ $page['revision_id'] ]['author'];
   $selected_languages = !empty($language_ids_of_revision[$page['revision_id']]) ?
@@ -368,14 +401,32 @@ if (basename($_SERVER['SCRIPT_FILENAME']) == 'revision_mod.php')
   {
     $accept_agreement_checked = '';
   }
+
+  // Get descriptions
+  $default_language = $revision_infos_of[$page['revision_id']]['idx_language'];
+  $descriptions = array(
+    $default_language => $revision_infos_of[ $page['revision_id'] ]['description']
+  );
+  $query = '
+SELECT idx_language,
+       description
+  FROM '.REV_TRANS_TABLE.'
+  WHERE idx_revision = '.$page['revision_id'].'
+;';
+  $result = $db->query($query);
+  while($row = mysql_fetch_assoc($result))
+  {
+    $descriptions[$row['idx_language']] = $row['description'];
+  }
 }
 else
 {
   $version = '';
-  $description = '';
+  $descriptions = array();
   $selected_versions = array();
   $selected_author = $user['id'];
   $selected_languages = array();
+  $default_language = $interface_languages[$conf['default_language']]['id'];
 
   // Get selected languages of last revision
   $query = '
@@ -408,7 +459,8 @@ $tpl->assign(
     'authors' => $authors,
     'selected_author' => $selected_author,
     'name' => $version,
-    'description' => $description,
+    'descriptions' => $descriptions,
+    'default_language' => $default_language,
     'accept_agreement_checked' => $accept_agreement_checked,
     'file_needed' => (basename($_SERVER['SCRIPT_FILENAME']) == 'revision_add.php' ? true : false),
     )

@@ -33,6 +33,7 @@ CREATE TABLE `pem_extensions` (
   `idx_user` int(11) NOT NULL default '0',
   `name` varchar(255) NOT NULL default '',
   `description` text NOT NULL,
+  `idx_language` int(11) NOT NULL,
   `svn_url` varchar(255) NULL default NULL,
   `archive_root_dir` varchar(255) NULL default NULL,
   `archive_name` varchar(255) NULL default NULL,
@@ -45,6 +46,14 @@ CREATE TABLE `pem_extensions_categories` (
   `idx_extension` int(11) NOT NULL default '0',
   PRIMARY KEY  (`idx_category`,`idx_extension`)
 )  DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `pem_extensions_translations`;
+CREATE TABLE `pem_extensions_translations` (
+  `idx_extension` int(11) NOT NULL,
+  `idx_language` int(11) NOT NULL,
+  `description` TEXT NOT NULL,
+  PRIMARY KEY  (`idx_extension`, `idx_language`)
+) DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `pem_languages`;
 CREATE TABLE IF NOT EXISTS `pem_languages` (
@@ -78,6 +87,7 @@ CREATE TABLE `pem_revisions` (
   `date` int(11) NOT NULL default '0',
   `url` varchar(255) NOT NULL default '',
   `description` text NOT NULL,
+  `idx_language` int(11) NOT NULL,
   `version` varchar(25) NOT NULL default '',
   `accept_agreement` enum('true','false') default NULL,
   `author` int(11) NOT NULL default '0',
@@ -98,6 +108,14 @@ CREATE TABLE `pem_revisions_languages` (
   `idx_language` int(11) NOT NULL default '0',
   PRIMARY KEY  (`idx_revision`,`idx_language`)
 )  DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `pem_revisions_translations`;
+CREATE TABLE `pem_revisions_translations` (
+  `idx_revision` int(11) NOT NULL,
+  `idx_language` int(11) NOT NULL,
+  `description` TEXT NOT NULL,
+  PRIMARY KEY  (`idx_revision`,`idx_language`)
+) DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `pem_user_infos`;
 CREATE TABLE `pem_user_infos` (

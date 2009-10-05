@@ -516,16 +516,25 @@ SELECT
     version,
     date,
     idx_extension,
-    description,
+    r.description AS default_description,
+    r.idx_language,
     url,
     accept_agreement,
-    author
-  FROM '.REV_TABLE.'
+    author,
+    rt.description
+  FROM '.REV_TABLE.' AS r
+    LEFT JOIN '.REV_TRANS_TABLE.' AS rt
+    ON r.id_revision = rt.idx_revision
+    AND rt.idx_language = '.$_SESSION['language']['id'].'
   WHERE id_revision IN ('.implode(',', $revision_ids).')
 ;';
   $result = $db->query($query);
   while ($row = $db->fetch_assoc($result))
   {
+    if (empty($row['description']))
+    {
+      $row['description'] = $row['default_description'];
+    }
     $revision_infos_of[ $row['id_revision'] ] = $row;
   }
 
@@ -552,13 +561,21 @@ function get_extension_infos_of($extension_ids)
 SELECT id_extension,
        name,
        idx_user,
-       description
-  FROM '.EXT_TABLE.'
+       e.description AS default_description,
+       et.description
+  FROM '.EXT_TABLE.' AS e
+  LEFT JOIN '.EXT_TRANS_TABLE.' AS et
+    ON e.id_extension = et.idx_extension
+    AND et.idx_language = '.$_SESSION['language']['id'].'
   WHERE id_extension IN ('.$ids_string.')
 ;';
   $result = $db->query($query);
   while ($row = $db->fetch_assoc($result))
   {
+    if (empty($row['description']))
+    {
+      $row['description'] = $row['default_description'];
+    }
     if (is_array($extension_ids))
     {
       $extension_infos_of[ $row['id_extension'] ] = $row;
@@ -1028,7 +1045,7 @@ function get_user_language($desc)
   // we take all outside language tags
   $patterns[] = '#\[lang=all\](.*?)\[/lang\]#is';
   $replacements[] = '\\1';
-  $patterns[] = '#\[lang=.*\].*\[/lang\]#is';
+  $patterns[] = '#\[lang=.*?\].*?\[/lang\]#is';
   $replacements[] = '';
 
   return preg_replace($patterns, $replacements, $desc);

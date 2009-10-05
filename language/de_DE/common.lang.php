@@ -162,5 +162,7 @@ $lang['help'] = 'Hilfe';
 /*TODO*/$lang['An error occured during SVN export.'] = 'An error occured during SVN export.';
 
 /*TODO*/$lang['Available languages'] = 'Available languages';
+/*TODO*/$lang['Default description'] = 'Default description';
+/*TODO*/$lang['Default description can not be empty'] = 'Default description can not be empty';
 
 ?>
