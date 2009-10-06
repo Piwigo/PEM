@@ -561,6 +561,7 @@ function get_extension_infos_of($extension_ids)
 SELECT id_extension,
        name,
        idx_user,
+       svn_url,
        e.description AS default_description,
        et.description
   FROM '.EXT_TABLE.' AS e

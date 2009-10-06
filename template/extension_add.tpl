@@ -29,7 +29,7 @@
           </select>
           {foreach from=$languages item=language}
           <span id="desc_{$language.id}" class="desc">
-            <input type="radio" name="default_description" value="{$language.id}" {if $default_language == $language.id}checked="ckecked"{/if}>{'Default description'|@translate}
+            <label><input type="radio" name="default_description" value="{$language.id}" {if $default_language == $language.id}checked="checked"{/if}> {'Default description'|@translate}</label>
             <br>
             <textarea cols="80" rows="10" name="extension_descriptions[{$language.id}]">{$extension_descriptions[$language.id]}</textarea>
           </span>
