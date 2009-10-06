@@ -593,3 +593,8 @@ div.row  img.help_user
   padding: 0 !important;
   border: 0 none !important;
 }
+
+.default_description {
+  text-align: right;
+  font-style: italic;
+}

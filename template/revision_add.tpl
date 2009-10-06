@@ -68,18 +68,20 @@
       <tr>
         <th>{'Description'|@translate}</th>
         <td>
-          <select onchange="show_lang_desc(this.options[this.selectedIndex].value);">
+          <select name="lang_desc_select">
           {foreach from=$languages item=language}
-            <option value="{$language.id}" {if $default_language == $language.id}selected="selected"{/if}>{$language.name}</option>
+            <option value="{$language.id}" id="opt_{$language.id}" {if $default_language == $language.id}selected="selected"{/if}>
+              {if empty($descriptions[$language.id])}&#x2729;{else}&#x2605;{/if} &nbsp;{$language.name}</option>
           {/foreach}
           </select>
           {foreach from=$languages item=language}
-          <span id="desc_{$language.id}" class="desc">
+          <span id="desc_{$language.id}" class="desc" style="display: none;">
             <label><input type="radio" name="default_description" value="{$language.id}" {if $default_language == $language.id}checked="checked"{/if}> {'Default description'|@translate}</label>
             <br>
-            <textarea cols="80" rows="10" name="revision_descriptions[{$language.id}]">{$descriptions[$language.id]}</textarea>
+            <textarea cols="80" rows="10" name="revision_descriptions[{$language.id}]" id="desc_{$language.id}">{$descriptions[$language.id]}</textarea>
           </span>
           {/foreach}
+          <p class="default_description"></p>
         </td>
       </tr>
 {if !empty($extensions_languages)}
@@ -114,13 +116,31 @@
 {known_script id="jquery" src="template/jquery.min.js"}
 
 <script type="text/javascript">
-{literal}
-function show_lang_desc(lang)
-{
-  $(".desc").hide();
-  $("#desc_"+lang).show();
-}
-{/literal}
+var languages = new Array();
+{foreach from=$languages item=language}
+languages[{$language.id}] = "{$language.name}";
+{/foreach}
 
-show_lang_desc({$default_language});
+$(document).ready(function() {ldelim}
+  $('select[name="lang_desc_select"]').change(function () {ldelim}
+    $(".desc").hide();
+    $("#desc_"+this.options[this.selectedIndex].value).show();
+  });
+  $('input[name="default_description"]').change(function () {ldelim}
+    $(".default_description").html("{'Default description'|@translate}: "+languages[this.value]);
+  });
+  $('textarea[name^="revision_descriptions"]').change(function () {ldelim}
+    arr = $(this).attr("id").split("desc_");
+    opt = $('select[name="lang_desc_select"] option[id="opt_'+arr[1]+'"]');
+    if (this.value != '') {ldelim}
+      opt.html(opt.html().replace("\u2729", "\u2605"));
+    }
+    else {ldelim}
+      opt.html(opt.html().replace("\u2605", "\u2729"));
+    }
+  });
+});
+
+$("#desc_"+{$default_language}).show();
+$(".default_description").html("{'Default description'|@translate}: "+languages[{$default_language}]+"");
 </script>

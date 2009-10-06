@@ -229,7 +229,7 @@ else
 $tpl->assign(
   array(
     'extension_name' => $name,
-    'extension_descriptions' => $descriptions,
+    'descriptions' => $descriptions,
     'default_language' => $default_language,
     )
   );
