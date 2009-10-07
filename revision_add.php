@@ -110,16 +110,16 @@ DELETE
     $inserts = array();
     foreach ($_POST['revision_descriptions'] as $lang_id => $desc)
     {
-      if (!in_array($lang_id, $conf['translator_users'][$user['id']]))
+      if ($lang_id == $def_language and empty($desc))
+      {
+        message_die('Default description can not be empty');
+      }
+      if (!in_array($lang_id, $conf['translator_users'][$user['id']]) or empty($desc))
       {
         continue;
       }
       if ($lang_id == $def_language)
       {
-        if (empty($desc))
-        {
-          message_die('Default description can not be empty');
-        }
         $query = '
     UPDATE '.REV_TABLE.'
       SET description = \''.$desc.'\'
