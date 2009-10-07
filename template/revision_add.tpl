@@ -81,7 +81,7 @@
           <span id="span_{$language.id}" class="desc" style="display: none;"> &nbsp;
             <label><input type="radio" name="default_description" value="{$language.id}" {if $default_language == $language.id}checked="checked"{/if} {if $translator}disabled="disabled"{/if}> {'Default description'|@translate}</label>
             <br>
-            <textarea cols="80" rows="10" name="revision_descriptions[{$language.id}]" id="desc_{$language.id}" {if $translator and !$language.id|@in_array:$translator_languages}readonly="readonly"{/if}>{$descriptions[$language.id]}</textarea>
+            <textarea cols="80" rows="10" name="revision_descriptions[{$language.id}]" id="desc_{$language.id}" {if $translator and !$language.id|@in_array:$translator_languages}disabled="disabled"{/if}>{$descriptions[$language.id]}</textarea>
           </span>
           {/foreach}
           <p class="default_description"></p>
