@@ -25,11 +25,11 @@
           <select name="lang_desc_select">
           {foreach from=$languages item=language}
             <option value="{$language.id}" id="opt_{$language.id}" {if $default_language == $language.id}selected="selected"{/if}>
-              {if empty($descriptions[$language.id])}&#x2729;{else}&#x2605;{/if} &nbsp;{$language.name}</option>
+              {if empty($descriptions[$language.id])}&#x2718;{else}&#x2714;{/if} &nbsp;{$language.name} </option>
           {/foreach}
           </select>
           {foreach from=$languages item=language}
-          <span id="desc_{$language.id}" class="desc" style="display: none;">
+          <span id="span_{$language.id}" class="desc" style="display: none;"> &nbsp;
             <label><input type="radio" name="default_description" value="{$language.id}" {if $default_language == $language.id}checked="checked"{/if}> {'Default description'|@translate}</label>
             <br>
             <textarea cols="80" rows="10" name="extension_descriptions[{$language.id}]" id="desc_{$language.id}">{$descriptions[$language.id]}</textarea>
@@ -57,23 +57,23 @@ languages[{$language.id}] = "{$language.name}";
 $(document).ready(function() {ldelim}
   $('select[name="lang_desc_select"]').change(function () {ldelim}
     $(".desc").hide();
-    $("#desc_"+this.options[this.selectedIndex].value).show();
+    $("#span_"+this.options[this.selectedIndex].value).show();
   });
   $('input[name="default_description"]').change(function () {ldelim}
     $(".default_description").html("{'Default description'|@translate}: "+languages[this.value]);
   });
-  $('textarea[name^="extension_descriptions"]').change(function () {ldelim}
+  $('textarea[name^="extension_descriptions"]').keyup(function () {ldelim}
     arr = $(this).attr("id").split("desc_");
     opt = $('select[name="lang_desc_select"] option[id="opt_'+arr[1]+'"]');
     if (this.value != '') {ldelim}
-      opt.html(opt.html().replace("\u2729", "\u2605"));
+      opt.html(opt.html().replace("\u2718", "\u2714"));
     }
     else {ldelim}
-      opt.html(opt.html().replace("\u2605", "\u2729"));
+      opt.html(opt.html().replace("\u2714", "\u2718"));
     }
   });
 });
 
-$("#desc_"+{$default_language}).show();
+$("#span_"+{$default_language}).show();
 $(".default_description").html("{'Default description'|@translate}: "+languages[{$default_language}]+"");
 </script>
