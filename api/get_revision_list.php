@@ -94,9 +94,25 @@ if (isset($_GET['extension_exclude']))
   }
 }
 
-$_SESSION['language'] = isset($_GET['lang']) and isset($interface_languages[$_GET['lang']]) ?
-  $interface_languages[$_GET['lang']] :
-  array('code' => $conf['default_language']);
+$_SESSION['language'] = $interface_languages[$conf['default_language']];
+
+if (isset($_GET['lang']))
+{
+  if (isset($interface_languages[$_GET['lang']]))
+  {
+    $_SESSION['language'] = $interface_languages[$_GET['lang']];
+  }
+  elseif (strlen($_GET['lang']) == 2)
+  {
+    foreach ($interface_languages as $k =>$language)
+    {
+      if (substr($language['code'], 0, 2) == $_GET['lang'])
+      {
+        $_SESSION['language'] = $interface_languages[$k];
+      }
+    }
+  }
+}
 
 $username_field = $conf['user_fields']['username'];
 $userid_field = $conf['user_fields']['id'];
@@ -137,15 +153,23 @@ SELECT DISTINCT
     e.id_extension        AS extension_id,
     e.name                AS extension_name,
     e.idx_user            AS author_id,
-    e.description         AS extension_description,
+    e.description         AS default_extension_description,
+    et.description        AS extension_description,
     r.date                AS revision_date,
     r.url                 AS filename,
-    r.description         AS revision_description,
+    r.description         AS default_revision_description,
+    rt.description        AS revision_description,
     u.'.$username_field.' AS author_name
   FROM '.REV_TABLE.' AS r
     INNER JOIN '.EXT_TABLE.'      AS e  ON e.id_extension = r.idx_extension
     INNER JOIN '.COMP_TABLE.'     AS c  ON c.idx_revision = r.id_revision
     INNER JOIN '.USERS_TABLE.'    AS u  ON u.'.$userid_field.' = e.idx_user
+    LEFT JOIN '.EXT_TRANS_TABLE.' AS et
+      ON et.idx_extension = e.id_extension
+      AND et.idx_language = '.$_SESSION['language']['id'].'
+    LEFT JOIN '.REV_TRANS_TABLE.' AS rt
+      ON rt.idx_revision = r.id_revision
+      AND rt.idx_language = '.$_SESSION['language']['id'].'
   WHERE c.idx_version IN ( ' . $version . ' )';
 
 if (isset($page['filtered_extension_ids'])) {
@@ -204,8 +228,16 @@ while ($row = mysql_fetch_assoc($result)) {
     $row['revision_id']
     );
 
-  $row['extension_description'] = get_user_language($row['extension_description']);
-  $row['revision_description'] = get_user_language($row['revision_description']);
+  if (empty($row['extension_description']))
+  {
+    $row['extension_description'] = $row['default_extension_description'];
+  }
+  if (empty($row['revision_description']))
+  {
+    $row['revision_description'] = $row['default_revision_description'];
+  }
+  unset($row['default_extension_description']);
+  unset($row['default_revision_description']);
 
   if (isset($extension_authors[$row['extension_id']]))
   {
