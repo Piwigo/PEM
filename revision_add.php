@@ -81,7 +81,7 @@ list($page['extension_name'], $ext_user, $svn_url, $archive_root_dir, $archive_n
 
 $authors = get_extension_authors($page['extension_id']);
 
-if (!in_array($user['id'], $authors) and !isAdmin($user['id']))
+if (!in_array($user['id'], $authors) and !isAdmin($user['id']) and !isTranslator($user['id']))
 {
   message_die('You must be the extension author to modify it.');
 }
@@ -92,6 +92,67 @@ if (!in_array($user['id'], $authors) and !isAdmin($user['id']))
 
 if (isset($_POST['submit']))
 {
+  // Form sumbmitted for translator
+  if (!in_array($user['id'], $authors) and !isAdmin($user['id']))
+  {
+    $query = 'SELECT idx_language FROM '.REV_TABLE.' WHERE id_revision = '.$page['revision_id'].';';
+    $result = $db->query($query);
+    list($def_language) = mysql_fetch_array($result);
+
+    $query = '
+DELETE
+  FROM '.REV_TRANS_TABLE.'
+  WHERE idx_revision = '.$page['revision_id'].'
+    AND idx_language IN ('.implode(',', $conf['translator_users'][$user['id']]).')
+;';
+    $db->query($query);
+
+    $inserts = array();
+    foreach ($_POST['revision_descriptions'] as $lang_id => $desc)
+    {
+      if (!in_array($lang_id, $conf['translator_users'][$user['id']]))
+      {
+        continue;
+      }
+      if ($lang_id == $def_language)
+      {
+        if (empty($desc))
+        {
+          message_die('Default description can not be empty');
+        }
+        $query = '
+    UPDATE '.REV_TABLE.'
+      SET description = \''.$desc.'\'
+      WHERE id_revision = '.$page['revision_id'].'
+    ;';
+        $db->query($query);
+      }
+      else
+      {
+        array_push(
+          $inserts,
+          array(
+            'idx_revision'  => $page['revision_id'],
+            'idx_language'   => $lang_id,
+            'description'    => $desc,
+            )
+          );
+      }
+    }
+    if (!empty($inserts))
+    {
+      mass_inserts(REV_TRANS_TABLE, array_keys($inserts[0]), $inserts);
+    }
+    message_success(
+      'Revision successfuly added. Thank you.',
+      sprintf(
+        'extension_view.php?eid=%u&amp;rid=%u#rev%u',
+        $page['extension_id'],
+        $page['revision_id'],
+        $page['revision_id']
+        )
+      );
+  }
   // The file is mandatory only when we add a revision, not when we modify it
   if (basename($_SERVER['SCRIPT_FILENAME']) != 'revision_add.php')
   {
@@ -537,6 +598,8 @@ $tpl->assign(
     'f_action' => $_SERVER['REQUEST_URI'],
     'u_extension' => 'extension_view.php?eid='.$page['extension_id'],
     'page_title' => (basename($_SERVER['SCRIPT_FILENAME']) == 'revision_add.php' ? l10n('Add a revision') : l10n('Modify revision')),
+    'translator' => !in_array($user['id'], $authors) and !isAdmin($user['id']),
+    'translator_languages' => isTranslator($user['id']) ? $conf['translator_users'][$user['id']] : array(),
   )
 );
 

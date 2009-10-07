@@ -7,14 +7,14 @@
     <table>
       <tr>
         <th>{'Name'|@translate}</th>
-        <td><input type="text" name="extension_name" size="35" maxlength="255" value="{$extension_name}" /></td>
+        <td><input type="text" name="extension_name" size="35" maxlength="255" value="{$extension_name}" {if $translator}disabled="disabled"{/if}/></td>
       </tr>
       <tr>
         <th>{'Categories'|@translate}</th>
         <td>
           <div class="checkboxBox">
 {foreach from=$extension_categories item=cat}
-            <label><input type="checkbox" name="extension_category[]" value="{$cat.value}" {$cat.checked} /> {$cat.name}</label>
+            <label><input type="checkbox" name="extension_category[]" value="{$cat.value}" {$cat.checked} {if $translator}disabled="disabled"{/if}/> {$cat.name}</label>
 {/foreach}
           </div>
         </td>
@@ -30,9 +30,9 @@
           </select>
           {foreach from=$languages item=language}
           <span id="span_{$language.id}" class="desc" style="display: none;"> &nbsp;
-            <label><input type="radio" name="default_description" value="{$language.id}" {if $default_language == $language.id}checked="checked"{/if}> {'Default description'|@translate}</label>
+            <label><input type="radio" name="default_description" value="{$language.id}" {if $default_language == $language.id}checked="checked"{/if} {if $translator}disabled="disabled"{/if}> {'Default description'|@translate}</label>
             <br>
-            <textarea cols="80" rows="10" name="extension_descriptions[{$language.id}]" id="desc_{$language.id}">{$descriptions[$language.id]}</textarea>
+            <textarea cols="80" rows="10" name="extension_descriptions[{$language.id}]" id="desc_{$language.id}" {if $translator and !$language.id|@in_array:$translator_languages}readonly="readonly"{/if}>{$descriptions[$language.id]}</textarea>
           </span>
           {/foreach}
           <p class="default_description"></p>

@@ -49,7 +49,8 @@ if (!isset($data['id_extension']))
 $authors = get_extension_authors($page['extension_id']);
 
 $page['user_can_modify'] = false;
-if (isset($user['id']) and (isAdmin($user['id']) or in_array($user['id'], $authors)))
+if (isset($user['id']) and 
+  (isAdmin($user['id']) or isTranslator($user['id']) or in_array($user['id'], $authors)))
 {
   $page['user_can_modify'] = true;
 }
@@ -125,6 +126,7 @@ if (isset($user['id']))
         'u_add_rev' => 'revision_add.php?eid='.$page['extension_id'],
         'u_links' => 'extension_links.php?eid='.$page['extension_id'],
         'u_screenshot'=> 'extension_screenshot.php?eid='.$page['extension_id'],
+        'translator' => !in_array($user['id'], $authors) and !isAdmin($user['id']),
         )
       );
   }

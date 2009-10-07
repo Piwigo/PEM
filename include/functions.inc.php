@@ -74,6 +74,13 @@ function isAdmin($user_id)
   return in_array($user_id, $conf['admin_users']);
 }
 
+function isTranslator($user_id)
+{
+  global $conf;
+
+  return isset($conf['translator_users'][$user_id]);
+}
+
 /**
  * returns the corresponding value from $lang if existing. Else, the key is
  * returned

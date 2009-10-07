@@ -20,6 +20,7 @@
             size="10"
             maxlength="10"
             value="{$name}"
+            {if $translator}disabled="disabled"{/if}
           />
         </td>
       </tr>
@@ -51,7 +52,7 @@
           <div class="checkboxBox">
 {foreach from=$versions item=version}
             <label>
-              <input type="checkbox" name="compatible_versions[]" value="{$version.id_version}" {$version.checked} />{$version.name}
+              <input type="checkbox" name="compatible_versions[]" value="{$version.id_version}" {$version.checked} {if $translator}disabled="disabled"{/if}/>{$version.name}
             </label>
 {/foreach}
           </div>
@@ -61,7 +62,9 @@
       <tr>
         <th>{'Author'|@translate}</th>
         <td>
-          {html_radios name="author" values=$authors output=$authors|@get_author_name selected=$selected_author}
+          {foreach from=$authors item=author}
+          <label><input type="radio" name="author" value="{$author}" {if $author == $selected_author}checked="checked"{/if} {if $translator}disabled="disabled"{/if}>{$author|@get_author_name}</label>
+          {/foreach}
         </td>
       </tr>
 {/if}
@@ -76,9 +79,9 @@
           </select>
           {foreach from=$languages item=language}
           <span id="span_{$language.id}" class="desc" style="display: none;"> &nbsp;
-            <label><input type="radio" name="default_description" value="{$language.id}" {if $default_language == $language.id}checked="checked"{/if}> {'Default description'|@translate}</label>
+            <label><input type="radio" name="default_description" value="{$language.id}" {if $default_language == $language.id}checked="checked"{/if} {if $translator}disabled="disabled"{/if}> {'Default description'|@translate}</label>
             <br>
-            <textarea cols="80" rows="10" name="revision_descriptions[{$language.id}]" id="desc_{$language.id}">{$descriptions[$language.id]}</textarea>
+            <textarea cols="80" rows="10" name="revision_descriptions[{$language.id}]" id="desc_{$language.id}" {if $translator and !$language.id|@in_array:$translator_languages}readonly="readonly"{/if}>{$descriptions[$language.id]}</textarea>
           </span>
           {/foreach}
           <p class="default_description"></p>
@@ -90,7 +93,7 @@
         <td>
           <div class="checkboxBox">
             {foreach from=$extensions_languages item=lang}
-            <label><input type="checkbox" name="extensions_languages[]" value="{$lang.id}" title="{$lang.name}" {$lang.checked} />
+            <label><input type="checkbox" name="extensions_languages[]" value="{$lang.id}" title="{$lang.name}" {$lang.checked} {if $translator}disabled="disabled"{/if}/>
               <img src="language/{$lang.code}/icon.jpg" alt="{$lang.name}" title="{$lang.name}">&nbsp;</label>
             {/foreach}
           </div>
@@ -101,7 +104,7 @@
       <tr>
         <th>{'Agreement'|@translate}</th>
         <td>
-          <label><input type="checkbox" name="accept_agreement" {$accept_agreement_checked}>{$agreement_description}</label>
+          <label><input type="checkbox" name="accept_agreement" {$accept_agreement_checked} {if $translator}disabled="disabled"{/if}>{$agreement_description}</label>
         </td>
       </tr>
 {/if}

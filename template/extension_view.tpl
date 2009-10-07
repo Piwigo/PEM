@@ -3,6 +3,7 @@
 {if isset($can_modify)}
 <ul class="actionLinks">
   <li><a href="{$u_modify}" title="{'Modify extension'|@translate}"><img src="template/images/modify.png" alt="{'Modify extension'|@translate}"></a></li>
+{if !$translator}
   {if isset($u_delete)}
     <li><a href="{$u_delete}" onclick="return confirm('{'Are you sure you want to delete this item?'|@translate|escape:javascript}');" title="{'Delete extension'|@translate}"><img src="template/images/delete.png" alt="{'Delete extension'|@translate}"></a></li>
   {/if}
@@ -15,6 +16,7 @@
   {if isset($u_svn)}
     <li><a href="{$u_svn}" title="{'SVN configuration'|@translate}"><img src="template/images/svn.png" alt="{'SVN configuration'|@translate}"></a></li>
   {/if}
+{/if}
 </ul>
 {/if}
 
@@ -94,8 +96,10 @@
   {if $rev.can_modify}
       <ul class="revActionLinks">
         <li><a href="{$rev.u_modify}" title="{'Modify revision'|@translate}"><img src="template/images/modify.png" alt="{'Modify revision'|@translate}"></a></li>
+        {if !$translator}
         <li><a href="{$rev.u_delete}" onclick="return confirm('{'Are you sure you want to delete this item?'|@translate|escape:javascript}');" title="{'Delete revision'|@translate}">
             <img src="template/images/delete.png" alt="{'Delete revision'|@translate}"></a></li>
+        {/if}
       </ul>
   {/if}
     </div>

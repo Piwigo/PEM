@@ -44,7 +44,7 @@ if (basename($_SERVER['SCRIPT_FILENAME']) == 'extension_mod.php')
 {
   $authors = get_extension_authors($page['extension_id']);
 
-  if (!in_array($user['id'], $authors) and !isAdmin($user['id']))
+  if (!in_array($user['id'], $authors) and !isAdmin($user['id']) and !isTranslator($user['id']))
   {
     message_die('You must be the extension author to modify it.');
   }
@@ -53,6 +53,60 @@ if (basename($_SERVER['SCRIPT_FILENAME']) == 'extension_mod.php')
 // Form submitted
 if (isset($_POST['submit']))
 {
+  // Form sumbmitted for translator
+  if (!in_array($user['id'], $authors) and !isAdmin($user['id']))
+  {
+    $query = 'SELECT idx_language FROM '.EXT_TABLE.' WHERE id_extension = '.$page['extension_id'].';';
+    $result = $db->query($query);
+    list($def_language) = mysql_fetch_array($result);
+
+    $query = '
+DELETE
+  FROM '.EXT_TRANS_TABLE.'
+  WHERE idx_extension = '.$page['extension_id'].'
+    AND idx_language IN ('.implode(',', $conf['translator_users'][$user['id']]).')
+;';
+    $db->query($query);
+
+    $inserts = array();
+    foreach ($_POST['extension_descriptions'] as $lang_id => $desc)
+    {
+      if (!in_array($lang_id, $conf['translator_users'][$user['id']]))
+      {
+        continue;
+      }
+      if ($lang_id == $def_language)
+      {
+        if (empty($desc))
+        {
+          message_die('Default description can not be empty');
+        }
+        $query = '
+    UPDATE '.EXT_TABLE.'
+      SET description = \''.$desc.'\'
+      WHERE id_extension = '.$page['extension_id'].'
+    ;';
+        $db->query($query);
+      }
+      else
+      {
+        array_push(
+          $inserts,
+          array(
+            'idx_extension'  => $page['extension_id'],
+            'idx_language'   => $lang_id,
+            'description'    => $desc,
+            )
+          );
+      }
+    }
+    if (!empty($inserts))
+    {
+      mass_inserts(EXT_TRANS_TABLE, array_keys($inserts[0]), $inserts);
+    }
+    message_success('Extension successfuly added. Thank you.', 'extension_view.php?eid='.$page['extension_id']);
+  }
+
   // Checks that all the fields have been well filled
   $required_fields = array(
     'extension_name',
@@ -226,14 +280,6 @@ else
   $default_language = $interface_languages[$conf['default_language']]['id'];
 }
 
-$tpl->assign(
-  array(
-    'extension_name' => $name,
-    'descriptions' => $descriptions,
-    'default_language' => $default_language,
-    )
-  );
-
 // Display the cats
 $tpl_extension_categories = array();
 foreach($cats as $cat)
@@ -250,7 +296,6 @@ foreach($cats as $cat)
       )
     );
 }
-$tpl->assign('extension_categories', $tpl_extension_categories);
 
 if (basename($_SERVER['SCRIPT_FILENAME']) == 'extension_mod.php')
 {
@@ -261,8 +306,18 @@ else
   $f_action = 'extension_add.php';
 }
 
-$tpl->assign('f_action', $f_action);
-  
+$tpl->assign(
+  array(
+    'f_action' => $f_action,
+    'translator' => !in_array($user['id'], $authors) and !isAdmin($user['id']),
+    'translator_languages' => isTranslator($user['id']) ? $conf['translator_users'][$user['id']] : array(),
+    'extension_name' => $name,
+    'descriptions' => $descriptions,
+    'default_language' => $default_language,
+    'extension_categories' => $tpl_extension_categories,
+    )
+  );
+
 // +-----------------------------------------------------------------------+
 // |                           html code display                           |
 // +-----------------------------------------------------------------------+

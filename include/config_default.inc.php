@@ -26,6 +26,12 @@
 $conf['admin_users'] = array(
   );
 
+// Translators: this users are able to translate extensionand revisions
+// Use: $conf['translator_users'] = array('1234' => array(5, 8));
+// In this example, user 1234 will be able to translate languages 5 and 8
+$conf['translator_users'] = array(
+  );
+
 // +-----------------------------------------------------------------------+
 // | Database connection parameters                                        |
 // +-----------------------------------------------------------------------+
