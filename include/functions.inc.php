@@ -1173,7 +1173,7 @@ SELECT
 }
 
 function get_extension_ids_for_search($search) {
-  $fields = array('e.name', 'e.description', 'r.description');
+  $fields = array('e.name', 'e.description', 'r.description', 'et.description', 'rt.description');
 
   $replace_by = array(
     '-' => ' ',
@@ -1255,6 +1255,12 @@ SELECT
     id_extension
   FROM '.EXT_TABLE.' AS e
     JOIN '.REV_TABLE.' AS r ON r.idx_extension = e.id_extension
+    LEFT JOIN '.EXT_TRANS_TABLE.' AS et
+      ON e.id_extension = et.idx_extension
+      AND et.idx_language = '.$_SESSION['language']['id'].'
+    LEFT JOIN '.REV_TRANS_TABLE.' AS rt
+      ON r.id_revision = rt.idx_revision
+      AND rt.idx_language = '.$_SESSION['language']['id'].'
   WHERE '.$clause.'
 ;';
   return array_from_query($query, 'id_extension');
