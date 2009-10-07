@@ -104,7 +104,7 @@
   {foreach from=$languages item=language}
             <option
               value="{$self_uri}lang={$language.code}"
-              {if ($lang == $language.code)}selected="selected"{/if}
+              {if ($user_language == $language.code)}selected="selected"{/if}
             >
               {$language.name}
             </option>

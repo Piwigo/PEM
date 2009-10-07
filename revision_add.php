@@ -403,10 +403,20 @@ if (basename($_SERVER['SCRIPT_FILENAME']) == 'revision_mod.php')
   }
 
   // Get descriptions
-  $default_language = $revision_infos_of[$page['revision_id']]['idx_language'];
-  $descriptions = array(
-    $default_language => $revision_infos_of[ $page['revision_id'] ]['description']
-  );
+  $descriptions = array();
+  $query = '
+SELECT idx_language,
+       description
+  FROM '.REV_TABLE.'
+  WHERE id_revision = '.$page['revision_id'].'
+;';
+  $result = $db->query($query);
+  if ($row = mysql_fetch_assoc($result))
+  {
+    $descriptions[$row['idx_language']] = $row['description'];
+    $default_language = $row['idx_language'];
+  }
+
   $query = '
 SELECT idx_language,
        description

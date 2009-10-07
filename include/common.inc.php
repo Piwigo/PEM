@@ -134,7 +134,7 @@ if (empty($_SESSION['language']))
 $self_uri = preg_replace('#(\?|&)lang=.._..#', '', $_SERVER['REQUEST_URI']);
 $self_uri .= strpos($self_uri, '?') ? '&amp;' : '?';
 $tpl->assign('self_uri', $self_uri);
-$tpl->assign('lang', $_SESSION['language']['code']);
+$tpl->assign('user_language', $_SESSION['language']['code']);
 $tpl->assign('languages', $interface_languages);
 
 $lang = array();
