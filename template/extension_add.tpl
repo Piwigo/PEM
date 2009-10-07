@@ -50,8 +50,11 @@
 
 <script type="text/javascript">
 var languages = new Array();
+var filled = new Array;
 {foreach from=$languages item=language}
 languages[{$language.id}] = "{$language.name}";
+if ($('textarea[id=desc_{$language.id}]').val() != '')
+  filled.push({$language.id});
 {/foreach}
 
 $(document).ready(function() {ldelim}
@@ -60,20 +63,39 @@ $(document).ready(function() {ldelim}
     $("#span_"+this.options[this.selectedIndex].value).show();
   });
   $('input[name="default_description"]').click(function () {ldelim}
-    $(".default_description").html("{'Default description'|@translate}: "+languages[this.value]);
+    set_default_description(this.value);
   });
   $('textarea[name^="extension_descriptions"]').keyup(function () {ldelim}
     arr = $(this).attr("id").split("desc_");
-    opt = $('select[name="lang_desc_select"] option[id="opt_'+arr[1]+'"]');
+    id = arr[1];
+    opt = $('select[name="lang_desc_select"] option[id="opt_'+id+'"]');
     if (this.value != '') {ldelim}
       opt.html(opt.html().replace("\u2718", "\u2714"));
+      add = true;
+      for (i in filled) {ldelim}
+        if (filled[i] == id) add = false;
+      }
+      if (add) {ldelim}
+        if (!filled.length) {ldelim}
+          $('#span_'+id+' input[name="default_description"]').attr("checked", "checked");
+          set_default_description(id);
+        }
+        filled.push(id);
+      }
     }
     else {ldelim}
+      for (i in filled) {ldelim}
+        if (filled[i] == id) filled.splice(i, 1);
+      }
       opt.html(opt.html().replace("\u2714", "\u2718"));
     }
   });
 });
 
+function set_default_description (id) {ldelim}
+  $(".default_description").html("{'Default description'|@translate}: "+languages[id]);
+}
+
 $("#span_"+{$default_language}).show();
-$(".default_description").html("{'Default description'|@translate}: "+languages[{$default_language}]+"");
+set_default_description({$default_language});
 </script>
