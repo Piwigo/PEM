@@ -126,7 +126,7 @@ $(document).ready(function() {ldelim}
     $(".desc").hide();
     $("#span_"+this.options[this.selectedIndex].value).show();
   });
-  $('input[name="default_description"]').change(function () {ldelim}
+  $('input[name="default_description"]').click(function () {ldelim}
     $(".default_description").html("{'Default description'|@translate}: "+languages[this.value]);
   });
   $('textarea[name^="revision_descriptions"]').keyup(function () {ldelim}
