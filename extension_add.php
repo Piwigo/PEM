@@ -54,7 +54,7 @@ if (basename($_SERVER['SCRIPT_FILENAME']) == 'extension_mod.php')
 if (isset($_POST['submit']))
 {
   // Form sumbmitted for translator
-  if (!in_array($user['id'], $authors) and !isAdmin($user['id']))
+  if (basename($_SERVER['SCRIPT_FILENAME']) == 'extension_mod.php' and !in_array($user['id'], $authors) and !isAdmin($user['id']))
   {
     $query = 'SELECT idx_language FROM '.EXT_TABLE.' WHERE id_extension = '.$page['extension_id'].';';
     $result = $db->query($query);
@@ -309,7 +309,7 @@ else
 $tpl->assign(
   array(
     'f_action' => $f_action,
-    'translator' => !in_array($user['id'], $authors) and !isAdmin($user['id']),
+    'translator' => basename($_SERVER['SCRIPT_FILENAME']) == 'extension_mod.php' and !in_array($user['id'], $authors) and !isAdmin($user['id']),
     'translator_languages' => isTranslator($user['id']) ? $conf['translator_users'][$user['id']] : array(),
     'extension_name' => $name,
     'descriptions' => $descriptions,
