@@ -11,7 +11,7 @@
     <legend>{'Add an author'|@translate}</legend>
     <p>&nbsp;</p>
     <strong>{'Name'|@translate}</strong>
-    <input type="text" name="author_name" maxlength="50" value="" />
+    {html_options name=author_select options=$users}
     <input type="submit" value="{'Submit'|@translate}" name="submit_add" />
     <p>&nbsp;</p>
   </fieldset>

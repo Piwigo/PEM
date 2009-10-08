@@ -75,12 +75,10 @@ list($page['extension_name']) = $db->fetch_array($result);
 
 if (isset($_POST['submit_add']))
 {
-  $author_name = mysql_real_escape_string($_POST['author_name']);
-
   $query = '
-SELECT '.$conf['user_fields']['id'].'
-  FROM '.$conf['users_table'].' as u
-  WHERE '.$conf['user_fields']['username'].' = "'.$author_name.'"
+SELECT '.$conf['user_fields']['id'].' AS id
+  FROM '.USERS_TABLE.'
+  WHERE id = '.$_POST['author_select'].'
 ;';
   list($author_id) = $db->fetch_array($db->query($query));
 
@@ -136,11 +134,30 @@ foreach ($authors as $author_id)
                   '&amp;delete='.$author_id));
 }
 
+// Get all user list
+$query = '
+SELECT '.$conf['user_fields']['id'].' AS id,
+       '.$conf['user_fields']['username'].' AS username
+  FROM '.USERS_TABLE.'
+  ORDER BY username
+;';
+$result = $db->query($query);
+
+$users = array(0 => '');
+while ($row = mysql_fetch_assoc($result))
+{
+  if (!empty($row['username']))
+  {
+    $users[$row['id']] = $row['username'];
+  }
+}
+
 $tpl->assign(
   array(
     'extension_name' => $page['extension_name'],
     'u_extension' => 'extension_view.php?eid='.$page['extension_id'],
     'f_action' => 'extension_authors.php?eid='.$page['extension_id'],
+    'users' => $users,
     )
   );
 
