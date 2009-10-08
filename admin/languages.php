@@ -131,6 +131,21 @@ UPDATE '.LANG_TABLE.'
   $db->query($query);
 }
 
+// Display language ids
+$query = 'SELECT id_language, code FROM '.LANG_TABLE.';';
+$result = $db->query($query);
+while ($row = mysql_fetch_assoc($result))
+{
+  if (isset($int_languages[$row['code']]))
+  {
+    $int_languages[$row['code']] = ' ('.$row['id_language'].') '. $int_languages[$row['code']];
+  }
+  if (isset($ext_languages[$row['code']]))
+  {
+    $ext_languages[$row['code']] = ' ('.$row['id_language'].') '. $ext_languages[$row['code']];
+  }
+}
+
 $tpl->assign(array(
   'f_action'      => 'languages.php',
   'int_languages' => $int_languages,
