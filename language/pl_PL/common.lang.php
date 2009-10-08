@@ -162,7 +162,7 @@ $lang['SVN revision'] = 'Wersja SVN';
 $lang['An error occured during SVN export.'] = 'Błąd podczas eksportu SVN.';
 
 $lang['Available languages'] = 'Dostępne języki';
-/*TODO*/$lang['Default description'] = 'Default description';
-/*TODO*/$lang['Default description can not be empty'] = 'Default description can not be empty';
+$lang['Default description'] = 'Opis domyślny';
+$lang['Default description can not be empty'] = 'Opis domyślny nie może być pusty';
 
 ?>
