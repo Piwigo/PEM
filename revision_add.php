@@ -604,7 +604,7 @@ $tpl->assign(
 );
 
 if (basename($_SERVER['SCRIPT_FILENAME']) == 'revision_add.php' and $conf['allow_svn_file_creation']
-  and !empty($svn_url) and !empty($archive_root_dir) and !empty($archive_name))
+  and !empty($svn_url) and !empty($archive_name))
 {
   $tpl->assign(
     array(
