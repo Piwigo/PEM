@@ -1,3 +1,22 @@
+{known_script id="highslide" src="template/highslide/highslide-full.packed.js"}
+{html_head}
+<link rel="stylesheet" type="text/css" href="template/highslide/highslide.css">
+<script type="text/javascript">
+hs.graphicsDir = 'template/highslide/graphics/';
+hs.registerOverlay({ldelim}
+  html: '<div class="closebutton" onclick="return hs.close(this)"></div>',
+  position: 'top right',
+  fade: 2
+});
+hs.align = 'center';
+hs.showCredits = false;
+hs.outlineType = 'rounded-white';
+hs.expandDuration = 400;
+hs.allowSizeReduction = false;
+hs.lang['restoreTitle'] = '';
+</script>
+{/html_head}
+
 <h2>{$extension_name}</h2>
 
 {if isset($can_modify)}
@@ -21,7 +40,7 @@
 {/if}
 
 {if isset($thumbnail)}
-<a class="screenshot" href="{$thumbnail.url}"><img src="{$thumbnail.src}"/></a>
+<a class="screenshot highslide" href="{$thumbnail.url}" onclick="return hs.expand(this)"><img src="{$thumbnail.src}"/></a>
 {/if}
 
 <ul class="extensionInfos">
