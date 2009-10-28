@@ -75,7 +75,7 @@ CREATE TABLE `pem_links` (
   `description` text,
   `rank` int(10) unsigned NOT NULL default '0',
   `idx_extension` int(10) unsigned NOT NULL default '0',
-  `idx_languages` int(11) default NULL,
+  `idx_language` int(11) default NULL,
   PRIMARY KEY  (`id_link`),
   KEY `idx_extension` (`idx_extension`)
 )   DEFAULT CHARSET=utf8;
