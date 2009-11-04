@@ -84,6 +84,10 @@ $languages = array();
 $int_languages = array();
 $ext_languages = array();
 
+// it's time to refresh language names in the database, sometimes the iso
+// code may change in iso.txt
+$updates = array();
+
 while ($file = readdir($dir))
 {
   $path = $root_path.'language/'.$file;
@@ -99,12 +103,33 @@ while ($file = readdir($dir))
     {
       $ext_languages[$file] = $language_name;
     }
+
+    if (isset($db_languages[$file])) {
+      array_push(
+        $updates,
+        array(
+          'id_language' => $db_languages[$file],
+          'name' => $language_name,
+          )
+        );
+    }
   }
 }
 closedir($dir);
 @asort($languages);
 @asort($int_languages);
 @asort($ext_languages);
+
+if (count($updates) > 0) {
+  mass_updates(
+    LANG_TABLE,
+    array(
+      'primary' => array('id_language'),
+      'update' => array('name'),
+      ),
+    $updates
+    );
+}
 
 // Add new languages to DB
 $add = array_diff_key($languages, $db_languages);
