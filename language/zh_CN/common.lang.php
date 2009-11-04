@@ -1,9 +1,4 @@
-﻿
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-</head>
-
-<?php
+﻿<?php
 // +-----------------------------------------------------------------------+
 // | PEM - a PHP based Extension Manager                                   |
 // | Copyright (C) 2005-2009 PEM Team - http://home.gna.org/pem            |
