@@ -94,6 +94,7 @@ while ($file = readdir($dir))
   if (!is_link($path) and file_exists($path.'/iso.txt'))
   {
     list($language_name) = @file($path.'/iso.txt');
+    $language_name = trim($language_name);
     $languages[$file] = $language_name;
     if (file_exists($path.'/common.lang.php'))
     {
