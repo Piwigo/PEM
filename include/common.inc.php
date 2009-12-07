@@ -110,7 +110,7 @@ if (isset($_GET['lang']))
 {
   $_SESSION['language'] = @$interface_languages[$_GET['lang']];
 }
-if (empty($_SESSION['language']))
+if (empty($_SESSION['language']) or !is_array($_SESSION['language']))
 {
   $_SESSION['language'] = $interface_languages[$conf['default_language']];
 
