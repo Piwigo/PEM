@@ -3,9 +3,6 @@
 // | PEM - a PHP based Extension Manager                                   |
 // | Copyright (C) 2005-2009 PEM Team - http://home.gna.org/pem            |
 // +-----------------------------------------------------------------------+
-// | last modifier : $Author: plg $
-// | revision      : $Revision: 2 $
-// +-----------------------------------------------------------------------+
 // | This program is free software; you can redistribute it and/or modify  |
 // | it under the terms of the GNU General Public License as published by  |
 // | the Free Software Foundation                                          |
