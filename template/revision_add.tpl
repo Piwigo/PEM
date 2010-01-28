@@ -30,8 +30,9 @@
         <td>
           {if isset($allow_svn_file_creation)}
             <div style="margin-bottom: 5px;">
-              <input type="radio" name="file_type" value="upload" onClick="javascript: toggleDisplay('upload_type'); toggleDisplay('svn_type');" checked="checked"> {'Upload a file'|@translate}
-              <input type="radio" name="file_type" value="svn" onClick="javascript: toggleDisplay('upload_type'); toggleDisplay('svn_type');"> {'Use SVN file creation'|@translate}
+              <label><input type="radio" name="file_type" value="upload" onClick="javascript: display('upload_type'); hide('svn_type');    hide('url_type');" checked="checked"> {'Upload a file'|@translate}</label>
+              <label><input type="radio" name="file_type" value="svn" onClick="javascript:    hide('upload_type');    display('svn_type'); hide('url_type');"> {'Use SVN file creation'|@translate}</label>
+              <label><input type="radio" name="file_type" value="url" onClick="javascript:    hide('upload_type');    hide('svn_type');    display('url_type');"> {'Download from URL'|@translate}</label>
             </div>
             <div id="upload_type">
               <input type="file" name="revision_file" size="35" />
@@ -39,6 +40,9 @@
             <div id="svn_type" style="display: none;">
               {'URL'|@translate} <input type="text" name="svn_url" value="{$SVN_URL}" size="65"> &nbsp;
               {'Revision'|@translate} <input type="text" name="svn_revision" value="HEAD" size="5">
+            </div>
+            <div id="url_type" style="display: none;">
+              {'URL'|@translate} <input type="text" name="download_url" value="{$DOWNLOAD_URL}" size="65">
             </div>
           {else}
             <input type="file" name="revision_file" size="35" />

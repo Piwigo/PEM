@@ -158,6 +158,13 @@ $conf['archive_comment_filename'] = 'pem_metadata.txt';
 $conf['archive_comment'] = "File automatically created from SVN repository.\n\nURL: %s \nRevision: %s";
 
 // +-----------------------------------------------------------------------+
+// |                            Archive from URL                           |
+// +-----------------------------------------------------------------------+
+
+// Maximum size for a downloaded archive, in megabytes.
+$conf['download_url_max_filesize'] = 10;
+
+// +-----------------------------------------------------------------------+
 // |                            debug/performance                          |
 // +-----------------------------------------------------------------------+
 

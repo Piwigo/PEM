@@ -151,20 +151,20 @@ DELETE
       );
   }
   // The file is mandatory only when we add a revision, not when we modify it
-  if (basename($_SERVER['SCRIPT_FILENAME']) != 'revision_add.php')
+  if ('revision_add.php' == basename($_SERVER['SCRIPT_FILENAME']))
   {
-    $file_to_upload = 'none';
-  }
-  elseif (isset($_POST['file_type']) and $_POST['file_type'] == 'svn')
-  {
-    $file_to_upload = 'svn';
+    if (isset($_POST['file_type']) and in_array($_POST['file_type'], array('upload', 'svn', 'url')))
+    {
+      $file_to_upload = $_POST['file_type'];
+    }
   }
   else
   {
-    $file_to_upload = 'user';
+    // we are on revision_mod.php
+    $file_to_upload = 'none';
   }
 
-  if ($file_to_upload == 'user')
+  if ($file_to_upload == 'upload')
   {
     // Check file extension
     if (strtolower(substr($_FILES['revision_file']['name'], -3)) != 'zip')
@@ -182,6 +182,8 @@ DELETE
         )
       );
     }
+
+    $archive_name = $_FILES['revision_file']['name'];
   }
 
   if ($file_to_upload == 'svn')
@@ -228,6 +230,30 @@ DELETE
         sprintf($conf['archive_comment'], $svn_url, $svn_revision)
       );
     }
+  }
+
+  if ('url' == $file_to_upload)
+  {
+    $download_url = $_POST['download_url'];
+    if (empty($download_url))
+    {
+      message_die('Some fields are missing');
+    }
+    
+    $sch = parse_url($download_url, PHP_URL_SCHEME);
+    if (!in_array($sch, array('http', 'https')))
+    {
+      message_die('The download URL must start with "http"');
+    }
+    
+    $headers = get_headers($download_url, 1);
+
+    if ($headers["Content-Length"] > $conf['download_url_max_filesize']*1024*1024)
+    {
+      message_die('The archive on the download URL is bigger than '.$conf['download_url_max_filesize'].'MB');
+    }
+    
+    $archive_name = basename($download_url);
   }
 
   $required_fields = array(
@@ -282,7 +308,7 @@ DELETE
       'date'           => mktime(),
       'description'    => $_POST['revision_descriptions'][$_POST['default_description']],
       'idx_language'   => $_POST['default_description'],
-      'url'            => ($file_to_upload == 'user' ? $_FILES['revision_file']['name'] : $archive_name),
+      'url'            => $archive_name,
       'author'         => isset($_POST['author']) ? $_POST['author'] : $user['id'],
       );
 
@@ -322,14 +348,14 @@ DELETE
     umask(0000);
     @mkdir($revision_dir, 0777);
 
-    if ($file_to_upload == 'user')
+    if ($file_to_upload == 'upload')
     {
       move_uploaded_file(
         $_FILES['revision_file']['tmp_name'],
         $revision_dir.'/'.$_FILES['revision_file']['name']
       );
     }
-    else
+    elseif ('svn' == $file_to_upload)
     {
       // Create zip archive
       include_once($root_path.'include/pclzip.lib.php');
@@ -337,6 +363,10 @@ DELETE
       $zip->create($temp_svn_path,
         PCLZIP_OPT_REMOVE_PATH, $temp_svn_path,
         PCLZIP_OPT_ADD_PATH, $archive_root_dir);
+    }
+    elseif ('url' == $file_to_upload)
+    {
+      copy($download_url, $revision_dir.'/'.$archive_name);
     }
   }
 

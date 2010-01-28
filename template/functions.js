@@ -26,6 +26,18 @@ function toggleDisplay(elementId)
   }
 }
 
+function display(elementId)
+{
+  var element = document.getElementById(elementId);
+  element.style.display = 'block';
+}
+
+function hide(elementId)
+{
+  var element = document.getElementById(elementId);
+  element.style.display = 'none';
+}
+
 function revToggleDisplay(headerId, contentId)
 {
   var revHeader = document.getElementById(headerId);
