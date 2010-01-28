@@ -161,6 +161,10 @@ $conf['archive_comment'] = "File automatically created from SVN repository.\n\nU
 // |                            Archive from URL                           |
 // +-----------------------------------------------------------------------+
 
+// allow users to upload their archive from a remote URL instead of their
+// own desktop
+$conf['allow_download_url'] = false;
+
 // Maximum size for a downloaded archive, in megabytes.
 $conf['download_url_max_filesize'] = 10;
 

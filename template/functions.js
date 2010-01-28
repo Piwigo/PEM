@@ -38,6 +38,29 @@ function hide(elementId)
   element.style.display = 'none';
 }
 
+function showOnlyThisChild(parentId, childIdtoShow)
+{
+  var parent = document.getElementById(parentId);
+  var children = parent.childNodes;
+  var n = children.length;
+
+  for (i=0; i<n; i++)
+  {
+    var child = children[i];
+    if (child.id != undefined)
+    {
+      if (child.id == childIdtoShow)
+      {
+        child.style.display = 'block';
+      }
+      else
+      {
+        child.style.display = 'none';
+      }
+    }
+  }
+}
+
 function revToggleDisplay(headerId, contentId)
 {
   var revHeader = document.getElementById(headerId);

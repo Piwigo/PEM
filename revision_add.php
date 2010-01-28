@@ -641,6 +641,21 @@ if (basename($_SERVER['SCRIPT_FILENAME']) == 'revision_add.php' and $conf['allow
   );
 }
 
+$upload_methods = array('upload');
+if ($conf['allow_download_url'])
+{
+  array_push($upload_methods, 'url');
+}
+if ($conf['allow_svn_file_creation'])
+{
+  array_push($upload_methods, 'svn');
+}
+
+$tpl->assign(
+  array(
+    'upload_methods' => $upload_methods,
+    )
+  );
 // +-----------------------------------------------------------------------+
 // |                           html code display                           |
 // +-----------------------------------------------------------------------+
