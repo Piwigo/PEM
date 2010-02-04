@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 // +-----------------------------------------------------------------------+
 // | PEM - a PHP based Extension Manager                                   |
 // | Copyright (C) 2005-2009 PEM Team - http://home.gna.org/pem            |
@@ -163,4 +163,3 @@ $lang['Default description'] = '预设描述';
 $lang['Default description can not be empty'] = '预设描述不能空置';
 
 ?>
-

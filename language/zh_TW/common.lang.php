@@ -163,4 +163,3 @@ $lang['Default description'] = '預設描述';
 $lang['Default description can not be empty'] = '預設描述不能空置';
 
 ?>
-
