@@ -74,9 +74,9 @@ foreach($categories as $cat)
         get_user_language($cat['name']),
         isset($nb_ext_of_category[$id])
         ? $nb_ext_of_category[$id] > 1
-          ? $nb_ext_of_category[$id].' extensions'
-          : $nb_ext_of_category[$id].' extension'
-        : 'no extension'
+          ? $nb_ext_of_category[$id].' '.l10n('extensions')
+          : $nb_ext_of_category[$id].' '.l10n('extension')
+        : l10n('no extension')
         ),
       )
     );
@@ -132,9 +132,9 @@ foreach ($versions as $version)
         $version['version'],
         isset($nb_ext_of_version[$version_id])
         ? $nb_ext_of_version[$version_id] > 1
-          ? $nb_ext_of_version[$version_id].' extensions'
-          : $nb_ext_of_version[$version_id].' extension'
-        : 'no extension'
+          ? $nb_ext_of_version[$version_id].' '.l10n('extensions')
+          : $nb_ext_of_version[$version_id].' '.l10n('extension')
+        : l10n('no extension')
         ),
       'selected' => $selected,
       )
@@ -185,9 +185,9 @@ foreach ($user_infos_of as $author) {
         $author['username'],
         isset($nb_ext_of_user[$id])
         ? $nb_ext_of_user[$id] > 1
-          ? $nb_ext_of_user[$id].' extensions'
-          : $nb_ext_of_user[$id].' extension'
-        : 'no extension'
+          ? $nb_ext_of_user[$id].' '.l10n('extensions')
+          : $nb_ext_of_user[$id].' '.l10n('extension')
+        : l10n('no extension')
         ),
       )
     );

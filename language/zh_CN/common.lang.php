@@ -161,5 +161,7 @@ $lang['An error occured during SVN export.'] = '汇出SVN时发生错误。';
 $lang['Available languages'] = '可用语言';
 $lang['Default description'] = '预设描述';
 $lang['Default description can not be empty'] = '预设描述不能空置';
+/*TODO*/$lang['extension'] = 'extension';
+/*TODO*/$lang['no extension'] = 'no extension';
 
 ?>
