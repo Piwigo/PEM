@@ -226,6 +226,38 @@ A.screenshot {
   margin-left: 3em;
 }
 
+.extensionButtons {
+  float:right;
+  margin-left:3em;
+}
+.extensionButtons A.screenshot {
+  float: none;
+  margin-left: 0;
+}
+
+.downloadButton {
+  width:154px;
+  margin-bottom:10px;
+  line-height:50px;
+  background-color:#57a50b;
+  text-align:center;
+  color:white;
+  -moz-border-radius:5px;
+}
+.downloadButton A {
+  display:block;
+  color:#eee;
+  font-size:16px;
+  font-weight:bold;
+}
+
+.downloadButton:hover {
+  background-color:#5db10c;
+}
+.downloadButton A:hover {
+  color:#fff;
+}
+
 div.nav_left
 {
   float:left;

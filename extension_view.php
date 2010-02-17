@@ -246,6 +246,10 @@ SELECT id_revision,
           $row['date']
           )
         );
+      $tpl->assign(
+        'download_last_url',
+        'download.php?rid='.$row['id_revision']
+        );
       $last_date_set = true;
     }
 
