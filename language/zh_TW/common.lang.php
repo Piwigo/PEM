@@ -164,4 +164,5 @@ $lang['Default description can not be empty'] = '預設描述不能空置';
 /*TODO*/$lang['extension'] = 'extension';
 /*TODO*/$lang['no extension'] = 'no extension';
 
+$lang['Download'] = '下載';
 ?>

@@ -164,4 +164,6 @@ $lang['Default description can not be empty'] = 'Default description can not be 
 $lang['extension'] = 'extension';
 $lang['no extension'] = 'no extension';
 
+$lang['Download last revision'] = 'Download last revision';
+$lang['Download'] = 'Download';
 ?>

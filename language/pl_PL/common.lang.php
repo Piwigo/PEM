@@ -164,4 +164,5 @@ $lang['Default description can not be empty'] = 'Opis domyślny nie może być p
 /*TODO*/$lang['extension'] = 'extension';
 /*TODO*/$lang['no extension'] = 'no extension';
 
+$lang['Download'] = 'Pobierz';
 ?>

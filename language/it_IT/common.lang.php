@@ -164,4 +164,5 @@ $lang['Default description can not be empty'] = 'Dovete inserire la descrizione 
 /*TODO*/$lang['extension'] = 'extension';
 /*TODO*/$lang['no extension'] = 'no extension';
 
+$lang['Download'] = 'Scaricare';
 ?>

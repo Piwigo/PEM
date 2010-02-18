@@ -164,4 +164,5 @@ $lang['Available languages'] = 'Verfügbare Sprachen';
 /*TODO*/$lang['extension'] = 'extension';
 /*TODO*/$lang['no extension'] = 'no extension';
 
+$lang['Download'] = 'Herunterladen';
 ?>
