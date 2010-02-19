@@ -27,42 +27,25 @@ require_once( $root_path . 'admin/init.inc.php' );
 $tpl->set_filenames(
   array(
     'page' => 'admin/page.tpl',
-    'index' => 'admin/index.tpl'
+    'empty_extensions' => 'admin/empty_extensions.tpl'
   )
 );
 
-// Select the revisions count
-$sql =  '
-SELECT
-    COUNT(id_revision) AS revisions_count
-  FROM '.REV_TABLE.'
-;';
-$req = $db->query($sql);
-$data = $db->fetch_assoc($req);
-  
-$tpl->assign('revisions_count', $data['revisions_count']);
-
 // Are there extension without a single revision?
 $query = '
-SELECT COUNT(*)
+SELECT
+    id_extension,
+    name
   FROM '.EXT_TABLE.'
     LEFT JOIN '.REV_TABLE.' ON idx_extension = id_extension
   WHERE id_revision IS NULL
 ;';
-list($count) = $db->fetch_row($db->query($query));
-if ($count > 0) {
-  $tpl->assign(
-    array(
-      'empty_extensions_count' => $count,
-      'empty_extensions_url' => 'empty_extensions.php',
-      )
-    );
-}
+$tpl->assign('extensions', array_of_arrays_from_query($query));
 
 // +-----------------------------------------------------------------------+
 // |                           html code display                           |
 // +-----------------------------------------------------------------------+
 
-$tpl->assign_var_from_handle('main_content', 'index');
+$tpl->assign_var_from_handle('main_content', 'empty_extensions');
 $tpl->pparse('page');
 ?>
