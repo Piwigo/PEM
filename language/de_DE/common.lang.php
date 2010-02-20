@@ -159,10 +159,10 @@ $lang['SVN revision'] = 'SVN Version';
 $lang['An error occured during SVN export.'] = 'Ein Fehler ist während dem SVN Export aufgetreten.'; 
 
 $lang['Available languages'] = 'Verfügbare Sprachen'; 
-/*TODO*/$lang['Default description'] = 'Default description';
-/*TODO*/$lang['Default description can not be empty'] = 'Default description can not be empty';
-/*TODO*/$lang['extension'] = 'extension';
-/*TODO*/$lang['no extension'] = 'no extension';
+$lang['Default description'] = 'Vorgegebene Beschreibung';
+$lang['Default description can not be empty'] = 'Die vorgegebene Beschreibung kann nicht leergelassen werden';
+$lang['extension'] = 'Erweiterung';
+$lang['no extension'] = 'keine Erweiterung';
 
 $lang['Download'] = 'Herunterladen';
 ?>
