@@ -54,7 +54,7 @@ $lang['Download revision'] = 'Pobierz wersję';
 $lang['Downloads'] = 'Pobrań';
 $lang['Error'] = 'Błąd';
 $lang['expand/collapse all'] = 'rozwiń/zwiń wszystkie';
-$lang['extensions'] = 'rozszerzenia';
+$lang['extensions'] = 'rozszerzeń';
 $lang['Extension informations'] = 'Informacje o rozszerzeniu';
 $lang['Extension successfuly added. Thank you.'] = 'Rozszerzenie dodane pomyślnie. Dziekujemy.';
 $lang['Extension successfuly deleted.'] = 'Rozszerzenie usunięte pomyślnie.';
@@ -161,8 +161,8 @@ $lang['An error occured during SVN export.'] = 'Błąd podczas eksportu SVN.';
 $lang['Available languages'] = 'Dostępne języki';
 $lang['Default description'] = 'Opis domyślny';
 $lang['Default description can not be empty'] = 'Opis domyślny nie może być pusty';
-/*TODO*/$lang['extension'] = 'extension';
-/*TODO*/$lang['no extension'] = 'no extension';
+$lang['extension'] = 'rozszerzenie';
+$lang['no extension'] = 'brak rozszerzeń';
 
 $lang['Download'] = 'Pobierz';
 ?>
