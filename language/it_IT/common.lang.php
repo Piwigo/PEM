@@ -161,8 +161,8 @@ $lang['An error occured during SVN export.'] = 'È sorto un\'errore durante il t
 $lang['Available languages'] = 'Lingue disponibili';
 $lang['Default description'] = 'Descrizione di default';
 $lang['Default description can not be empty'] = 'Dovete inserire la descrizione di default';
-/*TODO*/$lang['extension'] = 'extension';
-/*TODO*/$lang['no extension'] = 'no extension';
+$lang['extension'] = 'estensione';
+$lang['no extension'] = 'nessuna estensione';
 
 $lang['Download'] = 'Scaricare';
 ?>
