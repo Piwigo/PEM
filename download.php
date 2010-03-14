@@ -91,10 +91,49 @@ if (isset($_GET['rid'])) {
     do_error(400, 'Invalid request, revision id must be numeric');
   }
 }
+elseif (isset($_GET['eid'])) {
+  if (!is_numeric($_GET['eid'])) {
+    do_error(400, 'Invalid request, extension id must be numeric');
+  }
+
+  if (isset($_GET['version'])) {
+    $version_id_of = array_flip(get_version_name_of());
+    if (isset($version_id_of[ $_GET['version'] ])) {
+      $version = $version_id_of[ $_GET['version'] ];
+    }
+    else {
+      do_error(400, 'Invalid request, this version does not exist');
+    }
+
+    $get_rid_query = '
+SELECT
+    MAX(id_revision)
+  FROM '.REV_TABLE.'
+    JOIN '.COMP_TABLE.' c ON c.idx_revision = id_revision
+  WHERE idx_extension = '.$_GET['eid'].'
+    AND idx_version = '.$version.'
+;';
+  }
+  else {
+    // we provide the most recent revision of the extension, that is
+    // compatible the given version
+    $get_rid_query = '
+SELECT
+    MAX(id_revision)
+  FROM '.REV_TABLE.'
+  WHERE idx_extension = '.$_GET['eid'].'
+;';
+  }
+
+  list($page['revision_id']) = $db->fetch_row($db->query($get_rid_query));
+}
 else {
   do_error(400, 'Invalid request, missing revision id');
 }
 
+if (empty($page['revision_id'])) {
+  do_error(400, 'Invalid request, no revision matches your request');
+}
 $revision_infos_of = get_revision_infos_of(array($page['revision_id']));
 
 if (count($revision_infos_of) == 0)
