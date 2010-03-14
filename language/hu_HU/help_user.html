@@ -1,0 +1,132 @@
+<h2>Útmutató munkatársaknak</h2>
+<br>
+<div class="row">
+
+  <div id="add_extension" class="changelogRevision">
+
+    <div
+      id="add_extension_header"
+      class="changelogRevisionHeaderCollapsed"
+      onclick="revToggleDisplay('add_extension_header', 'add_extension_content')"
+    >
+      <span class="revisionTitle">Bővítmény hozzáadása</span>
+    </div>
+
+    <div
+      id="add_extension_content"
+      class="changelogRevisionContent"
+      style="display:none"
+    >
+<p>Hogy közzétegye munkáját, először létre kell hoznia a bővítményt. Kattintson a <a href="extension_add.php">Bővítmény hozzáadása</a> menüpontra.</p>
+
+<img class="help_user" src="template/images/help/cat.jpg" alt=""/>
+<ol>
+  <li>Adjon nevet a bővítménynek</li>
+  <li>Válasszon egy vagy több kategóriát</li>
+  <li>Készítse el a leírást. Többnyelvű jelölő áll rendelkezésére, így a látogató el tudja olvasni a tartalmát a saját nyelvén.</li>
+</ol>
+
+<p>A bővítmény oldalán megjelenő gombok számos lehetőséget biztosítanak.</p>
+
+<img class="help_user" src="template/images/help/rev1.jpg" alt=""/>
+
+<ol>
+  <li>szerkesztheti a bővítményt</li>
+  <li>törölheti a bővítményt</li>
+  <li>kezelhet külső hivatkozásokat</li>
+  <li>hozzáadhat képet, hogy bemutassa a bővítményt</li>
+  <li>hozzáadhat változatot</li>
+</ol>
+    </div>
+  </div> <!-- add_extension -->
+
+  <div id="add_revision" class="changelogRevision">
+
+    <div
+      id="add_revision_header"
+      class="changelogRevisionHeaderCollapsed"
+      onclick="revToggleDisplay('add_revision_header', 'add_revision_content')"
+    >
+      <span class="revisionTitle">Változat hozzáadása</span>
+    </div>
+
+    <div
+      id="add_revision_content"
+      class="changelogRevisionContent"
+      style="display:none"
+    >
+<p>Minden egyes változat a bővítmény egy új verziója, így több változat érhető el egy bővítményhez. Hozzon létre egy új változatot, kattintson a "Változat hozzáadása" gombra az űrlap megjelenítéséhez:</p>
+
+<img class="help_user" src="template/images/help/rev2.jpg" alt=""/>
+
+<ol>
+  <li>Írja be a változat számát, például "2.0"</li>
+  <li>Válassza ki a megfelelő ZIP archívumot</li>
+  <li>Válassza ki a listából mely galéria verziókkal kompatibilis a bővítmény új változata. Például ha a bővítmény neve "Piwigo" és a bővítmény "dinamikus menü", meg kell adni, hogy a "dinamikus menü" "2.0" változata a "Piwigo" mely verzióival kompatibilis: 2.0.0, 2.0.1 és 2.0.2.</li>
+  <li>Sorolja fel az új verziónál történt változásokat. Többnyelvű jelölő áll rendelkezésére, így a látogató el tudja olvasni a tartalmát a saját nyelvén.</li>
+</ol>
+    </div>
+  </div> <!-- add_revision -->
+
+  <div id="mod_revision" class="changelogRevision">
+
+    <div
+      id="mod_revision_header"
+      class="changelogRevisionHeaderCollapsed"
+      onclick="revToggleDisplay('mod_revision_header', 'mod_revision_content')"
+    >
+      <span class="revisionTitle">Változat javítása</span>
+    </div>
+
+    <div
+      id="mod_revision_content"
+      class="changelogRevisionContent"
+      style="display:none"
+    >
+		<img class="help_user" src="template/images/help/rev3.jpg" alt=""/>
+	<ol>
+		<li>Változat módosítás</li>
+		<li>Változat törlés</li>
+	</ol>
+
+<b>Ne feledje:</b>
+	<ul>
+		<li>A mentett változatot nem lehet módosítani. Ha hiba van a mentett változatban, törölni kell, majd egy újat létrehozni.</li>
+		<li>Ha a hibás változatot már több alkalommal letöltötték hozzon létre egy új változatot, ne a régi sorszámát használja. Ellenkező esetben a felhasználó nem tudja eldönteni, hogy a régi vagy a javított változat van használatban.</li>
+	</ul>
+    </div>
+  </div> <!-- mod_revision -->
+
+  <div id="multilingual" class="changelogRevision">
+
+    <div
+      id="multilingual_header"
+      class="changelogRevisionHeaderCollapsed"
+      onclick="revToggleDisplay('multilingual_header', 'multilingual_content')"
+    >
+      <span class="revisionTitle">Többnyelvű leírások</span>
+    </div>
+
+    <div
+      id="multilingual_content"
+      class="changelogRevisionContent"
+      style="display:none"
+    >
+
+<p>Többnyelvű leírások esetén be kell szúrni a [lang=xx] és [/lang] jelölőket, ahol xx a nyelvi kód (például, fr, en, es, it, etc.)
+Van 2 speciális jelölő: [lang=default] és [lang=all]</p>
+
+<p><strong>Példa</strong>:</p>
+<textarea cols="80" rows="10">[lang=en]The description, in english[/lang]
+[lang=fr]La description en français[/lang]
+[lang=ru]Описание на русском языке[/lang]
+[lang=zh]说明在中国[/lang]
+[lang=es]Descripción en español[/lang]
+
+[lang=all]megjeleníti a leírást, függetlenül a felhasználó nyelvétől[/lang]</textarea>
+
+<p>Ha a leírás nem érhető el a látogató által választott nyelven, a PEM az alapértelmezett angol nyelvet használja.</p>
+    </div>
+  </div> <!-- multilingual -->
+
+</div> <!-- row -->
