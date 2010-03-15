@@ -856,10 +856,10 @@ function get_download_of_extension($extension_ids) {
     return array();
   }
 
-  $download_of_extension = array();
+  $downloads_of_extension = array();
 
   foreach ($extension_ids as $id) {
-    $download_of_extension[$id] = 0;
+    $downloads_of_extension[$id] = 0;
   }
   
   $query = '
@@ -887,10 +887,10 @@ function get_download_of_revision($revision_ids) {
     return array();
   }
 
-  $download_of_revision = array();
+  $downloads_of_revision = array();
 
   foreach ($revision_ids as $id) {
-    $download_of_revision[$id] = 0;
+    $downloads_of_revision[$id] = 0;
   }
   
   $query = '
