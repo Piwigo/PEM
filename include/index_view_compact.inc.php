@@ -87,7 +87,7 @@ foreach ($revision_ids as $revision_id)
       'id' => $revision_id,
       'extension_id' => $extension_id,
       'extension_name' => $extension_infos_of[$extension_id]['name'],
-      'about' => get_user_language($extension_infos_of[$extension_id]['description']),
+      'about' => $extension_infos_of[$extension_id]['description'],
       'name' => $revision_infos_of[$revision_id]['version'],
       'description' => nl2br(
         htmlspecialchars(

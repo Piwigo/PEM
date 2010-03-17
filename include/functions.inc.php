@@ -965,7 +965,7 @@ function fix_magic_quotes($var = NULL, $sybase = NULL) {
     }
 
     // disable magic_quotes_runtime
-    set_magic_quotes_runtime(0);
+    @set_magic_quotes_runtime(0);
     return TRUE;
   }
 
@@ -1029,42 +1029,6 @@ function pun_setcookie($user_id, $password_hash)
       $cookie_secure
       );
   }
-}
-
-/* *
-* Return description traduction
-*/
-function get_user_language($desc)
-{
-  global $conf;
-
-  $languages = array(
-    @substr($_SESSION['language']['code'], 0, 2),
-    'default',
-    substr($conf['default_language'], 0, 2)
-  );
-
-  foreach ($languages as $language)
-  {
-    if (strpos(strtolower($desc), '[lang=' . $language . ']') !== false)
-    {
-      $patterns[] = '#(^|\[/lang\])(.*?)(\[lang=(' . $language . '|all)\]|$)#is';
-      $replacements[] = '';
-      $patterns[] = '#\[lang=(' . $language . '|all)\](.*?)\[/lang\]#is';
-      $replacements[] = '\\1';
-
-      return preg_replace($patterns, $replacements, $desc);
-    }
-  }
-
-  // tag not found for selected language
-  // we take all outside language tags
-  $patterns[] = '#\[lang=all\](.*?)\[/lang\]#is';
-  $replacements[] = '\\1';
-  $patterns[] = '#\[lang=.*?\].*?\[/lang\]#is';
-  $replacements[] = '';
-
-  return preg_replace($patterns, $replacements, $desc);
 }
 
 /**
@@ -1139,16 +1103,26 @@ function get_categories_of_extension($extension_ids) {
   $query = '
 SELECT
     id_category,
-    name,
+    c.name AS default_name,
+    ct.name,
     idx_extension
-  FROM '.EXT_CAT_TABLE.'
-    JOIN '.CAT_TABLE.' ON id_category = idx_category
+  FROM '.EXT_CAT_TABLE.' AS ec
+    JOIN '.CAT_TABLE.' AS c
+      ON id_category = ec.idx_category
+    LEFT JOIN '.CAT_TRANS_TABLE.' AS ct
+      ON id_category = ct.idx_category
+      AND ct.idx_language = '.$_SESSION['language']['id'].'
   WHERE idx_extension IN ('.implode(',', $extension_ids).')
 ;';
 
   $result = $db->query($query);
   while ($row = $db->fetch_assoc($result)) {
     $id_extension = $row['idx_extension'];
+
+    if (empty($row['name']))
+    {
+      $row['name'] = $row['default_name'];
+    }
     
     if (!isset($cat_list_for[$id_extension])) {
       $cat_list_for[$id_extension] = array();
@@ -1159,7 +1133,7 @@ SELECT
       sprintf(
         '<a href="index.php?cid=%u">%s</a>',
         $row['id_category'],
-        get_user_language($row['name'])
+        $row['name']
         )
       );
   }

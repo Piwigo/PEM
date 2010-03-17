@@ -111,21 +111,21 @@ function get_languages_from_table()
   return $languages;
 }
 
-function get_converted_translations($type, $table, $trans_table)
+function get_converted_translations($type, $column, $table, $trans_table)
 {
   global $db, $conf;
 
   $languages = get_languages_from_table();
   $default_language = substr($conf['default_language'], 0, 2);
 
-  $query = 'SELECT id_'.$type.', description FROM '.$table.';';
+  $query = 'SELECT id_'.$type.', '.$column.' FROM '.$table.';';
   $result = $db->query($query);
   $translations = array();
 
   while ($row = mysql_fetch_assoc($result))
   {
     $id = $row['id_'.$type];
-    $desc = $row['description'];
+    $desc = $row[$column];
 
     $pattern = '#\[lang=(.*?)\](.*?)\[/lang\]#is';
     preg_match_all($pattern, $desc, $matches, PREG_SET_ORDER);
@@ -187,7 +187,7 @@ function get_converted_translations($type, $table, $trans_table)
       {
         $query = '
 UPDATE '.$table.'
-  SET description = "'.addslashes(trim($desc)).'"
+  SET '.$column.' = "'.addslashes(trim($desc)).'"
   WHERE id_'.$type.' = '.$id.'
 ;';
         $db->query($query);
@@ -196,7 +196,7 @@ UPDATE '.$table.'
       else
       {
         $query = '
-INSERT INTO '.$trans_table.' (`idx_'.$type.'`, `idx_language`, `description`)
+INSERT INTO '.$trans_table.' (`idx_'.$type.'`, `idx_language`, `'.$column.'`)
   VALUES ('.$id.', '.$id_lang.', "'.addslashes(trim($desc)).'")
 ;';
         $db->query($query);
@@ -285,7 +285,7 @@ CREATE TABLE `'.EXT_TRANS_TABLE.'` (
   array_push($upgrade_infos, 'Extensions translations table has been created');
 
   // Get descriptions and find translations
-  $i = get_converted_translations('extension', EXT_TABLE, EXT_TRANS_TABLE);
+  $i = get_converted_translations('extension', 'description', EXT_TABLE, EXT_TRANS_TABLE);
   array_push($upgrade_infos, '- '.$i[0].' row(s) updated in extensions table');
   array_push($upgrade_infos, '- '.$i[1].' row(s) inserted in extensions translations table');
 }
@@ -313,9 +313,38 @@ CREATE TABLE `'.REV_TRANS_TABLE.'` (
   array_push($upgrade_infos, 'Revisions translations table has been created');
 
   // Get descriptions and find translations
-  $i = get_converted_translations('revision', REV_TABLE, REV_TRANS_TABLE);
+  $i = get_converted_translations('revision', 'description', REV_TABLE, REV_TRANS_TABLE);
   array_push($upgrade_infos, '- '.$i[0].' row(s) updated in revisions table');
   array_push($upgrade_infos, '- '.$i[1].' row(s) inserted in revisions translations table');
+}
+
+$query = 'SHOW TABLES LIKE "'.CAT_TRANS_TABLE.'";';
+$result = $db->query($query);
+if (!mysql_fetch_row($result))
+{
+  // Add column idx_default_language
+  $query = 'ALTER TABLE '.CAT_TABLE.' ADD `idx_language` INT( 11 ) NOT NULL AFTER `description` ';
+  $db->query($query);
+  $query = 'UPDATE '.CAT_TABLE.' SET idx_language = '.$languages[substr($conf['default_language'], 0, 2)].';';
+  $db->query($query);
+
+  // Create translation table
+  $query = '
+CREATE TABLE `'.CAT_TRANS_TABLE.'` (
+  `idx_category` int(11) NOT NULL,
+  `idx_language` int(11) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `description` text default NULL,
+  PRIMARY KEY  (`idx_category`, `idx_language`)
+) DEFAULT CHARSET=utf8
+;';
+  $db->query($query);
+  array_push($upgrade_infos, 'Categories translations table has been created');
+
+  // Get descriptions and find translations
+  $i = get_converted_translations('category', 'name', CAT_TABLE, CAT_TRANS_TABLE);
+  array_push($upgrade_infos, '- '.$i[0].' row(s) updated in categories table');
+  array_push($upgrade_infos, '- '.$i[1].' row(s) inserted in categories translations table');
 }
 
 // +-----------------------------------------------------------------------+

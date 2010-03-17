@@ -86,8 +86,8 @@ foreach ($revisions as $revision)
         $revision['id_revision']
         ),
       'ext_author' => $author['username'],
-      'ext_description' => get_user_language($extension['description']),
-      'description' => get_user_language($revision['description']),
+      'ext_description' => $extension['description'],
+      'description' => $revision['description'],
       )
     );
 }

@@ -38,8 +38,12 @@ $nb_ext_of_category = simple_hash_from_query($query, 'idx_category', 'counter');
 $query = '
 SELECT
     id_category,
-    name
-  FROM '.CAT_TABLE.'
+    c.name AS default_name,
+    ct.name    
+  FROM '.CAT_TABLE.' AS c
+  LEFT JOIN '.CAT_TRANS_TABLE.' AS ct
+    ON c.id_category = ct.idx_category
+    AND ct.idx_language = '.$_SESSION['language']['id'].'
   ORDER BY name ASC
 ;';
 $req = $db->query($query);
@@ -47,6 +51,10 @@ $req = $db->query($query);
 $categories = array();
 while ($data = $db->fetch_assoc($req))
 {
+  if (empty($data['name']))
+  {
+    $data['name'] = $data['default_name'];
+  }
   array_push($categories, $data);
 }
 
@@ -71,7 +79,7 @@ foreach($categories as $cat)
       'selected' => $selected,
       'name' => sprintf(
         '%s (%s)',
-        get_user_language($cat['name']),
+        $cat['name'],
         isset($nb_ext_of_category[$id])
         ? $nb_ext_of_category[$id] > 1
           ? $nb_ext_of_category[$id].' '.l10n('extensions')

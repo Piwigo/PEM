@@ -11,8 +11,18 @@ CREATE TABLE `pem_categories` (
   `idx_parent` int(11) default NULL,
   `name` varchar(255) default NULL,
   `description` text NOT NULL,
+  `idx_language` int(11) NOT NULL,
   PRIMARY KEY  (`id_category`)
 )   DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `pem_categories_translations`;
+CREATE TABLE `pem_categories_translations` (
+  `idx_category` int(11) NOT NULL,
+  `idx_language` int(11) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `description` text default NULL,
+  PRIMARY KEY  (`idx_category`, `idx_language`)
+) DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `pem_download_log`;
 CREATE TABLE `pem_download_log` (

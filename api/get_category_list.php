@@ -34,13 +34,21 @@ $nb_ext_of_category = simple_hash_from_query($query, 'idx_category', 'counter');
 $query = '
 SELECT
     id_category AS id,
-    name
-  FROM '.CAT_TABLE.'
+    c.name AS default_name,
+    ct.name    
+  FROM '.CAT_TABLE.' AS c
+  LEFT JOIN '.CAT_TRANS_TABLE.' AS ct
+    ON c.id_category = ct.idx_category
+    AND ct.idx_language = '.$_SESSION['language']['id'].'
   ORDER BY name ASC
 ;';
 $output = array_of_arrays_from_query($query);
 foreach ($output as $i => $category) {
-  $output[$i]['name'] = get_user_language($output[$i]['name']);
+  if (empty($output[$i]['name']))
+  {
+    $output[$i]['name'] = $output[$i]['default_name'];
+  }
+  unset($output[$i]['default_name']);
   
   $output[$i]['counter'] = 0;
   if (isset($nb_ext_of_category[ $category['id'] ])) {

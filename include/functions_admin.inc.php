@@ -34,6 +34,13 @@ DELETE
   WHERE id_category = '.$category_id.'
 ;';
   $db->query($query);
+
+  $query = '
+DELETE
+  FROM '.CAT_TRANS_TABLE.'
+  WHERE idx_category = '.$category_id.'
+;';
+  $db->query($query);
 }
 
 function delete_version($version_id) {

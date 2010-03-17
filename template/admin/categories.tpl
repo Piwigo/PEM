@@ -23,11 +23,19 @@
   {if isset($category_id)}
     <input type="hidden" name="id" value="{$category_id}" />
   {/if}
-      <table>
+      <table style="text-align: center;">
         <tr>
+          <th>Language</th>
           <th>Name</th>
-          <td><textarea rows="4" cols="50" name="name">{if isset($name)}{$name}{/if}</textarea></td>
+          <th>Default</th>
         </tr>
+        {foreach from=$languages item=language}
+        <tr>
+          <td>{$language.name}</td>
+          <td><input type="text" name="name[{$language.id}]" size="35" maxlength="255" value="{if isset($name[$language.id])}{$name[$language.id]}{/if}" /></td>
+          <td><input type="radio" name="default_name" value="{$language.id}" {if $default_name == $language.id}checked="checked"{/if}></td>
+        </tr>
+        {/foreach}
       </table>
       
       <div>

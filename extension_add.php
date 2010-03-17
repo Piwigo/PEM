@@ -205,9 +205,14 @@ DELETE
 
 // Get the category listing
 $query = '
-SELECT name,
-       id_category
-  FROM '.CAT_TABLE.'
+SELECT
+    id_category,
+    c.name  AS default_name,
+    ct.name    
+  FROM '.CAT_TABLE.' AS c
+  LEFT JOIN '.CAT_TRANS_TABLE.' AS ct
+    ON c.id_category = ct.idx_category
+    AND ct.idx_language = '.$_SESSION['language']['id'].'
   ORDER BY name ASC
 ;';
 $req = $db->query($query);
@@ -215,6 +220,10 @@ $req = $db->query($query);
 $cats = array();
 while($data = $db->fetch_assoc($req))
 {
+  if (empty($data['name']))
+  {
+    $data['name'] = $data['default_name'];
+  }
   array_push($cats, $data);
 }
 
@@ -284,7 +293,7 @@ foreach($cats as $cat)
   array_push(
     $tpl_extension_categories,
     array(
-      'name' => get_user_language($cat['name']),
+      'name' => $cat['name'],
       'value' => $cat['id_category'],
       'checked' =>
       in_array($cat['id_category'], $selected_categories)
