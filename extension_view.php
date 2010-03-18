@@ -175,7 +175,7 @@ while ($row = $db->fetch_array($result))
     array(
       'name' => $row['name'],
       'url' => $row['url'],
-      'description' => get_user_language($row['description']),
+      'description' => $row['description'],
       )
     );
 }

@@ -30,7 +30,7 @@ $tpl->assign(
     'xml_header' => '<?xml version="1.0" encoding="utf-8"?>',
     'title' => $conf['page_title'],
     'website_url' => $conf['website_url'],
-    'description' => get_user_language($conf['website_description']),
+    'description' => $conf['website_description'],
     'language' => $conf['website_language'],
     'webmaster_email' => $conf['webmaster_email'],
     )
