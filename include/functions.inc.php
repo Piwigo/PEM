@@ -1464,4 +1464,83 @@ SELECT rv.idx_revision,
 
   return $languages_of;
 }
+
+function get_current_language()
+{
+  global $db, $conf;
+  
+  $language = null;
+  
+  $interface_languages = get_interface_languages();
+  
+  if (isset($_GET['lang']))
+  {
+    $language = @$interface_languages[$_GET['lang']];
+  }
+  
+  if (empty($language) or !is_array($language))
+  {
+    $language = $interface_languages[$conf['default_language']];
+    
+    if ($conf['get_browser_language'])
+    {
+      $browser_language = @substr($_SERVER["HTTP_ACCEPT_LANGUAGE"],0,2);
+      foreach ($interface_languages as $language)
+      {
+        if (substr($language['code'], 0, 2) == $browser_language)
+        {
+          $language = $interface_languages[$language['code']];
+          break;
+        }
+      }
+    }
+  }
+
+  return $language;
+}
+
+function get_current_language_id()
+{
+  $language = null;
+  
+  if (isset($_SESSION['language']))
+  {
+    $language = $_SESSION['language'];
+  }
+  else
+  {
+    $language = get_current_language();
+  }
+  
+  return $language['id'];
+}
+
+function get_interface_languages()
+{
+  global $db, $conf, $cache;
+
+  if (isset($cache['interface_languages']))
+  {
+    return $cache['interface_languages'];
+  }
+  
+  $query = '
+SELECT id_language AS id,
+       code,
+       name
+  FROM '.LANG_TABLE.'
+  WHERE interface = "true"
+  ORDER BY name
+;';
+  $result = $db->query($query);
+  $interface_languages = array();
+  while ($row = mysql_fetch_assoc($result))
+  {
+    $interface_languages[$row['code']] = $row;
+  }
+
+  $cache['interface_languages'] = $interface_languages;
+
+  return $cache['interface_languages'];
+}
 ?>
