@@ -43,7 +43,7 @@ SELECT
   FROM '.CAT_TABLE.' AS c
   LEFT JOIN '.CAT_TRANS_TABLE.' AS ct
     ON c.id_category = ct.idx_category
-    AND ct.idx_language = '.get_current_language_id().'
+    AND ct.idx_language = \''.get_current_language_id().'\'
   ORDER BY name ASC
 ;';
 $req = $db->query($query);

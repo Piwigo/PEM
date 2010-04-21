@@ -47,7 +47,13 @@ CREATE TABLE  `'.LANG_TABLE.'` (
   KEY `languages_i3` (`extensions`)
 )  DEFAULT CHARSET=utf8;';
   $db->query($query);
-
+  array_push($upgrade_infos, 'Languages table has been created');
+}
+$query = 'SELECT COUNT(*) FROM '.LANG_TABLE.';';
+$result = $db->query($query);
+$row = mysql_fetch_row($result);
+if($row[0] == 0)
+{
   // Get dir languages
   $dir = opendir($root_path.'language');
   $languages = array();
@@ -63,7 +69,7 @@ CREATE TABLE  `'.LANG_TABLE.'` (
   }
   closedir($dir);
   @asort($languages);
-  array_push($upgrade_infos, 'Languages table has been created');
+  array_push($upgrade_infos, 'Languages table has been populated');
 
   // Add new languages to DB
   if (!empty($languages))
