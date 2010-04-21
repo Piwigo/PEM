@@ -206,8 +206,8 @@ if (isset($_POST['submit_add']))
   // $type == 3 means PNG
   if (!in_array($type, array(2, 3)))
   {
-    message_die('You can only upload PNG and JPEG files as screenshot.');
     unlink($temp_name);
+    message_die('You can only upload PNG and JPEG files as screenshot.');
   }
 
   $screenshot_filename = get_extension_screenshot_src($page['extension_id']);
