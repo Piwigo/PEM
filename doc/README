@@ -5,8 +5,8 @@
 http://home.gna.org/pem
 
 PEM is an extension manager for a given software. PEM let software users
-contribute by sharing their extensions: template, language pack, MOD,
-tools... PEM works with PHP and MySQL.
+contribute by sharing their extensions: templates, language packs, MODs,
+plugins, tools, etc. PEM works with PHP and MySQL.
 
 PEM originally stands for PhpWebGallery Extension Manager.
 
@@ -15,10 +15,31 @@ Installation
 
 1. extract files from the archive
 
-2. place de source files on your website in the directory of your choice
+2. place the source files on your website in the directory of your choice
    ("extensions" for example)
 
-TODO...
+3. create the MySQL database (and optionally, a separate database user)
+
+4. edit include/config_default.inc.php, setting the db_params to the
+   correct database connection information
+
+5. using the mysql client (or a web interface such as phpMyAdmin),
+   create the tables, e.g.,
+
+	mysql> source extensions/install/pem.sql
+
+6. from your browser, go to the pem folder (e.g., "http://mysite/extensions")
+   and register a user; you'll be logged in automatically upon successful
+   registration
+
+7. edit include/config_default.inc.php, adding '1' to the admin_users array
+   (if you registered more than one user, lookup the corresponding id_user
+    in the pem_users table)
+
+8. from your browser, run the upgrade script, for example:
+
+	http://mysite/extensions/install/upgrade.php
+
 
 How to start
 ============
