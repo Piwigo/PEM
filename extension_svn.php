@@ -83,7 +83,7 @@ if (isset($_POST['submit']))
   }
   else
   {
-    if (preg_match('/[^a-z0-9_]/i', $_POST['root_dir']))
+    if (preg_match('/[^a-z0-9_-]/i', $_POST['root_dir']))
     {
       message_die('Characters not allowed in archive root directory.');
     }
