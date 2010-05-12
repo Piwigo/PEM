@@ -120,7 +120,7 @@ function resize_picture(
     $original_height
     );
 
-  imagejpeg($destination_image, $destination_filename);
+  imagejpeg($destination_image, $destination_filename, 95);
   
   // freeing memory ressources
   imagedestroy($source_image);
