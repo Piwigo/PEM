@@ -18,7 +18,7 @@
 // | USA.                                                                  |
 // +-----------------------------------------------------------------------+
 
-$lang['About'] = 'Descrzione';
+$lang['About'] = 'Descrizione';
 $lang['Add/Modify an extension'] = 'Aggiungere/modificare un\'estensione';
 $lang['Add a link'] = 'Aggiungere un link';
 $lang['Add a revision'] = 'Aggiungere una revisione';
@@ -86,7 +86,7 @@ $lang['Most recent extensions'] = 'Ultime estensioni';
 $lang['My extensions'] = 'Le mie estensioni';
 $lang['My personnal homepage'] = 'Pagina personale';
 $lang['Name'] = 'Nome';
-$lang['news feed'] = 'Filo RSS';
+$lang['news feed'] = 'Flusso RSS';
 $lang['next'] = 'Successiva';
 $lang['No account?'] = 'Nessun\' conto?';
 $lang['No extension match your filter'] = 'Nessun\' estensione corrisponde al vostro filtro';
