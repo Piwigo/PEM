@@ -1477,6 +1477,10 @@ function get_current_language()
   {
     $language = @$interface_languages[$_GET['lang']];
   }
+  else if (isset($_SESSION['language']))
+  {
+    $language = $_SESSION['language'];
+  }
   
   if (empty($language) or !is_array($language))
   {
@@ -1485,11 +1489,11 @@ function get_current_language()
     if ($conf['get_browser_language'])
     {
       $browser_language = @substr($_SERVER["HTTP_ACCEPT_LANGUAGE"],0,2);
-      foreach ($interface_languages as $language)
+      foreach ($interface_languages as $interface_language)
       {
-        if (substr($language['code'], 0, 2) == $browser_language)
+        if (substr($interface_language['code'], 0, 2) == $browser_language)
         {
-          $language = $interface_languages[$language['code']];
+          $language = $interface_languages[$interface_language['code']];
           break;
         }
       }

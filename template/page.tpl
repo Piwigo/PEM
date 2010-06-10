@@ -117,7 +117,7 @@
     </div> <!-- overall -->
     
     <div id="footer">
-      <a href="rss.php?lang={$lang}" title="notification feed">{'news feed'|@translate}</a>
+      <a href="rss.php?lang={$user_language}" title="notification feed">{'news feed'|@translate}</a>
       - {'page generated in %s'|@translate|sprintf:$generation_time}
       - {'powered by'|@translate} {$subversion_revision}
     </div> <!-- footer -->
