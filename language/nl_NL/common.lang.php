@@ -101,7 +101,7 @@ $lang['powered by'] = 'powered by <a href="https://gna.org/projects/pem/">PEM</a
 $lang['prev'] = 'Vorige';
 $lang['Problem during upload'] = 'Probleem tijdens de upload';
 $lang['Rank'] = 'Rang';
-$lang['Register'] = 'Register';
+$lang['Register'] = 'Registratie';
 $lang['Related links'] = 'Gerelateerde links';
 $lang['Released on'] = 'Uitgebracht op';
 $lang['Reset'] = 'Reset';
