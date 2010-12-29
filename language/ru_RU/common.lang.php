@@ -101,7 +101,7 @@ $lang['powered by'] = 'обеспечивается <a href="https://gna.org/pro
 $lang['prev'] = 'Пред.';
 $lang['Problem during upload'] = 'Проблема во время загрузки';
 $lang['Rank'] = 'Ранг';
-$lang['Register'] = 'Зрагистрируйтесь';
+$lang['Register'] = 'Зарегистрируйтесь';
 $lang['Related links'] = 'Связанные ссылки';
 $lang['Released on'] = 'Выпущено';
 $lang['Reset'] = 'Сброс';
