@@ -389,7 +389,7 @@ CREATE TABLE `'.CAT_TRANS_TABLE.'` (
 $columns = get_columns_of(array(REV_TABLE));
 if (!in_array('nb_downloads', $columns[REV_TABLE]))
 {
-  $query = 'ALTER TABLE '.REV_TABLE.' add column nb_downloads int';
+  $query = 'ALTER TABLE '.REV_TABLE.' add column nb_downloads int not null default 0';
   $db->query($query);
 
   $updates = array();
