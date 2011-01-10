@@ -102,6 +102,35 @@ $languages = get_languages_from_table();
 // |                              Functions                                |
 // +-----------------------------------------------------------------------+
 
+/**
+ * list all columns of each given table
+ *
+ * @return array of array
+ */
+function get_columns_of($tables)
+{
+  global $db;
+  
+  $columns_of = array();
+
+  foreach ($tables as $table)
+  {
+    $query = '
+DESC '.$table.'
+;';
+    $result = $db->query($query);
+
+    $columns_of[$table] = array();
+
+    while ($row = mysql_fetch_row($result))
+    {
+      array_push($columns_of[$table], $row[0]);
+    }
+  }
+
+  return $columns_of;
+}
+
 function get_languages_from_table()
 {
   global $db;
@@ -351,6 +380,43 @@ CREATE TABLE `'.CAT_TRANS_TABLE.'` (
   $i = get_converted_translations('category', 'name', CAT_TABLE, CAT_TRANS_TABLE);
   array_push($upgrade_infos, '- '.$i[0].' row(s) updated in categories table');
   array_push($upgrade_infos, '- '.$i[1].' row(s) inserted in categories translations table');
+}
+
+// +-----------------------------------------------------------------------+
+// | Download aggregation                                                  |
+// +-----------------------------------------------------------------------+
+
+$columns = get_columns_of(array(REV_TABLE));
+if (!in_array('nb_downloads', $columns[REV_TABLE]))
+{
+  $query = 'ALTER TABLE '.REV_TABLE.' add column nb_downloads int';
+  $db->query($query);
+
+  $updates = array();
+  
+  $query = '
+SELECT
+    idx_revision AS id_revision,
+    COUNT(*) AS nb_downloads
+  FROM '.DOWNLOAD_LOG_TABLE.'
+  GROUP BY idx_revision
+;';
+  $result = $db->query($query);
+  while ($row = $db->fetch_assoc($result))
+  {
+    array_push($updates, $row);
+  }
+
+  mass_updates(
+    REV_TABLE,
+    array(
+      'primary' => array('id_revision'),
+      'update'  => array('nb_downloads'),
+      ),
+    $updates
+    );
+
+  array_push($upgrade_infos, '- new columns '.REV_TABLE.'.nb_downloads');
 }
 
 // +-----------------------------------------------------------------------+

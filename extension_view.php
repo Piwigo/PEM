@@ -71,23 +71,17 @@ $categories_of_extension = get_categories_of_extension(
 // download statistics
 $query = '
 SELECT
-    idx_revision AS revision_id,
-    count(*) AS counter
-  FROM '.DOWNLOAD_LOG_TABLE.'
-  WHERE idx_revision IN (
-    SELECT
-        id_revision
-      FROM '.REV_TABLE.'
-      WHERE idx_extension = '.$page['extension_id'].'
-  )
-  GROUP BY idx_revision
+    id_revision,
+    nb_downloads
+  FROM '.REV_TABLE.'
+  WHERE idx_extension = '.$page['extension_id'].'
 ;';
 $result = $db->query($query);
 $extension_downloads = 0;
 $downloads_of_revision = array();
 while ($row = $db->fetch_assoc($result)) {
-  $extension_downloads += $row['counter'];
-  $downloads_of_revision[ $row['revision_id'] ] = $row['counter'];
+  $extension_downloads += $row['nb_downloads'];
+  $downloads_of_revision[ $row['id_revision'] ] = $row['nb_downloads'];
 }
 
 $tpl->assign(

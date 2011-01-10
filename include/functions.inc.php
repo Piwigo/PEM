@@ -847,6 +847,13 @@ INSERT INTO '.DOWNLOAD_LOG_TABLE.'
   )
 ;';
   $db->query($query);
+
+  $query = '
+UPDATE '.REV_TABLE.'
+  SET nb_downloads = nb_downloads + 1
+  WHERE id_revision = '.$revision_id.'
+;';
+  $db->query($query);
 }
 
 function get_download_of_extension($extension_ids) {
@@ -861,20 +868,19 @@ function get_download_of_extension($extension_ids) {
   foreach ($extension_ids as $id) {
     $downloads_of_extension[$id] = 0;
   }
-  
+
   $query = '
 SELECT
     idx_extension AS extension_id,
-    count(*) AS counter
-  FROM '.DOWNLOAD_LOG_TABLE.'
-    JOIN '.REV_TABLE.' ON id_revision = idx_revision
+    SUM(nb_downloads) AS sum_downloads
+  FROM '.REV_TABLE.'
   WHERE idx_extension IN ('.implode(',', $extension_ids).')
   GROUP BY idx_extension
 ;';
 
   $result = $db->query($query);
   while ($row = $db->fetch_assoc($result)) {
-    $downloads_of_extension[ $row['extension_id'] ] = $row['counter'];
+    $downloads_of_extension[ $row['extension_id'] ] = $row['sum_downloads'];
   }
 
   return $downloads_of_extension;
@@ -892,19 +898,18 @@ function get_download_of_revision($revision_ids) {
   foreach ($revision_ids as $id) {
     $downloads_of_revision[$id] = 0;
   }
-  
+
   $query = '
 SELECT
-    idx_revision,
-    COUNT(*) AS counter
-  FROM '.DOWNLOAD_LOG_TABLE.'
-  WHERE idx_revision IN ('.implode(',', $revision_ids).')
-  GROUP BY idx_revision
+    id_revision,
+    nb_downloads
+  FROM '.REV_TABLE.'
+  WHERE id_revision IN ('.implode(',', $revision_ids).')
 ;';
   $result = $db->query($query);
   
   while ($row = $db->fetch_assoc($result)) {
-    $downloads_of_revision[ $row['idx_revision'] ] = $row['counter'];
+    $downloads_of_revision[ $row['id_revision'] ] = $row['nb_downloads'];
   }
 
   return $downloads_of_revision;
