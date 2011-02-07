@@ -32,6 +32,7 @@ $lang['Author'] = 'Auteur';
 $lang['Automatic redirection in %s seconds.'] = 'Redirection automatique dans %s secondes.';
 $lang['Back to previous page'] = 'Revenir à la page précédente';
 $lang['Can only resize PNG and JPEG files'] = 'Redimensionnement uniquement possible pour les fichiers PNG et JPEG';
+$lang['CAPTCHA_error'] = 'Les mots entrés ne correspondent pas. Veuillez recommencer afin de prouver votre humanité';
 $lang['Categories'] = 'Catégories';
 $lang['Category'] = 'Catégorie';
 $lang['Changes'] = 'Changements';

@@ -43,6 +43,16 @@ $conf['db_params'] = array(
   'persistent_connection' => true,
   );
 
+// recaptcha config
+$conf['recaptcha'] = array(
+  'activation' => false,
+  'file_path' => 'include/recaptcha/recaptchalib.php',
+  'publickey' => '',
+  'privatekey' => '',
+  'lang' => array('en','nl','fr','de','pt','ru','es','tr'),
+  'theme' => 'white',
+  );
+
 // user_manager: 'local'
 $conf['user_manager'] = 'local';
 

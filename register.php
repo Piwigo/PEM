@@ -21,13 +21,51 @@
 define('INTERNAL', true);
 $root_path = './';
 require_once($root_path.'include/common.inc.php');
-
 $tpl->set_filenames(
   array(
     'page' => 'page.tpl',
     'register' => 'register.tpl'
   )
 );
+
+if (isset($conf['recaptcha']['activation']) and $conf['recaptcha']['activation'])
+{
+	require_once($conf['recaptcha']['file_path']);
+	/*with the code bellow the translation is not needed for these js vars :
+				 								instructions_visual : "{'instructions_visual'|@translate}",
+                        instructions_audio : "{'instructions_audio'|@translate}",
+                        play_again : "{'play_again'|@translate}",
+                        cant_hear_this : "{'cant_hear_this'|@translate}",
+                        visual_challenge : "{'visual_challenge'|@translate}",
+                        audio_challenge : "{'audio_challenge'|@translate}",
+                        refresh_btn : "{'refresh_btn'|@translate}",
+                        help_btn : "{'help_btn'|@translate}",
+                        incorrect_try_again : "{'incorrect_try_again'|@translate}",
+	the languages 'en','nl','fr','de','pt','ru','es','tr' will be automaticly traduced. For the other languages, tall the js var must be traduced or none of them, because of the if() line 55
+	*/
+	$code_lang=array();
+	$code_lang=explode('_', $_SESSION['language']['code']);
+	if ( array_search($code_lang[0], $conf['recaptcha']['lang']) )
+	{
+		$recaptcha_lang=$code_lang[0];
+	}
+	else
+	{
+		$recaptcha_lang='en';
+		if ( l10n('instructions_visual')!='instructions_visual' )
+		{
+			$tpl->assign(
+    	array('custom_translation' => true,
+			));
+		}
+	}
+	$tpl->assign(
+    array('html_recaptcha' => recaptcha_get_html($conf['recaptcha']['publickey']),
+	'lang' => $recaptcha_lang,
+	'theme' => $conf['recaptcha']['theme'],
+	));
+}
+
 
 if (isset($_POST['submit']))
 {
@@ -41,12 +79,26 @@ if (isset($_POST['submit']))
       );
   }
 
-  $register_errors = register_user(
-    $_POST['username'],
-    $_POST['password'],
-    $_POST['email']
-    );
+	$register_errors = register_user(
+	$_POST['username'],
+	$_POST['password'],
+	$_POST['email']
+	);
 
+	if (isset($conf['recaptcha']['activation']) and $conf['recaptcha']['activation'])
+	{
+		$resp = recaptcha_check_answer ($conf['recaptcha']['privatekey'],
+									$_SERVER["REMOTE_ADDR"],
+									$_POST["recaptcha_challenge_field"],
+									$_POST["recaptcha_response_field"]);
+	
+		if (!$resp->is_valid) {
+			array_push(
+				$errors,
+				l10n('CAPTCHA_error')
+				);
+		}
+	}
   $errors = array_merge($errors, $register_errors);
 
   if (count($errors) == 0)
