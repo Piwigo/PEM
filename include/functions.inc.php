@@ -369,6 +369,11 @@ function get_versions_of_revision($revision_ids)
   {
     $versions_of[$revision_id] = array();
 
+    if (!isset($version_ids_of[$revision_id])) {
+      $versions_of[$revision_id] = array('none');
+      continue;
+    }
+
     foreach ($version_ids_of[$revision_id] as $version_id)
     {
       array_push(
@@ -462,10 +467,12 @@ SELECT id_revision,
     if (isset($revisions_of[$extension_id])) {
       foreach ($revisions_of[$extension_id] as $revision_id)
       {
-        $version_ids_of_extension[$extension_id] = array_merge(
-          $version_ids_of_extension[$extension_id],
-          $version_ids_of_revision[$revision_id]
-          );
+        if (isset($version_ids_of_revision[$revision_id])) {
+          $version_ids_of_extension[$extension_id] = array_merge(
+            $version_ids_of_extension[$extension_id],
+            $version_ids_of_revision[$revision_id]
+            );
+        }
       }
     }
 

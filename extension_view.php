@@ -181,7 +181,7 @@ $revision_ids = array();
 $query = '
 SELECT id_revision
   FROM '.REV_TABLE.' r
-    INNER JOIN '.COMP_TABLE.' c ON c.idx_revision = r.id_revision
+    LEFT JOIN '.COMP_TABLE.' c ON c.idx_revision = r.id_revision
     INNER JOIN '.EXT_TABLE.' e ON e.id_extension = r.idx_extension
   WHERE id_extension = '.$page['extension_id'];
 

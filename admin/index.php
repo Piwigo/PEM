@@ -59,6 +59,22 @@ if ($count > 0) {
     );
 }
 
+// Are there revisions compatible to no version?
+$query = '
+SELECT
+    name,
+    id_revision,
+    idx_extension,
+    nb_downloads,
+    version,
+    idx_version
+  FROM '.REV_TABLE.'
+    JOIN '.EXT_TABLE.' ON idx_extension = id_extension
+    LEFT JOIN '.COMP_TABLE.' ON id_revision = idx_revision
+  WHERE idx_version IS NULL
+;';
+$tpl->assign('no_compat_revs', array_of_arrays_from_query($query));
+
 // +-----------------------------------------------------------------------+
 // |                           html code display                           |
 // +-----------------------------------------------------------------------+
