@@ -52,7 +52,7 @@ hs.lang['restoreTitle'] = '';
   <li><em>{'Categories'|@translate}:</em> {$extension_categories}</li>
   <li><em>{'First revision date'|@translate}:</em> {$first_date}</li>
   <li><em>{'Latest revision date'|@translate}:</em> {$last_date}</li>
-  <li><em>{'Compatible with'|@translate}:</em> {$software} releases {$compatible_with}</li>
+  <li><em>{'Compatible with'|@translate}:</em> {$software} {'releases'|@translate} {$compatible_with}</li>
   <li><em>{'Downloads'|@translate}:</em> {$extension_downloads}</li>
 </ul>
 

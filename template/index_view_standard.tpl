@@ -43,7 +43,7 @@ hs.lang['restoreTitle'] = '';
     <li><em>{if count($revision.authors)>1}{'Authors'|@translate}{else}{'Author'|@translate}{/if}:</em> {', '|@implode:$revision.authors}</li>
     <li><em>{'Categories'|@translate}:</em> {$revision.categories}</li>
     <li><em>{'Released on'|@translate}:</em> {$revision.date}</li>
-    <li><em>{'Compatible with'|@translate}:</em> {$software} releases {$revision.compatible_versions}</li>
+    <li><em>{'Compatible with'|@translate}:</em> {$software} {'releases'|@translate} {$revision.compatible_versions}</li>
     {if !empty($revision.languages)}
     <li><em>{'Available languages'|@translate}:</em>
         {foreach from=$revision.languages item=language}

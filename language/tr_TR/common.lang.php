@@ -167,4 +167,5 @@ $lang['no extension'] = 'eklenti yok';
 
 $lang['Download last revision'] = 'Son değişiklikleri indir';
 $lang['Download'] = 'İndir';
+$lang['releases'] = 'sürümler';
 ?>

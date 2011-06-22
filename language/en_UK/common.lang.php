@@ -167,4 +167,5 @@ $lang['no extension'] = 'no extension';
 
 $lang['Download last revision'] = 'Download last revision';
 $lang['Download'] = 'Download';
+$lang['releases'] = 'releases';
 ?>
