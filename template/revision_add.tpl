@@ -67,11 +67,11 @@
         <th>{'Compatibility'|@translate}</th>
         <td>
           <div class="checkboxBox">
+          <select name="compatible_versions[]" id="compatible_versions" style="width:100%;" data-placeholder="{'Choose compatibility versions...'|@translate}" multiple>
 {foreach from=$versions item=version}
-            <label>
-              <input type="checkbox" name="compatible_versions[]" value="{$version.id_version}" {$version.checked} {if $translator}disabled="disabled"{/if}/>{$version.name}
-            </label>
+            <option value="{$version.id_version}" {$version.selected}>{$version.name}</option>
 {/foreach}
+          </select>
           </div>
         </td>
       </tr>
@@ -134,6 +134,10 @@
 </form>
 
 {known_script id="jquery" src="template/jquery.min.js"}
+{known_script id="jquery.chosen" src="template/chosen.jquery.min.js"}
+{html_head}
+<link rel="stylesheet" type="text/css" href="template/chosen.css">
+{/html_head}
 
 <script type="text/javascript">
 var languages = new Array();
@@ -177,6 +181,7 @@ $(document).ready(function() {ldelim}
       opt.html(opt.html().replace("\u2714", "\u2718"));
     }
   });
+  $('#compatible_versions').chosen();
 });
 
 function set_default_description (id) {ldelim}

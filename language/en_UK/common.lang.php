@@ -168,4 +168,6 @@ $lang['no extension'] = 'no extension';
 $lang['Download last revision'] = 'Download last revision';
 $lang['Download'] = 'Download';
 $lang['releases'] = 'releases';
+
+$lang['Choose compatibility versions...'] = 'Choose compatibility versions...';
 ?>

@@ -585,9 +585,9 @@ foreach ($versions as $version)
     array(
       'id_version' => $version['id_version'],
       'name' => $version['version'],
-      'checked' =>
+      'selected' =>
         in_array($version['id_version'], $selected_versions)
-        ? 'checked="checked"'
+        ? 'selected="selected"'
         : '',
       )
     );
