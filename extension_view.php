@@ -155,7 +155,7 @@ SELECT name,
        description
   FROM '.LINKS_TABLE.'
   WHERE idx_extension = '.$page['extension_id'].'
-    AND (idx_language IS NULL OR idx_language = '.$_SESSION['language']['id'].')
+    AND (idx_language = 0 OR idx_language = '.$_SESSION['language']['id'].')
   ORDER BY rank ASC
 ;';
 $result = $db->query($query);
