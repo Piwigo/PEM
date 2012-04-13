@@ -43,7 +43,11 @@ hs.lang['restoreTitle'] = '';
 {/if}
 
 <div class="extensionButtons">
-  <div class="extensionRate">
+{if isset($download_last_url)}
+  <div class="downloadButton"><a href="{$download_last_url}" title="{'Download last revision'|@translate}">{'Download'|@translate}</a></div>
+{/if}
+
+  <div class="extensionRated">
     <em>{'Average rating'|@translate} :</em>
   {if $rate_summary.rating_score == NULL}
     <div class="rating_infos">{'not rated yet'|@translate}</div>
@@ -92,12 +96,10 @@ hs.lang['restoreTitle'] = '';
     </form>
   </div>
   
-{if isset($download_last_url)}
-  <div class="downloadButton"><a href="{$download_last_url}" title="{'Download last revision'|@translate}">{'Download'|@translate}</a></div>
-{/if}
 {if isset($thumbnail)}
 <a class="screenshot highslide" href="{$thumbnail.url}" onclick="return hs.expand(this)"><img src="{$thumbnail.src}"/></a>
 {/if}
+
 </div>
 <ul class="extensionInfos">
   <li><em>{if count($authors)>1}{'Authors'|@translate}{else}{'Author'|@translate}{/if}:</em> {', '|@implode:$authors}</li>
