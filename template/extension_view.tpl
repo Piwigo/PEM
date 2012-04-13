@@ -1,4 +1,7 @@
+{known_script id="jquery" src="template/jquery.min.js"}
+{known_script id="jquery.raty" src="template/jquery.raty/jquery.raty.min.js"}
 {known_script id="highslide" src="template/highslide/highslide-full.packed.js"}
+
 {html_head}
 <link rel="stylesheet" type="text/css" href="template/highslide/highslide.css">
 <script type="text/javascript">
@@ -40,6 +43,55 @@ hs.lang['restoreTitle'] = '';
 {/if}
 
 <div class="extensionButtons">
+  <div class="extensionRate">
+    <em>{'Average rating'|@translate} :</em>
+  {if $rate_summary.rating_score == NULL}
+    <div class="rating_infos">{'not rated yet'|@translate}</div>
+  {else}
+  {html_head}
+    <script type="text/javascript">
+    $(document).ready(function() {ldelim}
+      $('#average_rating').raty({ldelim}
+        path: "template/jquery.raty/",
+        readOnly: true,
+        start: {$rate_summary.rating_score}
+      });
+    });
+    </script>
+  {/html_head}
+    <div id="average_rating"></div>
+    <div class="rating_infos">{$rate_summary.count_text}</div>
+  {/if}
+    
+  {html_head}
+    <script type="text/javascript">
+    $(document).ready(function() {ldelim}
+      $('#user_rate div').raty({ldelim}
+        path: "template/jquery.raty/",
+        cancelHint: '{'cancel this rating!'|@translate}',
+        cancelPlace: 'right',
+        size:18,
+        half: true,
+        click: function(score, event) {ldelim}
+          $("#user_rate").append('<input type="hidden" name="rate" value="'+ score +'">').submit(); 
+        }
+        {if isset($user_rating.rate)}, cancel: true, start: {$user_rating.rate}{/if}
+      });
+      $("#user_rate_show").click(function() {ldelim}
+        $(this).slideUp();
+        $('#user_rate').slideDown();
+      });
+    });
+    </script>
+  {/html_head}
+    <br>
+    <a id="user_rate_show">{if isset($user_rating.rate)}{'Update your rating'|@translate}{else}{'Rate it!'|@translate}{/if}</a>
+    <form id="user_rate" style="display:none;" method="post" action="{$user_rating.action}">
+      <em>{'Your rating'|@translate} :</em>
+      <div></div>
+    </form>
+  </div>
+  
 {if isset($download_last_url)}
   <div class="downloadButton"><a href="{$download_last_url}" title="{'Download last revision'|@translate}">{'Download'|@translate}</a></div>
 {/if}

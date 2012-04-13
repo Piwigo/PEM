@@ -117,6 +117,7 @@ foreach ($revision_ids as $revision_id)
       'id' => $revision_id,
       'extension_id' => $extension_id,
       'extension_name' => $extension_infos_of[$extension_id]['name'],
+      'rating_score' => $extension_infos_of[$extension_id]['rating_score'],
       'about' => nl2br(
         htmlspecialchars(
           strip_tags($extension_infos_of[$extension_id]['description'])

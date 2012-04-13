@@ -184,7 +184,7 @@ div.row
   padding-bottom : 2px;
   overflow:hidden;
 }
-div.row img
+div.row .screenshot img
 {
   margin:10px;
   padding:10px;
@@ -238,33 +238,47 @@ A.screenshot {
   float:right;
   margin-left:3em;
 }
-.extensionButtons A.screenshot {
-  float: none;
-  margin-left: 0;
-}
+  .extensionButtons A.screenshot {
+    float: none;
+    margin-left: 0;
+  }
+  
+  .extensionRate {
+    position:absolute;
+    right:190px;
+    width:130px;
+    background:#ddd;
+    border-radius:5px;
+    padding:10px 15px;
+  }
+    .rating_infos {
+      font-size:0.8em;
+    }
+    a#user_rate_show {
+      cursor:pointer;
+    }
 
-.downloadButton {
-  width:154px;
-  margin-bottom:10px;
-  line-height:50px;
-  background-color:#57a50b;
-  text-align:center;
-  color:white;
-  -moz-border-radius:5px;
-}
-.downloadButton A {
-  display:block;
-  color:#eee;
-  font-size:16px;
-  font-weight:bold;
-}
-
-.downloadButton:hover {
-  background-color:#5db10c;
-}
-.downloadButton A:hover {
-  color:#fff;
-}
+  .downloadButton {
+    width:154px;
+    margin-bottom:10px;
+    line-height:50px;
+    background-color:#57a50b;
+    text-align:center;
+    color:white;
+    -moz-border-radius:5px;
+  }
+  .downloadButton A {
+    display:block;
+    color:#eee;
+    font-size:16px;
+    font-weight:bold;
+  }
+    .downloadButton:hover {
+      background-color:#5db10c;
+    }
+    .downloadButton A:hover {
+      color:#fff;
+    }
 
 div.nav_left
 {

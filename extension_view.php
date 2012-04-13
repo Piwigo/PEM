@@ -35,6 +35,13 @@ $tpl->set_filenames(
   )
 );
 
+// rating
+if ( isset($_GET['action']) and $_GET['action'] == 'rate' )
+{
+  rate_extension($page['extension_id'], $_POST['rate']);
+  header('Location: extension_view.php?eid='.$page['extension_id']);  
+}  
+
 // Gets extension informations
 $data = get_extension_infos_of($page['extension_id']);
 
@@ -90,6 +97,7 @@ while ($row = $db->fetch_assoc($result)) {
 
 $tpl->assign(
   array(
+    'extension_id' => $page['extension_id'],
     'extension_name' => htmlspecialchars(
       strip_tags($data['name'])
       ),
@@ -308,6 +316,60 @@ SELECT id_revision,
   
   $tpl->assign('revisions', $tpl_revisions);
 }
+
+// rating
+$rate_summary = array(
+  'count' => 0, 
+  'count_text' => sprintf(l10n('Rated %d times'), 0), 
+  'rating_score' => $data['rating_score'], 
+  );
+if ($rate_summary['rating_score'] != null)
+{
+  $query = '
+SELECT COUNT(rate) AS count
+  FROM '.RATE_TABLE.'
+  WHERE idx_extension = '.$page['extension_id'].'
+;';
+  list($rate_summary['count']) = $db->fetch_row($db->query($query));
+  $rate_summary['count_text'] = sprintf(l10n('Rated %d times'), $rate_summary['count']);
+}
+$tpl->assign('rate_summary', $rate_summary);
+
+$user_rate = null;
+if ($rate_summary['count'] > 0)
+{
+  $user_id = empty($user['id']) ? 0 : $user['id'];
+  
+  $query = '
+SELECT rate
+  FROM '.RATE_TABLE.'
+  WHERE 
+    idx_extension = '.$page['extension_id']. '
+    AND idx_user = '.$user_id.'';
+  if ($user_id == 0)
+  {
+    $ip_components = explode('.', $_SERVER['REMOTE_ADDR']);
+    if (count($ip_components) > 3)
+    {
+      array_pop($ip_components);
+    }
+    $query.= '
+    AND anonymous_id = "'.implode ('.', $ip_components) . '"';
+  }
+  $query.= '
+;';
+
+  $result = $db->query($query);
+  if ($db->num_rows($result) > 0)
+  {
+    list($user_rate) = $db->fetch_row($result);
+  }
+}
+$tpl->assign('user_rating', array(
+  'action' => 'extension_view.php?eid='.$page['extension_id'].'&amp;action=rate',
+  'rate' => $user_rate,
+  ));
+
 
 // +-----------------------------------------------------------------------+
 // |                           html code display                           |

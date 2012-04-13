@@ -176,5 +176,13 @@ $lang['Type in a search term'] = 'Type in a search term';
 $lang['No results'] = 'No results';
 $lang['Searching...'] = 'Searching...';
 $lang['new'] = 'new';
+$lang['Rated %d times'] = 'Rated %d times';
+$lang['Average rating'] = 'Average rating';
+$lang['not rated yet'] = 'not rated yet';
+$lang['cancel this rating!'] = 'cancel this rating!';
+$lang['Update your rating'] = 'Update your rating';
+$lang['Rate it!'] = 'Rate it!';
+$lang['Your rating'] = 'Your rating';
+$lang['All'] = 'All';
 
 ?>

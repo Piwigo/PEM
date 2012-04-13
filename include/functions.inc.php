@@ -582,6 +582,7 @@ function get_extension_infos_of($extension_ids)
   $query = '
 SELECT id_extension,
        name,
+       rating_score,
        idx_user,
        svn_url,
        e.description AS default_description,
@@ -1793,4 +1794,121 @@ SELECT id_language AS id,
 
   return $cache['interface_languages'];
 }
+
+function rate_extension($extension_id, $rate)
+{
+  global $db, $user;
+
+  if ( !isset($rate) or !isset($extension_id) )
+  {
+    return false;
+  }
+
+  // get user infos
+  $user_anonymous = empty($user['id']);
+  $user_id = $user_anonymous ? 0 : $user['id'];
+
+  $ip_components = explode('.', $_SERVER["REMOTE_ADDR"]);
+  if (count($ip_components) > 3)
+  {
+    array_pop($ip_components);
+  }
+  $anonymous_id = implode ('.', $ip_components);
+
+  if ($user_anonymous)
+  {
+    $save_anonymous_id = !empty($_SESSION['anonymous_rater']) ? $_SESSION['anonymous_rater'] : $anonymous_id;
+
+    if ($anonymous_id != $save_anonymous_id)
+    { // client has changed his IP adress or he's trying to fool us
+      $query = '
+SELECT idx_extension
+  FROM '.RATE_TABLE.'
+  WHERE
+    idx_user = '.$user_id.'
+    AND anonymous_id = "'.$anonymous_id.'"
+;';
+      $already_there = array_from_query($query, 'idx_extension');
+
+      if (count($already_there) > 0)
+      {
+        $query = '
+DELETE
+  FROM '.RATE_TABLE.'
+  WHERE 
+    idx_user = '.$user_id.'
+    AND anonymous_id = "'.$save_anonymous_id.'"
+    AND idx_extension IN ('.implode(',', $already_there).')
+;';
+         $db->query($query);
+       }
+
+       $query = '
+UPDATE '.RATE_TABLE.'
+  SET anonymous_id = "'.$anonymous_id.'"
+  WHERE 
+    idx_user = '.$user_id.'
+    AND anonymous_id = "'.$save_anonymous_id.'"
+;';
+       $db->query($query);
+    } // end client changed ip
+
+    $_SESSION['anonymous_rater'] = $anonymous_id;
+  } // end anonymous user
+
+  // insert/update rate
+  $query = '
+DELETE
+  FROM '.RATE_TABLE.'
+  WHERE 
+    idx_extension = '.$extension_id.'
+    AND idx_user = '.$user_id.'
+';
+  if ($user_anonymous)
+  {
+    $query.= '
+    AND anonymous_id = "'.$anonymous_id.'"';
+  }
+  $query.= '
+;';
+  $db->query($query);
+  
+  if ($rate != 'null')
+  {
+    $query = '
+INSERT
+  INTO '.RATE_TABLE.' (
+    idx_user,
+    idx_extension,
+    anonymous_id,
+    rate,
+    date
+  )
+  VALUES (
+    '.$user_id.',
+    '.$extension_id.',
+    "'.$anonymous_id.'",
+    '.$rate.',
+    NOW()
+  )
+;';
+    $db->query($query);
+  }
+  
+  // update extension rating score
+  $query = '
+SELECT rate
+  FROM '.RATE_TABLE.'
+  WHERE idx_extension = '.$extension_id.'
+;';
+  $rates = array_from_query($query, 'rate');
+  
+  $query = '
+UPDATE '.EXT_TABLE.'
+  SET rating_score = '.(count($rates)>0 ? array_sum($rates)/count($rates) : 'NULL').'
+  WHERE id_extension = '.$extension_id.'
+;';
+  $db->query($query);
+}
+
 ?>

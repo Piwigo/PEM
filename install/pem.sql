@@ -47,6 +47,7 @@ CREATE TABLE `pem_extensions` (
   `svn_url` varchar(255) NULL default NULL,
   `archive_root_dir` varchar(255) NULL default NULL,
   `archive_name` varchar(255) NULL default NULL,
+  `rating_score` float(5,2) unsigned DEFAULT NULL,
   PRIMARY KEY  (`id_extension`)
 )   DEFAULT CHARSET=utf8;
 
@@ -96,6 +97,16 @@ CREATE TABLE `pem_links` (
   PRIMARY KEY  (`id_link`),
   KEY `idx_extension` (`idx_extension`)
 )   DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `pem_rates`;
+CREATE TABLE `pem_rates` (
+  `idx_user` smallint(5) NOT NULL DEFAULT '0',
+  `idx_extension` int(11) NOT NULL,
+  `anonymous_id` varchar(45) NOT NULL,
+  `rate` float(5,2) NOT NULL DEFAULT '0.00',
+  `date` datetime NOT NULL,
+  PRIMARY KEY (`idx_user`,`idx_extension`,`anonymous_id`)
+) DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `pem_revisions`;
 CREATE TABLE `pem_revisions` (

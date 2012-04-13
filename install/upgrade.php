@@ -450,6 +450,31 @@ CREATE TABLE `'.EXT_TAG_TABLE.'` (
 }
 
 // +-----------------------------------------------------------------------+
+// |                       Rates tables                                     |
+// +-----------------------------------------------------------------------+
+
+$query = 'SHOW TABLES LIKE "'.RATE_TABLE.'";';
+$result = $db->query($query);
+if (!mysql_fetch_row($result))
+{
+  $query = '
+CREATE TABLE `'.RATE_TABLE.'` (
+  `idx_user` smallint(5) NOT NULL DEFAULT \'0\',
+  `idx_extension` int(11) NOT NULL,
+  `anonymous_id` varchar(45) NOT NULL,
+  `rate` float(5,2) NOT NULL DEFAULT \'0.00\',
+  `date` datetime NOT NULL,
+  PRIMARY KEY (`idx_user`,`idx_extension`,`anonymous_id`)
+) DEFAULT CHARSET=utf8;';
+  $db->query($query);
+  
+  $query = 'ALTER TABLE '.EXT_TABLE.' ADD `rating_score` float(5,2) unsigned DEFAULT NULL AFTER `archive_name`;';
+  $db->query($query);
+  
+  array_push($upgrade_infos, 'Rates table has been created');
+}
+
+// +-----------------------------------------------------------------------+
 // |                       Display upgrade result                          |
 // +-----------------------------------------------------------------------+
 

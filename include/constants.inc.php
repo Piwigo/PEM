@@ -34,6 +34,7 @@ define( 'REV_TRANS_TABLE', $conf['db_params']['tables_prefix'].'revisions_transl
 define( 'CAT_TRANS_TABLE', $conf['db_params']['tables_prefix'].'categories_translations' );
 define( 'TAG_TABLE' ,    $conf['db_params']['tables_prefix'].'tags' );
 define( 'EXT_TAG_TABLE', $conf['db_params']['tables_prefix'].'extensions_tags' );
+define( 'RATE_TABLE', $conf['db_params']['tables_prefix'].'rates' );
 
 define( 'USERS_TABLE', $conf['users_table'] );
 
