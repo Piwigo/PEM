@@ -67,7 +67,7 @@ foreach($categories as $cat)
   if (isset($_SESSION['filter']['category_ids'])
       and in_array($cat['id_category'], $_SESSION['filter']['category_ids']))
   {
-    $selected = 'selected="selected"';
+    $selected = true;
   }
 
   $id = $cat['id_category'];
@@ -77,20 +77,24 @@ foreach($categories as $cat)
     array(
       'id'  => $id,
       'selected' => $selected,
-      'name' => sprintf(
-        '%s (%s)',
-        $cat['name'],
-        isset($nb_ext_of_category[$id])
-        ? $nb_ext_of_category[$id] > 1
-          ? $nb_ext_of_category[$id].' '.l10n('extensions')
-          : $nb_ext_of_category[$id].' '.l10n('extension')
-        : l10n('no extension')
-        ),
+      'name' => $cat['name'],
+      'count' => !empty($nb_ext_of_category[$id]) ? $nb_ext_of_category[$id] : 0,
       )
     );
 }
 
 $tpl->assign('categories', $tpl_categories);
+
+$query = '
+SELECT COUNT(*) AS total
+  FROM '.EXT_TABLE.'
+;';
+list($total_extensions) = $db->fetch_row($db->query($query));
+
+$tpl->assign(array(
+  'total_extensions' => $total_extensions,
+  'cat_is_home' => empty($_SESSION['filter']['category_ids']),
+  ));
 
 // Gets the current search
 if (isset($_SESSION['filter']['search'])) {
@@ -227,7 +231,7 @@ if (isset($conf['banner_filepath'])) {
 
 $tpl->assign('menu_versions', $tpl_versions);
 $tpl->assign('title', $conf['page_title']);
-$tpl->assign('action', 'index.php');
+$tpl->assign('action', !empty($_SESSION['filter']['category_ids']) ? 'index.php?cid='.$_SESSION['filter']['category_ids'][0] : 'index.php');
 
 if (isset($user['id']))
 {

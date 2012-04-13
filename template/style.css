@@ -56,6 +56,19 @@ a
 /*a:link {color:#005e89;}*/
 a:hover {color:#858460;}
 
+ul
+{
+/*  list-style-image : url(images/puce.png); */
+  margin : 5px 0 5px 5px;
+  padding : 0 0 0 25px;
+}
+
+li
+{
+  margin: 0;
+  padding:0;
+}
+
 #Header 
 {
   margin:10px 0px 10px 0px;
@@ -143,18 +156,13 @@ div.menu INPUT[type="text"], div.menu INPUT[type="password"], div.menu SELECT {
   width:160px;
 }
 
-ul
-{
-/*  list-style-image : url(images/puce.png); */
-  margin : 5px 0 5px 5px;
-  padding : 0 0 0 25px;
+ul.categoriesList {
+  list-style:square;
+  padding-left:10px;
 }
-
-li
-{
-  margin: 0;
-  padding:0;
-}
+  ul.categoriesList li.selected {
+    font-weight:bold;
+  }
 
 /* Again, "be nice to Opera 5". */
 body>div.menu {width:150px;}

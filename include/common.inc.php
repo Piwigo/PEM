@@ -126,7 +126,11 @@ if (is_file($root_path.'language/'.$_SESSION['language'].'/help_user.html')
 
 // is the URL prefiltered?
 if (isset($_GET['cid'])) {
-  if (is_numeric($_GET['cid'])) {
+  if ($_GET['cid'] == 'null') {
+    // special url parameter to cancel category filter
+    unset($_SESSION['filter']['category_ids'], $_SESSION['filter']['category_mode']);
+  }
+  else if (is_numeric($_GET['cid'])) {
     $_SESSION['filter']['category_ids'] = array($_GET['cid']);
     $_SESSION['filter']['category_mode'] = 'and';
   }
@@ -154,33 +158,12 @@ if (isset($_POST['filter_submit'])) {
 
   // filter on a textual free search
   if (isset($_POST['search']) and !empty($_POST['search'])) {
+    // we can't do a textual search within an tag (from url) as textual search also finds tags
+    unset($_SESSION['filter']['tag_ids']);
     $_SESSION['filter']['search'] = $_POST['search'];
   }
   else {
     unset($_SESSION['filter']['search']);
-  }
-
-  // filter on a category
-  if (isset($_POST['category_ids']) and is_array($_POST['category_ids'])) {
-    $_SESSION['filter']['category_ids'] = array();
-    
-    foreach ($_POST['category_ids'] as $cid) {
-      if (is_numeric($cid) and $cid != 0) {
-        array_push($_SESSION['filter']['category_ids'], $cid);
-      }
-    }
-
-    if (count($_SESSION['filter']['category_ids']) > 0) {
-      $_SESSION['filter']['category_mode'] = 'and';
-    }
-    else {
-      unset($_SESSION['filter']['category_ids']);
-      unset($_SESSION['filter']['category_mode']);
-    }
-  }
-  else {
-    unset($_SESSION['filter']['category_ids']);
-    unset($_SESSION['filter']['category_mode']);
   }
   
   // filter on a user

@@ -17,13 +17,20 @@
     <div id="overall">
       <div id="Menus">
         <div class="menu">
+          {'Category'|@translate}
+          <ul class="categoriesList">
+            <li {if $cat_is_home}class="selected"{/if}>
+              <a href="index.php?cid=null">{'All'|@translate} <span style="font-size:0.8em;">({$total_extensions})</span></a>
+            </li>
+          {foreach from=$categories item=category}
+            <li {if $category.selected}class="selected"{/if}>
+              <a href="index.php?cid={$category.id}">
+                {$category.name} <span style="font-size:0.8em;">({$category.count})</span></a>
+            </li>
+          {/foreach}
+          </ul>
+          
           <form method="post" action="{$action}" style="margin:0;padding:0;">
-          {'Category'|@translate}<br />
-          <select name="category_ids[]" multiple="multiple" size="5">
-{foreach from=$categories item=category}
-            <option value="{$category.id}" {$category.selected}>{$category.name}</option>
-{/foreach}
-          </select><br />
 
           {'Search'|@translate}<br />
           <input name="search" type="text" value="{if isset($search)}{$search}{/if}"/><br />
@@ -87,7 +94,7 @@
       </div> <!-- Menus -->
     
       <div id="Content">
-        <div id="quickNav"><a href="index.php" title="{'Index'|@translate}"><img class="nav" src="template/images/home.png" alt="{'Index'|@translate}"/></a>
+        <div id="quickNav"><a href="index.php?cid=null" title="{'Index'|@translate}"><img class="nav" src="template/images/home.png" alt="{'Index'|@translate}"/></a>
 {if !$user_is_logged}
 	{if isset($has_help)}
           <a href="help_guest.php" title="{'help'|@translate}"><img class="nav" src="template/images/help.png" alt="{'help'|@translate}"/></a>
