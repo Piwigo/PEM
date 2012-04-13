@@ -170,4 +170,18 @@ $lang['Download'] = 'Télécharger';
 $lang['releases'] = 'versions';
 
 $lang['Choose compatibility versions...'] = 'Choisissez les versions compatibles...';
+
+$lang['Tags'] = 'Tags';
+$lang['Type in a search term'] = 'Entrez un tag';
+$lang['No results'] = 'Aucun résultat';
+$lang['Searching...'] = 'recherche en cours...';
+$lang['new'] = 'nouveau';
+$lang['Rated %d times'] = 'Notée %d fois';
+$lang['Average rating'] = 'Note moyenne';
+$lang['not rated yet'] = 'pas encore notée';
+$lang['cancel this rating!'] = 'annuler cette note !';
+$lang['Update your rating'] = 'Changez votre note';
+$lang['Rate it!'] = 'Notez le !';
+$lang['Your rating'] = 'Votre note';
+$lang['All'] = 'Toutes';
 ?>
