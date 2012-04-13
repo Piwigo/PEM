@@ -47,7 +47,7 @@ hs.lang['restoreTitle'] = '';
   <div class="downloadButton"><a href="{$download_last_url}" title="{'Download last revision'|@translate}">{'Download'|@translate}</a></div>
 {/if}
 
-  <div class="extensionRated">
+  <div class="extensionRate">
     <em>{'Average rating'|@translate} :</em>
   {if $rate_summary.rating_score == NULL}
     <div class="rating_infos">{'not rated yet'|@translate}</div>
