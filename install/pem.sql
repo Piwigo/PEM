@@ -57,6 +57,13 @@ CREATE TABLE `pem_extensions_categories` (
   PRIMARY KEY  (`idx_category`,`idx_extension`)
 )  DEFAULT CHARSET=utf8;
 
+DROP TABLE IF EXISTS `pem_extensions_tags`;
+CREATE TABLE `pem_extensions_tags` (
+  `idx_extension` int(11) NOT NULL default '0',
+  `idx_tag` smallint(5) unsigned NOT NULL default '0',
+  PRIMARY KEY (`idx_extension`,`idx_tag`)
+) DEFAULT CHARSET=utf8;
+
 DROP TABLE IF EXISTS `pem_extensions_translations`;
 CREATE TABLE `pem_extensions_translations` (
   `idx_extension` int(11) NOT NULL,
@@ -125,6 +132,13 @@ CREATE TABLE `pem_revisions_translations` (
   `idx_language` int(11) NOT NULL,
   `description` TEXT NOT NULL,
   PRIMARY KEY  (`idx_revision`,`idx_language`)
+) DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `pem_tags`;
+CREATE TABLE `pem_tags` (
+  `id_tag` smallint(5) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
+  PRIMARY KEY (`id_tag`)
 ) DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `pem_user_infos`;

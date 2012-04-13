@@ -419,6 +419,36 @@ SELECT
   array_push($upgrade_infos, '- new columns '.REV_TABLE.'.nb_downloads');
 }
 
+
+// +-----------------------------------------------------------------------+
+// |                       Tags tables                                     |
+// +-----------------------------------------------------------------------+
+
+$query = 'SHOW TABLES LIKE "'.TAG_TABLE.'";';
+$result = $db->query($query);
+if (!mysql_fetch_row($result))
+{
+  $query = '
+CREATE TABLE `'.TAG_TABLE.'` (
+  `id_tag` smallint(5) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
+  PRIMARY KEY (`id_tag`)
+) DEFAULT CHARSET=utf8
+;';
+  $db->query($query);
+  array_push($upgrade_infos, 'Tags table has been created');
+  
+  $query = '
+CREATE TABLE `'.EXT_TAG_TABLE.'` (
+  `idx_extension` int(11) NOT NULL default \'0\',
+  `idx_tag` smallint(5) unsigned NOT NULL default \'0\',
+  PRIMARY KEY (`idx_extension`,`idx_tag`)
+) DEFAULT CHARSET=utf8
+;';
+  $db->query($query);
+  array_push($upgrade_infos, 'Extension tag table has been created');
+}
+
 // +-----------------------------------------------------------------------+
 // |                       Display upgrade result                          |
 // +-----------------------------------------------------------------------+

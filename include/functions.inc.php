@@ -1107,6 +1107,48 @@ SELECT
   return array_unique($eids);
 }
 
+function get_extension_ids_for_tags($tag_ids, $mode=null) {
+  if (count($tag_ids) == 0) {
+    return array();
+  }
+
+  if (!in_array($mode, array('or', 'and'))) {
+    $mode = 'and';
+  }
+
+  // strategy is to list images associated to each category
+  $eids_for_tag = array();
+
+  if ($mode == 'and') {
+    foreach ($tag_ids as $tid) {
+      $query = '
+SELECT idx_extension
+  FROM '.EXT_TAG_TABLE.'
+  WHERE idx_tag = '.$tid.'
+;';
+      $eids_for_tag[$tid] = array_from_query($query, 'idx_extension');
+    }
+  
+    // then we calculate the intersection, the images that are associated to
+    // every tags
+    $eids = array_shift($eids_for_tag);
+    foreach ($eids_for_tag as $tag_ids) {
+      $eids = array_intersect($eids, $tag_ids);
+    }
+  }
+  else {
+    $query = '
+SELECT
+    DISTINCT(idx_extension)
+  FROM '.EXT_TAG_TABLE.'
+  WHERE idx_tag IN ('.implode(',', $tag_ids).')
+;';
+    $eids = array_from_query($query, 'idx_extension');
+  }
+
+  return array_unique($eids);
+}
+
 function get_categories_of_extension($extension_ids) {
   global $db;
   
@@ -1161,6 +1203,50 @@ SELECT
   return $categories_of_extension;
 }
 
+function get_tags_of_extension($extension_ids) {
+  global $db;
+  
+  $cat_list_for = array();
+  
+  $query = '
+SELECT idx_extension,
+       id_tag,
+       name
+  FROM '.TAG_TABLE.' AS t
+  LEFT JOIN '.EXT_TAG_TABLE.' AS et
+    ON et.idx_tag = t.id_tag
+  WHERE et.idx_extension IN ('.implode(',', $extension_ids).')
+;';
+  $result = $db->query($query);
+  
+  while ($row = $db->fetch_assoc($result)) {
+    $id_extension = $row['idx_extension'];
+    
+    if (!isset($cat_list_for[$id_extension])) {
+      $cat_list_for[$id_extension] = array();
+    }
+
+    array_push(
+      $cat_list_for[$id_extension],
+      sprintf(
+        '<a href="index.php?tid=%u">%s</a>',
+        $row['id_tag'],
+        $row['name']
+        )
+      );
+  }
+
+  $categories_of_extension = array();
+  foreach ($extension_ids as $extension_id) {
+    $categories_of_extension[$extension_id] = implode(
+      ', ',
+      $cat_list_for[$extension_id]
+      );
+  }
+
+  return $categories_of_extension;
+}
+
 function get_extension_ids_for_version($id_version) {
   $query = '
 SELECT
@@ -1174,44 +1260,22 @@ SELECT
 }
 
 function get_extension_ids_for_search($search) {
-  $fields = array('e.name', 'e.description', 'r.description', 'et.description', 'rt.description');
+   // search is performed on extension name (10 points), 
+   // tags (8 pts), description (6 pts), revision note (4 pts)
+   // one point is removed every month of antiquity
+   
+  global $db;
+  $search_result = array();
 
-  $replace_by = array(
-    '-' => ' ',
-    '^' => ' ',
-    '$' => ' ',
-    ';' => ' ',
-    '#' => ' ',
-    '&' => ' ',
-    '(' => ' ',
-    ')' => ' ',
-    '<' => ' ',
-    '>' => ' ',
-    '`' => '',
-    '\'' => '',
-    '"' => ' ',
-    '|' => ' ',
-    ',' => ' ',
-    '@' => ' ',
-    '_' => '',
-    '?' => ' ',
-    '%' => ' ',
-    '~' => ' ',
-    '.' => ' ',
-    '[' => ' ',
-    ']' => ' ',
-    '{' => ' ',
-    '}' => ' ',
-    ':' => ' ',
-    '\\' => '',
-    '/' => ' ',
-    '=' => ' ',
-    '\'' => ' ',
-    '!' => ' ',
-    '*' => ' ',
-    );
-    
   // Split words
+  $replace_by = array(
+    '-' => ' ', '^' => ' ', '$' => ' ', ';' => ' ', '#' => ' ', '&' => ' ',
+    '(' => ' ', ')' => ' ', '<' => ' ', '>' => ' ', '`' => '', '\'' => '',
+    '"' => ' ', '|' => ' ', ',' => ' ', '@' => ' ', '_' => '', '?' => ' ',
+    '%' => ' ', '~' => ' ', '.' => ' ', '[' => ' ', ']' => ' ', '{' => ' ',
+    '}' => ' ', ':' => ' ', '\\' => '', '/' => ' ', '=' => ' ', '\'' => ' ',
+    '!' => ' ', '*' => ' ',
+    );
   $words = array_unique(
     preg_split(
       '/\s+/',
@@ -1222,49 +1286,146 @@ function get_extension_ids_for_search($search) {
         )
       )
     );
-
-  // ((field1 LIKE '%word1%' OR field2 LIKE '%word1%')
-  // AND (field1 LIKE '%word2%' OR field2 LIKE '%word2%'))
+  $add_bracked = create_function('&$s','$s="(".$s.")";');
+  
+  // search on extension name
   $word_clauses = array();
   foreach ($words as $word) {
-    $field_clauses = array();
-    foreach ($fields as $field) {
-      array_push($field_clauses, $field." LIKE '%".$word."%'");
-    }
-    // adds brackets around where clauses
-    array_push(
-      $word_clauses,
-      implode(
-        "\n          OR ",
-        $field_clauses
-        )
-      );
+    array_push($word_clauses, "e.name LIKE '%".$word."%'");
   }
-  
   array_walk(
     $word_clauses,
-    create_function('&$s','$s="(".$s.")";')
+    $add_bracked
     );
-  
-  $clause = implode(
-    "\n         AND\n         ",
-    $word_clauses
-    );
-  
   $query = '
 SELECT
     id_extension
   FROM '.EXT_TABLE.' AS e
-    JOIN '.REV_TABLE.' AS r ON r.idx_extension = e.id_extension
+  WHERE '.implode("\n    AND ", $word_clauses).'
+;';
+  $result = array_from_query($query, 'id_extension');
+  foreach ($result as $ext_id) {
+    if (!empty($search_result[$ext_id])) {
+      $search_result[$ext_id]+= 10;
+    } else {
+      $search_result[$ext_id] = 10;
+    }
+  }
+  
+  // search on tags
+  $word_clauses = array();
+  foreach ($words as $word) {
+    array_push($word_clauses, "LOWER(t.name) LIKE '%".strtolower($word)."%'");
+  }
+  array_walk(
+    $word_clauses,
+    $add_bracked
+    );
+  $query = '
+SELECT
+    idx_extension
+  FROM '.EXT_TAG_TABLE.' AS et
+    LEFT JOIN '.TAG_TABLE.' AS t
+      ON et.idx_tag = t.id_tag
+  WHERE '.implode("\n    OR ", $word_clauses).'
+;';
+  $result = array_from_query($query, 'idx_extension');
+  foreach ($result as $ext_id) {
+    if (!empty($search_result[$ext_id])) {
+      $search_result[$ext_id]+= 8;
+    } else {
+      $search_result[$ext_id] = 8;
+    }
+  }
+  
+  // search on extension description
+  $word_clauses = array();
+  foreach ($words as $word) {
+    $field_clauses = array();
+    foreach (array('e.description', 'et.description') as $field) {
+      array_push($field_clauses, $field." LIKE '%".$word."%'");
+    }
+    array_push(
+      $word_clauses,
+      implode("\n          OR ", $field_clauses)
+      );
+  }
+  array_walk(
+    $word_clauses,
+    $add_bracked
+    );
+  $query = '
+SELECT
+    id_extension
+  FROM '.EXT_TABLE.' AS e
     LEFT JOIN '.EXT_TRANS_TABLE.' AS et
       ON e.id_extension = et.idx_extension
       AND et.idx_language = '.$_SESSION['language']['id'].'
+  WHERE '.implode("\n    AND ", $word_clauses).'
+;';
+  $result = array_from_query($query, 'id_extension');
+  foreach ($result as $ext_id) {
+    if (!empty($search_result[$ext_id])) {
+      $search_result[$ext_id]+= 6;
+    } else {
+      $search_result[$ext_id] = 6;
+    }
+  }
+  
+  // search on revision description
+  $word_clauses = array();
+  foreach ($words as $word) {
+    $field_clauses = array();
+    foreach (array('r.description', 'rt.description') as $field) {
+      array_push($field_clauses, $field." LIKE '%".$word."%'");
+    }
+    array_push(
+      $word_clauses,
+      implode("\n          OR ", $field_clauses)
+      );
+  }
+  array_walk(
+    $word_clauses,
+    $add_bracked
+    );
+  $query = '
+SELECT
+    DISTINCT(idx_extension) AS id_extension
+  FROM '.REV_TABLE.' AS r
     LEFT JOIN '.REV_TRANS_TABLE.' AS rt
       ON r.id_revision = rt.idx_revision
       AND rt.idx_language = '.$_SESSION['language']['id'].'
-  WHERE '.$clause.'
+  WHERE '.implode("\n    AND ", $word_clauses).'
 ;';
-  return array_from_query($query, 'id_extension');
+  $result = array_from_query($query, 'id_extension');
+  foreach ($result as $ext_id) {
+    if (!empty($search_result[$ext_id])) {
+      $search_result[$ext_id]+= 4;
+    } else {
+      $search_result[$ext_id] = 4;
+    }
+  }
+  
+  // minor rank by the date of last revision (remove 1 point for every month)
+  if (count($search_result)) {
+    $time = time();
+    $query = '
+SELECT
+    idx_extension,
+    MAX(date) AS date
+  FROM '.REV_TABLE.'
+  WHERE idx_extension IN ('.implode(',', array_keys($search_result)).')
+;';
+    $result = $db->query($query);
+    while ($row = $db->fetch_array($result))
+    {
+      $search_result[ $row['idx_extension'] ]-= ($time - $row['date']) / (60*60*24*7*30);
+    }
+    
+    arsort($search_result);
+  }
+  
+  return array_keys($search_result);
 }
 
 function get_extension_ids_for_user($user_id) {
@@ -1299,6 +1460,13 @@ function get_filtered_extension_ids($filter) {
       $filter['category_mode']
       );
   }
+  
+  if (isset($filter['tag_ids'])) {
+    $filtered_sets['tag_ids'] = get_extension_ids_for_tags(
+      $filter['tag_ids'],
+      $filter['tag_mode']
+      );
+  }
 
   if (isset($filter['id_user'])) {
     $filtered_sets['id_user'] = get_extension_ids_for_user($filter['id_user']);
@@ -1311,7 +1479,7 @@ function get_filtered_extension_ids($filter) {
       $set
       );
   }
-
+  
   return array_unique($filtered_extension_ids);
 }
 
@@ -1385,6 +1553,72 @@ function get_author_name($ids)
     return $result[0];
   }
   return $result;
+}
+
+function get_tag_ids($raw_tags, $allow_create=true)
+{
+  // In $raw_tags we receive something like "~~6~~,~~59~~,New tag,Another new tag"
+  // The ~~34~~ means that it is an existing tag. I've added the surrounding ~~ 
+  // to permit creation of tags like "10" or "1234" (numeric characters only)
+  
+  global $db;
+
+  $tag_ids = array();
+  $raw_tags = explode(',',$raw_tags);
+
+  foreach ($raw_tags as $raw_tag)
+  {
+    if (preg_match('/^~~(\d+)~~$/', $raw_tag, $matches))
+    {
+      array_push($tag_ids, $matches[1]);
+    }
+    elseif ($allow_create)
+    {
+      // does the tag already exists?
+      $query = '
+SELECT id_tag
+  FROM '.TAG_TABLE.'
+  WHERE name = "'.$raw_tag.'"
+;';
+      $existing_tags = array_from_query($query, 'id_tag');
+
+      if (count($existing_tags) == 0)
+      {
+        mass_inserts(
+          TAG_TABLE,
+          array('name'),
+          array(
+            array(
+              'name' => $raw_tag,
+              )
+            )
+          );
+        array_push($tag_ids, $db->insert_id());
+      }
+      else
+      {
+        array_push($tag_ids, $existing_tags[0]);
+      }
+    }
+  }
+
+  return $tag_ids;
+}
+
+function get_tag_name_from_id($id)
+{
+  global $db;
+  
+  $query = '
+SELECT
+    name
+  FROM '.TAG_TABLE.'
+  WHERE id_tag = '.$id.'
+;';
+  $result = $db->query($query);
+  
+  list($name) = $db->fetch_row($result);
+  return $name;
 }
 
 function deltree($path)

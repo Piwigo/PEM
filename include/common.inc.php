@@ -128,6 +128,13 @@ if (is_file($root_path.'language/'.$_SESSION['language'].'/help_user.html')
 if (isset($_GET['cid'])) {
   if (is_numeric($_GET['cid'])) {
     $_SESSION['filter']['category_ids'] = array($_GET['cid']);
+    $_SESSION['filter']['category_mode'] = 'and';
+  }
+}
+if (isset($_GET['tid'])) {
+  if (is_numeric($_GET['tid'])) {
+    $_SESSION['filter']['tag_ids'] = array($_GET['tid']);
+    $_SESSION['filter']['tag_mode'] = 'and';
   }
 }
 

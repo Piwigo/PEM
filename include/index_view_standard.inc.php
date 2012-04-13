@@ -59,8 +59,12 @@ if (isset($page['filtered_extension_ids'])) {
   }
 }
 $query.= '
-  GROUP BY idx_extension
-  ORDER BY max_date DESC
+  GROUP BY idx_extension';
+if (!isset($_SESSION['filter']['search'])) {
+  $query.= '
+  ORDER BY max_date DESC';
+}
+$query.= '
 ;';
 
 $all_revision_ids = array_from_query($query, 'id_revision');
@@ -98,6 +102,7 @@ $extension_ids = array_unique(
 $extension_infos_of = get_extension_infos_of($extension_ids);
 $download_of_extension = get_download_of_extension($extension_ids);
 $categories_of_extension = get_categories_of_extension($extension_ids);
+$tags_of_extension = get_tags_of_extension($extension_ids);
 
 $revisions = array();
 foreach ($revision_ids as $revision_id)
@@ -143,6 +148,7 @@ foreach ($revision_ids as $revision_id)
       'downloads' => isset($download_of_extension[$extension_id]) ?
                        $download_of_extension[$extension_id] : 0,
       'categories' => $categories_of_extension[$extension_id],
+      'tags' => $tags_of_extension[$extension_id],
       )
     );
 }

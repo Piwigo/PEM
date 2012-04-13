@@ -97,6 +97,10 @@ if (isset($_SESSION['filter']['search'])) {
   $tpl->assign('search', $_SESSION['filter']['search']);
 }
 
+if (isset($_SESSION['filter']['tag_ids'])) {
+  $tpl->assign('search', get_tag_name_from_id($_SESSION['filter']['tag_ids'][0]));
+}
+
 // Gets the list of the available versions (allows users to filter)
 $query = '
 SELECT
@@ -223,7 +227,7 @@ if (isset($conf['banner_filepath'])) {
 
 $tpl->assign('menu_versions', $tpl_versions);
 $tpl->assign('title', $conf['page_title']);
-$tpl->assign('action', $_SERVER['REQUEST_URI']);
+$tpl->assign('action', 'index.php');
 
 if (isset($user['id']))
 {

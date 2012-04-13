@@ -148,6 +148,13 @@ DELETE
   WHERE idx_extension = '.$page['extension_id'].'
 ;';
     $db->query($query);
+    
+    $query = '
+DELETE
+  FROM '.EXT_TAG_TABLE.'
+  WHERE idx_extension = '.$page['extension_id'].'
+;';
+    $db->query($query);
   }
   else
   {
@@ -198,6 +205,21 @@ DELETE
       );
   }
   mass_inserts(EXT_CAT_TABLE, array_keys($inserts[0]), $inserts);
+  
+  // Inserts the extensions <-> tags link
+  $_POST['tags'] = get_tag_ids($_POST['tags'], true);
+  $inserts = array();
+  foreach ($_POST['tags'] as $tag)
+  {
+    array_push(
+      $inserts,
+      array(
+        'idx_tag'   => $tag,
+        'idx_extension'  => $page['extension_id'],
+        )
+      );
+  }
+  mass_inserts(EXT_TAG_TABLE, array_keys($inserts[0]), $inserts);
   
   message_success('Extension successfuly added. Thank you.',
     'extension_view.php?eid='.$page['extension_id']);
@@ -272,8 +294,26 @@ SELECT idx_category
       $row['idx_category']
       );
   }
+  
+  $extension['tags'] = array();
+  
+  $query = '
+SELECT idx_tag
+  FROM '.EXT_TAG_TABLE.'
+  WHERE idx_extension = '.$page['extension_id'].'
+;';
+  $result = $db->query($query);
+
+  while ($row = $db->fetch_array($result))
+  {
+    array_push(
+      $extension['tags'],
+      '~~'.$row['idx_tag'].'~~'
+      );
+  }
 
   $selected_categories = $extension['categories'];
+  $selected_tags = $extension['tags'];
   $name = $extension['name'];
   $descriptions = $extension['descriptions'];
   $default_language = $extension['default_language'];
@@ -283,6 +323,7 @@ else
   $name = '';
   $descriptions = array();
   $selected_categories = array();
+  $selected_tags = array();
   $default_language = $interface_languages[$conf['default_language']]['id'];
 }
 
@@ -295,10 +336,32 @@ foreach($cats as $cat)
     array(
       'name' => $cat['name'],
       'value' => $cat['id_category'],
-      'checked' =>
+      'selected' =>
       in_array($cat['id_category'], $selected_categories)
-        ? 'checked="checked"'
+        ? 'selected="selected"'
         : '',
+      )
+    );
+}
+
+// Gets the available tags
+$query = '
+SELECT
+    id_tag,
+    name
+  FROM '.TAG_TABLE.'
+;';
+$tags = array_of_arrays_from_query($query);
+
+$tpl_tags = array();
+foreach ($tags as $tag)
+{
+  $tag['id_tag'] = '~~'.$tag['id_tag'].'~~';
+  array_push(
+    $tpl_tags,
+    array_merge(
+      $tag, 
+      array('selected' => in_array($tag['id_tag'], $selected_tags))
       )
     );
 }
@@ -321,6 +384,7 @@ $tpl->assign(
     'descriptions' => $descriptions,
     'default_language' => $default_language,
     'extension_categories' => $tpl_extension_categories,
+    'tags' => $tpl_tags,
     )
   );
 

@@ -13,10 +13,24 @@
         <th>{'Categories'|@translate}</th>
         <td>
           <div class="checkboxBox">
-{foreach from=$extension_categories item=cat}
-            <label><input type="checkbox" name="extension_category[]" value="{$cat.value}" {$cat.checked} {if $translator}disabled="disabled"{/if}/> {$cat.name}</label>
-{/foreach}
+            <select name="extension_category[]" id="extension_category" style="width:500px;" multiple="multiple">
+            {foreach from=$extension_categories item=cat}
+              <option value="{$cat.value}" {$cat.selected} {if $translator}disabled="disabled"{/if}>{$cat.name}</option>
+            {/foreach}
+            </select>
           </div>
+        </td>
+      </tr>
+      <tr>
+        <th>{'Tags'|@translate}</th>
+        <td>
+          <select id="tags" name="tags" multiple="multiple">
+          {foreach from=$tags item=tag}
+            {if $tag.selected}
+            <option value="{$tag.id_tag}" class="selected">{$tag.name}</option>
+            {/if}
+          {/foreach}
+          </select>
         </td>
       </tr>
       <tr>
@@ -47,6 +61,12 @@
 </form>
 
 {known_script id="jquery" src="template/jquery.min.js"}
+{known_script id="jquery.tokeninput" src="template/jquery.tokeninput.js"}
+{known_script id="jquery.chosen" src="template/chosen.jquery.min.js"}
+{html_head}
+<link rel="stylesheet" type="text/css" href="template/chosen.css">
+<link rel="stylesheet" type="text/css" href="template/jquery.tokeninput.css">
+{/html_head}
 
 <script type="text/javascript">
 var languages = new Array();
@@ -90,6 +110,21 @@ $(document).ready(function() {ldelim}
       opt.html(opt.html().replace("\u2714", "\u2718"));
     }
   });
+  
+  $("#tags").tokenInput(
+    [{foreach from=$tags item=tag name=tags}{ldelim}"name":"{$tag.name|@escape:'javascript'}","id":"{$tag.id_tag}"{rdelim}{if !$smarty.foreach.tags.last},{/if}{/foreach}],
+    {ldelim}
+      hintText: '{'Type in a search term'|@translate}',
+      noResultsText: '{'No results'|@translate}',
+      searchingText: '{'Searching...'|@translate}',
+      newText: ' ({'new'|@translate})',
+      animateDropdown: false,
+      preventDuplicates: true,
+      allowCreation: true
+    }
+  );
+  
+  $('#extension_category').chosen();
 });
 
 function set_default_description (id) {ldelim}

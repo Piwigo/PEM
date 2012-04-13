@@ -65,6 +65,10 @@ $versions_of_extension = get_versions_of_extension(
 $categories_of_extension = get_categories_of_extension(
   array($page['extension_id'])
   );
+  
+$tags_of_extension = get_tags_of_extension(
+  array($page['extension_id'])
+  );
 
 // print_array($categories_of_extension);
   
@@ -103,6 +107,7 @@ $tpl->assign(
       ),
     'extension_downloads' => $extension_downloads,
     'extension_categories' => $categories_of_extension[$page['extension_id']],
+    'extension_tags' => $tags_of_extension[$page['extension_id']],
     )
   );
   

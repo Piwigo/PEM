@@ -170,4 +170,11 @@ $lang['Download'] = 'Download';
 $lang['releases'] = 'releases';
 
 $lang['Choose compatibility versions...'] = 'Choose compatibility versions...';
+
+$lang['Tags'] = 'Tags';
+$lang['Type in a search term'] = 'Type in a search term';
+$lang['No results'] = 'No results';
+$lang['Searching...'] = 'Searching...';
+$lang['new'] = 'new';
+
 ?>

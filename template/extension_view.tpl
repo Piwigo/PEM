@@ -50,6 +50,7 @@ hs.lang['restoreTitle'] = '';
 <ul class="extensionInfos">
   <li><em>{if count($authors)>1}{'Authors'|@translate}{else}{'Author'|@translate}{/if}:</em> {', '|@implode:$authors}</li>
   <li><em>{'Categories'|@translate}:</em> {$extension_categories}</li>
+  <li><em>{'Tags'|@translate}:</em> {$extension_tags}</li>
   <li><em>{'First revision date'|@translate}:</em> {$first_date}</li>
   <li><em>{'Latest revision date'|@translate}:</em> {$last_date}</li>
   <li><em>{'Compatible with'|@translate}:</em> {$software} {'releases'|@translate} {$compatible_with}</li>
