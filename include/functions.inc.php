@@ -1241,7 +1241,7 @@ SELECT idx_extension,
   foreach ($extension_ids as $extension_id) {
     $categories_of_extension[$extension_id] = implode(
       ', ',
-      $cat_list_for[$extension_id]
+      isset($cat_list_for[$extension_id]) ? $cat_list_for[$extension_id] : array()
       );
   }
 
@@ -1562,11 +1562,13 @@ function get_tag_ids($raw_tags, $allow_create=true)
   // The ~~34~~ means that it is an existing tag. I've added the surrounding ~~ 
   // to permit creation of tags like "10" or "1234" (numeric characters only)
   
+  if (empty($raw_tags)) return array();
+  
   global $db;
 
   $tag_ids = array();
   $raw_tags = explode(',',$raw_tags);
-
+  
   foreach ($raw_tags as $raw_tag)
   {
     if (preg_match('/^~~(\d+)~~$/', $raw_tag, $matches))

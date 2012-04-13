@@ -207,19 +207,22 @@ DELETE
   mass_inserts(EXT_CAT_TABLE, array_keys($inserts[0]), $inserts);
   
   // Inserts the extensions <-> tags link
-  $_POST['tags'] = get_tag_ids($_POST['tags'], true);
-  $inserts = array();
-  foreach ($_POST['tags'] as $tag)
+  if (!empty($_POST['tags']))
   {
-    array_push(
-      $inserts,
-      array(
-        'idx_tag'   => $tag,
-        'idx_extension'  => $page['extension_id'],
-        )
-      );
+    $_POST['tags'] = get_tag_ids($_POST['tags'], true);
+    $inserts = array();
+    foreach ($_POST['tags'] as $tag)
+    {
+      array_push(
+        $inserts,
+        array(
+          'idx_tag'   => $tag,
+          'idx_extension'  => $page['extension_id'],
+          )
+        );
+    }
+    mass_inserts(EXT_TAG_TABLE, array_keys($inserts[0]), $inserts);
   }
-  mass_inserts(EXT_TAG_TABLE, array_keys($inserts[0]), $inserts);
   
   message_success('Extension successfuly added. Thank you.',
     'extension_view.php?eid='.$page['extension_id']);
