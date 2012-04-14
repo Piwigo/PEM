@@ -70,4 +70,20 @@ SELECT *
 
   return $user_infos_of;
 }
+
+function get_admin_email()
+{
+  global $conf;
+  
+  $query = '
+SELECT '.$conf['user_fields']['email'].' AS email
+  FROM '.USERS_TABLE.'
+  WHERE '.$conf['user_fields']['id'].' IN ('.implode(',', $conf['admin_users']).')
+;';
+  $admins = array_from_query($query, 'email');
+  
+  return implode(',', $admins);
+}
+  
+  
 ?>

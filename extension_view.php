@@ -28,6 +28,8 @@ if (!isset($page['extension_id']))
   message_die('eid URL parameter is missing', 'Error', false );
 }
 
+$self_url = $root_path.'extension_view.php?eid='.$page['extension_id'];
+
 $tpl->set_filenames(
   array(
     'page' => 'page.tpl',
@@ -35,12 +37,75 @@ $tpl->set_filenames(
   )
 );
 
-// rating
-if ( isset($_GET['action']) and $_GET['action'] == 'rate' )
+// actions
+if (isset($_GET['action']))
 {
-  rate_extension($page['extension_id'], $_POST['rate']);
-  header('Location: extension_view.php?eid='.$page['extension_id']);  
-}  
+  switch ($_GET['action'])
+  {
+    case 'rate':
+      rate_extension($page['extension_id'], $_POST['score']);
+      header('Location: '.$self_url);
+      break;
+     
+    case 'add_review':
+      if (empty($_POST)) break;
+      
+      $user_review = array(
+        'idx_extension' => $page['extension_id'],
+        'author' => trim($_POST['author']),
+        'email' => trim($_POST['email']),
+        'title' => trim($_POST['title']),
+        'content' => $_POST['content'],
+        'rate' => (float)$_POST['score'],
+        );
+        
+      insert_user_review($user_review);
+      switch ($user_review['action'])
+      {
+        case 'validate':
+          unset($user_review);
+          $user_review['action'] = 'validate';
+          $user_review['message'] = l10n('Thank you!');
+          break;
+          
+        case 'moderate':
+          unset($user_review);
+          $user_review['action'] = 'moderate';
+          $user_review['message'] = l10n('Thank you! Your review is awaiting moderation.');
+          break;
+          
+        case 'reject':
+          $user_review['display'] = true;
+          break;
+      }
+      
+      break;
+  }
+}
+
+// comments management
+if (isAdmin(@$user['id']))
+{
+  if (isset($_GET['delete_review']))
+  {
+    $query = '
+DELETE FROM '.REVIEW_TABLE.'
+  WHERE id_review = '.$_GET['delete_review'].'
+;';
+    $db->query($query);
+    header('Location: '.$self_url);
+  }
+  else if (isset($_GET['validate_review']))
+  {
+    $query = '
+UPDATE '.REVIEW_TABLE.'
+  SET validated = "true"
+  WHERE id_review = '.$_GET['validate_review'].'
+;';
+    $db->query($query);
+    header('Location: '.$self_url);
+  }
+}
 
 // Gets extension informations
 $data = get_extension_infos_of($page['extension_id']);
@@ -321,12 +386,12 @@ SELECT id_revision,
 $rate_summary = array(
   'count' => 0, 
   'count_text' => sprintf(l10n('Rated %d times'), 0), 
-  'rating_score' => $data['rating_score'], 
+  'rating_score' => generate_static_stars($data['rating_score']), 
   );
 if ($rate_summary['rating_score'] != null)
 {
   $query = '
-SELECT COUNT(rate) AS count
+SELECT COUNT(1)
   FROM '.RATE_TABLE.'
   WHERE idx_extension = '.$page['extension_id'].'
 ;';
@@ -354,7 +419,7 @@ SELECT rate
       array_pop($ip_components);
     }
     $query.= '
-    AND anonymous_id = "'.implode ('.', $ip_components) . '"';
+    AND anonymous_id = "'.implode('.', $ip_components) . '"';
   }
   $query.= '
 ;';
@@ -366,9 +431,45 @@ SELECT rate
   }
 }
 $tpl->assign('user_rating', array(
-  'action' => 'extension_view.php?eid='.$page['extension_id'].'&amp;action=rate',
+  'action' => $self_url.'&amp;action=rate',
   'rate' => $user_rate,
   ));
+  
+// reviews
+$query = '
+SELECT *
+  FROM '.REVIEW_TABLE.'
+  WHERE
+    idx_extension = '.$page['extension_id'].'
+    '.(!isAdmin(@$user['id']) ? 'AND validated = "true"' : null).'
+  ORDER BY date DESC
+;';
+$tpl_reviews = array_of_arrays_from_query($query, 'id_review');
+
+foreach ($tpl_reviews as &$review)
+{
+  $review['rate'] = generate_static_stars($review['rate'], false);
+  $review['content'] = nl2br($review['content']);
+  $review['date'] = date('d F Y', strtotime($review['date']));
+  
+  if (isAdmin(@$user['id']))
+  {
+    $review['u_delete'] = $self_url.'&amp;delete_review='.$review['id_review'];
+    if ($review['validated'] == 'false') $review['u_validate'] = $self_url.'&amp;validate_review='.$review['id_review'];
+  }
+}
+
+$tpl->assign('nb_reviews', count($tpl_reviews));
+$tpl->assign('reviews', $tpl_reviews);
+
+if (!empty($user['id'])) {
+  $user_review['author'] = $user['username'];
+  $user_review['email'] = $user['email'];
+  $user_review['is_logged'] = true;
+}
+$user_review['form_action'] = $self_url.'&amp;action=add_review';
+$user_review = array_map(create_function('$v', 'return stripslashes($v);'), $user_review);
+$tpl->assign('user_review', $user_review);
 
 
 // +-----------------------------------------------------------------------+

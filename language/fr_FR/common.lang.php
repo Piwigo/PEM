@@ -184,4 +184,15 @@ $lang['Update your rating'] = 'Changez votre note';
 $lang['Rate it!'] = 'Notez le !';
 $lang['Your rating'] = 'Votre note';
 $lang['All'] = 'Toutes';
+
+$lang['Thank you!'] = 'Merci !';
+$lang['Thank you! Your review is awaiting moderation.'] = 'Merci ! Votre message est en attente de validation.';
+$lang['Please enter your name'] = 'Veuillez renseigner votre nom';
+$lang['Please enter your email'] = 'Veuillez renseigner votre email';
+$lang['The review is empty!'] = 'Le message est vide !';
+$lang['Please rate this extension'] = 'Veuillez noter cette extension';
+$lang['Reviews'] = 'Avis';
+$lang['Add a review'] = 'Donnez votre avis';
+$lang['Email (not displayed)'] = 'Email (non publié)';
+$lang['Review summary'] = 'Résumé';
 ?>

@@ -1815,7 +1815,7 @@ function rate_extension($extension_id, $rate)
   {
     array_pop($ip_components);
   }
-  $anonymous_id = implode ('.', $ip_components);
+  $anonymous_id = implode('.', $ip_components);
 
   if ($user_anonymous)
   {
@@ -1875,7 +1875,7 @@ DELETE
 ;';
   $db->query($query);
   
-  if ($rate != 'null')
+  if ($rate != '')
   {
     $query = '
 INSERT
@@ -1911,6 +1911,253 @@ UPDATE '.EXT_TABLE.'
   WHERE id_extension = '.$extension_id.'
 ;';
   $db->query($query);
+}
+
+function generate_static_stars($score, $space=true)
+{
+  if ($score == null) return null;
+  
+  $score = min(max($score, 0), 5);
+  $floor = floor($score);
+  $space = $space ? ' ' : null;
+  
+  $html = null;
+  for ($i=1; $i<=$floor; $i++)
+  {
+    $html.= '<img alt="'.$i.'" src="template/jquery.raty/star-on.png">'.$space;
+  }
+  
+  if ($score-$floor <= .25)
+  {
+    $html.= '<img alt="'.($floor+1).'" src="template/jquery.raty/star-off.png">'.$space;
+  }
+  else if ($score-$floor <= .75)
+  {
+    $html.= '<img alt="'.($floor+1).'" src="template/jquery.raty/star-half.png">'.$space;
+  }
+  else
+  {
+    $html.= '<img alt="'.($floor+1).'" src="template/jquery.raty/star-on.png">'.$space;
+  }
+  
+  if ($score != 5)
+  {
+    for ($i=$floor+2; $i<=5; $i++)
+    {
+      $html.= '<img alt="'.$i.'" src="template/jquery.raty/star-off.png">'.$space;
+    }
+  }
+  
+  return $html;
+}
+
+function insert_user_review(&$comm)
+{
+  global $conf, $user, $db;
+  
+  if ( empty($comm['author']) or empty($comm['email']) or empty($comm['content']) or empty($comm['rate']) )
+  {
+    $comm['action'] = 'reject';
+    $comm['message'] = l10n('One or more required fields are empty');
+    return;
+  }
+  
+  if (filter_var($comm['email'], FILTER_VALIDATE_EMAIL) === false)
+  {
+    $comm['action'] = 'reject';
+    $comm['message'] = l10n('Mail address must be like xxx@yyy.eee (example : jack@altern.org)');
+    return;
+  }
+  
+  $user_id = !isset($user['id']) ? 0 : $user['id'];
+  
+  if ( !$conf['comments_validation'] or isAdmin($user['id']) )
+  {
+    $comm['action'] = 'validate';
+  }
+  else if ($conf['anti-flood_time'] > 0)
+  {
+    $query = '
+SELECT COUNT(1) 
+  FROM '.REVIEW_TABLE.'
+  WHERE 
+    date > SUBDATE(NOW(), INTERVAL '.$conf['anti-flood_time'].' SECOND)
+    AND idx_user = '.$user_id;
+  if ($user_id == 0)
+  {
+    $ip_components = explode('.', $_SERVER["REMOTE_ADDR"]);
+    if (count($ip_components) > 3)
+    {
+      array_pop($ip_components);
+    }
+    $query.= '
+    AND anonymous_id = "'.implode('.', $ip_components).'"';
+  }
+  $query.= '
+;';
+
+    list($counter) = $db->fetch_row($db->query($query));
+    if ($counter > 0)
+    {
+      $comm['message'] = l10n('Anti-flood system : please wait for a moment before trying to post another review');
+      $comm['action'] = 'reject';
+      return;
+    }
+    else
+    {
+      $comm['action'] = 'moderate';
+    }
+  }
+  else
+  {
+    $comm['action'] = 'moderate';
+  }
+  
+  if ($comm['action'] != 'reject')
+  {
+    if (empty($comm['title']))
+    {
+      $comm['title'] = substr($comm['content'], 0, 64);
+    }
+  
+    $query = '
+INSERT INTO '.REVIEW_TABLE.' (
+    idx_user,
+    idx_extension,
+    date,
+    author,
+    email,
+    title,
+    content, 
+    rate,
+    anonymous_id,
+    validated
+  )
+  VALUES (
+    '.$user_id.',
+    '.$comm['idx_extension'].',
+    NOW(),
+    "'.$comm['author'].'",
+    "'.$comm['email'].'",
+    "'.$comm['title'].'",
+    "'.$comm['content'].'",
+    '.$comm['rate'].',
+    "'.$anonymous_id.'",
+    "'.($comm['action']=='validate' ? 'true':'false').'"
+  )
+';
+
+    $db->query($query);
+    $comm['id'] = $db->insert_id();
+    rate_extension($comm['idx_extension'], $comm['rate']);
+    
+    if ( $conf['email_admin_on_comment_validation'] !== false and $comm['action'] == 'moderate' )
+    {
+      $u_delete = get_absolute_home_url().'admin/reviews.php?delete_review='.$comm['id'];
+      $u_validate = get_absolute_home_url().'admin/reviews.php?validate_review='.$comm['id'];
+      $extension_infos = get_extension_infos_of($comm['idx_extension']);
+      
+      $content = '
+<i>Extension:</i> '.$extension_infos['name'].'<br>
+<i>Author:</i> '.$comm['author'].'<br>
+<i>Email:</i> '.$comm['email'].'<br>
+<i>IP:</i> '.$_SERVER["REMOTE_ADDR"].'<br>
+<i>Date:</i> '.date('r').'<br>
+<br>
+<b>'.$comm['title'].'</b><br>
+'.$comm['content'].'<br>
+<br>
+<a href="'.$u_delete.'">Delete</a> | <a href="'.$u_validate.'">Validate<a><br>
+';
+
+      send_mail(
+        get_admin_email(),
+        'A new review on "'.$extension_infos['name'].'" by "'.$comm['author'].'"',
+        $content,
+        array('content_format'=>'text/html')
+        );
+    }
+  }
+}
+
+/**
+ * sends an email with PHP mail() function
+ * @param:
+ *   - to (list separated by comma).
+ *   - subject
+ *   - content
+ *   - args: function params of mail function:
+ *       o from [default 'noreply@domain']
+ *       o cc [default empty]
+ *       o bcc [default empty]
+ *       o content_format [default value 'text/plain']
+ * @return boolean
+ */
+function send_mail($to, $subject, $content, $args = array())
+{
+  // check inputs
+  if (empty($to) and empty($args['cc']) and empty($args['bcc']))
+  {
+    return false;
+  }
+
+  if (empty($subject) or empty($content))
+  {
+    return false;
+  }
+
+  if (empty($args['from']))
+  {
+    $args['from'] = 'PEM <noreply@'.$_SERVER['HTTP_HOST'].'>';
+  }
+
+  if (empty($args['content_format']))
+  {
+    $args['content_format'] = 'text/plain';
+  }
+
+  // format subject
+  $subject = trim(preg_replace('#[\n\r]+#s', null, $subject));
+
+  // headers
+  $headers = 'From: '.$args['from']."\n";
+
+  if (!empty($args['cc']))
+  {
+    $headers.= 'Cc: '.implode(',', $args['cc'])."\n";
+  }
+
+  if (!empty($args['bcc']))
+  {
+    $headers.= 'Bcc: '.implode(',', $args['bcc'])."\n";
+  }
+
+  $headers.= 'Content-Type: text/html; charset="utf-8"'."\n".
+  $headers.= 'X-Mailer: PEM'."\n";
+
+  // content
+  if ($args['content_format'] == 'text/plain')
+  {
+    $content = nl2br(htmlspecialchars($content, ENT_QUOTES));
+  }
+
+  // send mail
+  return @mail($to, $subject, $content, $headers);
+}
+
+function get_absolute_home_url()
+{
+  if (isset($_SERVER['HTTPS']) && ( strtolower($_SERVER['HTTPS']) == 'on' or $_SERVER['HTTPS'] == 1 ) )
+  {
+    $host = 'https://';
+  }
+  else
+  {
+    $host = 'http://';
+  }
+  $host.= $_SERVER['SERVER_NAME'];
+  $host.= str_replace(basename($_SERVER['SCRIPT_NAME']), null, $_SERVER['SCRIPT_NAME']);
+  return $host;
 }
 
 ?>

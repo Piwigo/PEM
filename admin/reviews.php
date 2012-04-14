@@ -27,69 +27,61 @@ require_once( $root_path . 'admin/init.inc.php' );
 $tpl->set_filenames(
   array(
     'page' => 'admin/page.tpl',
-    'index' => 'admin/index.tpl'
+    'reviews' => 'admin/reviews.tpl'
   )
 );
 
-// Select the revisions count
-$sql =  '
-SELECT
-    COUNT(id_revision) AS revisions_count
-  FROM '.REV_TABLE.'
+if (isset($_GET['delete_review']))
+{
+  $query = '
+DELETE FROM '.REVIEW_TABLE.'
+  WHERE id_review = '.$_GET['delete_review'].'
 ;';
-$req = $db->query($sql);
-$data = $db->fetch_assoc($req);
-  
-$tpl->assign('revisions_count', $data['revisions_count']);
-
-// Are there extension without a single revision?
-$query = '
-SELECT COUNT(*)
-  FROM '.EXT_TABLE.'
-    LEFT JOIN '.REV_TABLE.' ON idx_extension = id_extension
-  WHERE id_revision IS NULL
+  $db->query($query);
+}
+else if (isset($_GET['validate_review']))
+{
+  $query = '
+UPDATE '.REVIEW_TABLE.'
+  SET validated = "true"
+  WHERE id_review = '.$_GET['validate_review'].'
 ;';
-list($count) = $db->fetch_row($db->query($query));
-if ($count > 0) {
-  $tpl->assign(
-    array(
-      'empty_extensions_count' => $count,
-      'empty_extensions_url' => 'empty_extensions.php',
-      )
-    );
+  $db->query($query);
 }
 
-// Are there revisions compatible to no version?
 $query = '
-SELECT
-    name,
-    id_revision,
-    idx_extension,
-    nb_downloads,
-    version,
-    idx_version
-  FROM '.REV_TABLE.'
-    JOIN '.EXT_TABLE.' ON idx_extension = id_extension
-    LEFT JOIN '.COMP_TABLE.' ON id_revision = idx_revision
-  WHERE idx_version IS NULL
-;';
-$tpl->assign('no_compat_revs', array_of_arrays_from_query($query));
-
-// Reviews awaiting validation
-$query = '
-SELECT COUNT(1)
+SELECT *
   FROM '.REVIEW_TABLE.'
   WHERE validated = "false"
+  ORDER BY date DESC
 ;';
-list($count) = $db->fetch_row($db->query($query));
-if ($count > 0) {
-  $tpl->assign('nb_awaiting_reviews', $count);
+$tpl_reviews = array_of_arrays_from_query($query, 'id_review');
+
+if (count($tpl_reviews))
+{
+  $extensions_ids = array_map(create_function('$v', 'return $v["idx_extension"];'), $tpl_reviews); 
+  $extensions_infos_of = get_extension_infos_of($extensions_ids);
+
+  foreach ($tpl_reviews as &$review)
+  {
+    $review['extension_name'] = $extensions_infos_of[ $review['idx_extension'] ]['name'];
+    $review['content'] = nl2br($review['content']);
+    $review['date'] = date('d F Y H:i:s', strtotime($review['date']));
+    $review['u_delete'] = 'reviews.php?delete_review='.$review['id_review'];
+    $review['u_validate'] = 'reviews.php?validate_review='.$review['id_review'];
+  }
+
+  $tpl->assign('reviews', $tpl_reviews);
 }
+
+$tpl->assign('nb_reviews', count($tpl_reviews));
+$tpl->assign('f_action', 'reviews.php');
 
 // +-----------------------------------------------------------------------+
 // |                           html code display                           |
 // +-----------------------------------------------------------------------+
 
-$tpl->assign_var_from_handle('main_content', 'index');
-$tpl->pparse('page');
+$tpl->assign_var_from_handle('main_content', 'reviews');
+$tpl->parse('page');
+$tpl->p();
 ?>

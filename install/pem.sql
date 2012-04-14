@@ -108,6 +108,22 @@ CREATE TABLE `pem_rates` (
   PRIMARY KEY (`idx_user`,`idx_extension`,`anonymous_id`)
 ) DEFAULT CHARSET=utf8;
 
+DROP TABLE IF EXISTS `pem_reviews`;
+CREATE TABLE `pem_reviews` (
+  `id_review` int(11) NOT NULL AUTO_INCREMENT,
+  `idx_user` smallint(5) unsigned NOT NULL,
+  `idx_extension` int(11) NOT NULL,
+  `date` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `author` varchar(20) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `title` varchar(255) NOT NULL,
+  `content` text NOT NULL,
+  `rate` float(5,2) NOT NULL,
+  `anonymous_id` varchar(45) NOT NULL,
+  `validated` enum('true','false') NOT NULL DEFAULT 'false',
+  PRIMARY KEY (`id_review`)
+) DEFAULT CHARSET=utf8;
+
 DROP TABLE IF EXISTS `pem_revisions`;
 CREATE TABLE `pem_revisions` (
   `id_revision` int(11) NOT NULL auto_increment,

@@ -24,6 +24,7 @@
         <li><a href="categories.php">Categories</a></li>
         <li><a href="versions.php">Versions</a></li>
         <li><a href="languages.php">Languages</a></li>
+        <li><a href="reviews.php">Reviews</a></li>
       </ul>
     </div>
   </div>

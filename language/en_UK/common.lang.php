@@ -185,4 +185,16 @@ $lang['Rate it!'] = 'Rate it!';
 $lang['Your rating'] = 'Your rating';
 $lang['All'] = 'All';
 
+$lang['Thank you!'] = 'Thank you!';
+$lang['Thank you! Your review is awaiting moderation.'] = 'Thank you! Your review is awaiting moderation.';
+$lang['Please enter your name'] = 'Please enter your name';
+$lang['Please enter your email'] = 'Please enter your email';
+$lang['The review is empty!'] = 'The review is empty!';
+$lang['Please rate this extension'] = 'Please rate this extension';
+$lang['Reviews'] = 'Reviews';
+$lang['Add a review'] = 'Add a review';
+$lang['Email (not displayed)'] = 'Email (not displayed)';
+$lang['Review summary'] = 'Review summary';
+
+
 ?>

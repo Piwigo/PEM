@@ -1,5 +1,3 @@
-{known_script id="jquery" src="template/jquery.min.js"}
-{known_script id="jquery.raty" src="template/jquery.raty/jquery.raty.min.js"}
 {known_script id="highslide" src="template/highslide/highslide-full.packed.js"}
 {html_head}
 <link rel="stylesheet" type="text/css" href="template/highslide/highslide.css">
@@ -39,16 +37,7 @@ hs.lang['restoreTitle'] = '';
 {/if}
   <p class="extension_title">
     <strong><a href="extension_view.php?eid={$revision.extension_id}">{$revision.extension_name}</a></strong>
-  {if isset($revision.rating_score)}
-    <div class="rating_score"></div>
-    <script type="text/javascript">
-    $('#extension_{$revision.id} .rating_score').raty({ldelim}
-      path: "template/jquery.raty/",
-      readOnly: true,
-      start: {$revision.rating_score}
-    });
-    </script>
-  {/if}
+    {if isset($revision.rating_score)}<div class="rating_score">{$revision.rating_score}</div>{/if}
   </p>
 
   <p><a href="{$revision.revision_url}">{'Revision'|@translate} {$revision.name}</a></p>

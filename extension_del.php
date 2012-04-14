@@ -89,6 +89,14 @@ DELETE
 ;';
 $db->query($query);
 
+// Deletes all the reviews
+$query = '
+DELETE
+  FROM '.REVIEW_TABLE.'
+  WHERE idx_extension = '.$page['extension_id'].'
+;';
+$db->query($query);
+
 // And finally delete the extension
 $query = '
 DELETE

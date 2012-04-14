@@ -24,8 +24,8 @@ if(!defined('INTERNAL'))
   die('No right to do that, sorry. :)');
 }
 
-if (!isAdmin($user['id']))
+if (!isAdmin(@$user['id']))
 {
-  die ('Go away :-)');
+  header('Location: '.$root_path);
 }
 ?>

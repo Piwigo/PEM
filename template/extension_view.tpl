@@ -17,6 +17,51 @@ hs.outlineType = 'rounded-white';
 hs.expandDuration = 400;
 hs.allowSizeReduction = false;
 hs.lang['restoreTitle'] = '';
+
+$(document).ready(function() {ldelim}
+  $('#user_rate div').raty({ldelim}
+    path: "template/jquery.raty/",
+    cancelHint: '{'cancel this rating!'|@translate}',
+    cancelPlace: 'right',
+    size:18, half: true,
+    click: function(score, event) {ldelim}
+      $("#user_rate").submit(); 
+    }
+    {if isset($user_rating.rate)}, cancel: true, start: {$user_rating.rate}{/if}
+  });
+  $("#user_rate_show").click(function() {ldelim}
+    $(this).slideUp();
+    $("#user_rate").slideDown();
+  });
+  
+  $("#review_form #review_rate").raty({ldelim}
+    path: "template/jquery.raty/",
+    half: true
+    {if isset($user_review.rate)}, start: {$user_review.rate}{elseif isset($user_rating.rate)}, start: {$user_rating.rate}{/if}
+  });
+  $("#review_form_show").click(function() {ldelim}
+    $("#review_form").slideToggle();
+  });
+  
+  $("#review_form").submit(function() {ldelim}
+    if ($("#review_form input[name='author']").val() == '') {ldelim}
+      alert("{'Please enter your name'|@translate}");
+      return false;
+    }
+    if ($("#review_form input[name='email']").val() == '') {ldelim}
+      alert("{'Please enter your email'|@translate}");
+      return false;
+    }
+    if ($("#review_form textarea[name='content']").val() == '') {ldelim}
+      alert("{'The review is empty!'|@translate}");
+      return false;
+    }
+    if ($("#review_form input[name='score']").val() == '') {ldelim}
+      alert("{'Please rate this extension'|@translate}");
+      return false;
+    }
+  });
+});
 </script>
 {/html_head}
 
@@ -42,6 +87,8 @@ hs.lang['restoreTitle'] = '';
 </ul>
 {/if}
 
+{if isset($user_review.message)}<div class="review_message {$user_review.action}">{$user_review.message}</div>{/if}
+
 <div class="extensionButtons">
 {if isset($download_last_url)}
   <div class="downloadButton"><a href="{$download_last_url}" title="{'Download last revision'|@translate}">{'Download'|@translate}</a></div>
@@ -52,42 +99,9 @@ hs.lang['restoreTitle'] = '';
   {if $rate_summary.rating_score == NULL}
     <div class="rating_infos">{'not rated yet'|@translate}</div>
   {else}
-  {html_head}
-    <script type="text/javascript">
-    $(document).ready(function() {ldelim}
-      $('#average_rating').raty({ldelim}
-        path: "template/jquery.raty/",
-        readOnly: true,
-        start: {$rate_summary.rating_score}
-      });
-    });
-    </script>
-  {/html_head}
-    <div id="average_rating"></div>
+    <div id="average_rating">{$rate_summary.rating_score}</div>
     <div class="rating_infos">{$rate_summary.count_text}</div>
   {/if}
-    
-  {html_head}
-    <script type="text/javascript">
-    $(document).ready(function() {ldelim}
-      $('#user_rate div').raty({ldelim}
-        path: "template/jquery.raty/",
-        cancelHint: '{'cancel this rating!'|@translate}',
-        cancelPlace: 'right',
-        size:18,
-        half: true,
-        click: function(score, event) {ldelim}
-          $("#user_rate").append('<input type="hidden" name="rate" value="'+ score +'">').submit(); 
-        }
-        {if isset($user_rating.rate)}, cancel: true, start: {$user_rating.rate}{/if}
-      });
-      $("#user_rate_show").click(function() {ldelim}
-        $(this).slideUp();
-        $('#user_rate').slideDown();
-      });
-    });
-    </script>
-  {/html_head}
     <br>
     <a id="user_rate_show">{if isset($user_rating.rate)}{'Update your rating'|@translate}{else}{'Rate it!'|@translate}{/if}</a>
     <form id="user_rate" style="display:none;" method="post" action="{$user_rating.action}">
@@ -186,4 +200,44 @@ hs.lang['restoreTitle'] = '';
 </div> <!-- changelog -->
 {else}
 <p><em>{'No revision available for this extension.'|@translate}</em></p>
+{/if}
+
+<!-- reviews -->
+{if !empty($reviews)}
+<h3>
+  {$nb_reviews} {'Reviews'|@translate} 
+  <a id="review_form_show" name="add_review" style="font-size:0.8em;font-weight:normal;"><img src="template/images/comment.gif"> {'Add a review'|@translate}</a>
+</h3>
+{else}
+<h3>
+  <a id="review_form_show" name="add_review"><img src="template/images/comment.gif"> {'Add a review'|@translate}</a>
+</h3>
+{/if}
+
+<form id="review_form" method="post" action="{$user_review.form_action}" {if !isset($user_review.display)}style="display:none;"{/if}>
+  <p {if isset($user_review.is_logged)}style="display:none;"{/if}><label for="author">{'Name'|@translate} :</label> <input id="author" type="text" name="author" size="30" value="{$user_review.author}"></p>
+  <p {if isset($user_review.is_logged)}style="display:none;"{/if}><label for="email">{'Email (not displayed)'|@translate} :</label> <input id="email" type="text" name="email" size="30" value="{$user_review.email}"></p>
+  <p><label for="title">{'Review summary'|@translate} :</label> <input id="title" type="text" name="title" size="60" value="{$user_review.title}"></p>
+  <p><textarea name="content" style="width:99%;" rows="6">{$user_review.content}</textarea></p>
+  <p><label>{'Your rating'|@translate} :</label> <span id="review_rate"></span></p>
+  <p style="text-align:right;"><input type="submit" value="{'Send'|@translate}"></p>
+</form>
+
+{if !empty($reviews)}
+<div id="reviews_list">
+  {foreach from=$reviews item=review name=review_loop}
+  <div class="reviewItem {if $smarty.foreach.review_loop.index is odd}odd{else}even{/if}">
+    <div class="reviewInfos">
+      <div class="rating">{$review.rate}</div>
+      <div class="author">
+        {$review.author} on {$review.date}
+        {if isset($review.u_delete)}| <a href="{$review.u_delete}">Delete</a>{/if}
+        {if isset($review.u_validate)}| <a href="{$review.u_validate}">Validate</a>{/if}
+      </div>
+      <div class="title">{$review.title}</div>
+    </div>
+    <blockquote>{$review.content}</blockquote>
+  </div>
+  {/foreach}
+</div>
 {/if}

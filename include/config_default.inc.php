@@ -149,6 +149,15 @@ $conf['upload_dir'] = 'upload/';
 // the template to give to sprintf, must take an integer then a string
 $conf['user_url_template'] = null;
 
+// active manual validation for reviews
+$conf['comments_validation'] = true;
+
+// send pending reviews to admins
+$conf['email_admin_on_comment_validation'] = true;
+
+// anti flood time in seconds
+$conf['anti-flood_time'] = 60;
+
 // +-----------------------------------------------------------------------+
 // |                             SVN parameters                            |
 // +-----------------------------------------------------------------------+

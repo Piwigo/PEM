@@ -475,6 +475,34 @@ CREATE TABLE `'.RATE_TABLE.'` (
 }
 
 // +-----------------------------------------------------------------------+
+// |                       Reviews tables                                     |
+// +-----------------------------------------------------------------------+
+
+$query = 'SHOW TABLES LIKE "'.REVIEW_TABLE.'";';
+$result = $db->query($query);
+if (!mysql_fetch_row($result))
+{
+  $query = '
+CREATE TABLE `'.REVIEW_TABLE.'` (
+  `id_review` int(11) NOT NULL AUTO_INCREMENT,
+  `idx_user` smallint(5) unsigned NOT NULL,
+  `anonymous_id` varchar(45) NOT NULL,
+  `idx_extension` int(11) NOT NULL,
+  `date` datetime NOT NULL DEFAULT \'0000-00-00 00:00:00\',
+  `author` varchar(20) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `title` varchar(255) NOT NULL,
+  `content` text NOT NULL,
+  `rate` float(5,2) NOT NULL,
+  `validated` enum(\'true\',\'false\') NOT NULL DEFAULT \'false\',
+  PRIMARY KEY (`id_review`)
+) DEFAULT CHARSET=utf8;';
+  $db->query($query);
+
+  array_push($upgrade_infos, 'Reviews table has been created');
+}
+
+// +-----------------------------------------------------------------------+
 // |                       Display upgrade result                          |
 // +-----------------------------------------------------------------------+
 
