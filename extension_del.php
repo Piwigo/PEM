@@ -73,6 +73,22 @@ DELETE
 ;';
 $db->query($query);
 
+// Deletes all the tags relations
+$query = '
+DELETE
+  FROM '.EXT_TAG_TABLE.'
+  WHERE idx_extension = '.$page['extension_id'].'
+;';
+$db->query($query);
+
+// Deletes all the rates
+$query = '
+DELETE
+  FROM '.RATE_TABLE.'
+  WHERE idx_extension = '.$page['extension_id'].'
+;';
+$db->query($query);
+
 // And finally delete the extension
 $query = '
 DELETE
