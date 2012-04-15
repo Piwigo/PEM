@@ -1009,6 +1009,7 @@ SELECT
     MAX(date) AS date
   FROM '.REV_TABLE.'
   WHERE idx_extension IN ('.implode(',', array_keys($search_result)).')
+  GROUP BY idx_extension
 ;';
     $result = $db->query($query);
     while ($row = $db->fetch_array($result))
