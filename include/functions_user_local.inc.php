@@ -19,6 +19,7 @@
 // +-----------------------------------------------------------------------+
 
 /**
+ * check user password
  */
 function check_user_password($username, $password)
 {
@@ -49,6 +50,9 @@ SELECT '.$conf['user_fields']['id'].' AS id,
   }
 }
 
+/**
+ * register a new user in the database
+ */
 function register_user($username, $password, $email)
 {
   global $conf, $db;
@@ -152,6 +156,7 @@ function create_user_infos($user_id)
 }
 
 /**
+ * returns basic infos of a specific user or a set of users
  */
 function get_user_basic_infos_of($author_ids)
 {
@@ -179,4 +184,5 @@ SELECT '.$conf['user_fields']['id'].' AS id,
 
   return $user_basic_infos_of;
 }
+
 ?>

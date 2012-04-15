@@ -18,6 +18,9 @@
 // | USA.                                                                  |
 // +-----------------------------------------------------------------------+
 
+/**
+ * delete a category and all dependencies
+ */
 function delete_category($category_id) {
   global $db;
   
@@ -43,6 +46,9 @@ DELETE
   $db->query($query);
 }
 
+/**
+ * delete a version and all dependencies
+ */
 function delete_version($version_id) {
   global $db;
 
@@ -60,4 +66,5 @@ DELETE
 ;';
   $db->query($query);
 }
+
 ?>

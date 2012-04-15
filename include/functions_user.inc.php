@@ -18,9 +18,9 @@
 // | USA.                                                                  |
 // +-----------------------------------------------------------------------+
 
-include_once(
-  $root_path.'include/functions_user_'.$conf['user_manager'].'.inc.php'
-  );
+/* this file contains functions for users management */
+
+include_once($root_path . 'include/functions_user_'.$conf['user_manager'].'.inc.php');
 
 /**
  * Performs all required actions for user login
@@ -43,6 +43,7 @@ function log_user($user_id, $username, $password)
 }
 
 /**
+ * returns all infos of a specific user or a set of users
  */
 function get_user_infos_of($user_ids)
 {
@@ -71,6 +72,9 @@ SELECT *
   return $user_infos_of;
 }
 
+/**
+ * returns an array of all admin emails
+ */
 function get_admin_email()
 {
   global $conf;
@@ -80,10 +84,76 @@ SELECT '.$conf['user_fields']['email'].' AS email
   FROM '.USERS_TABLE.'
   WHERE '.$conf['user_fields']['id'].' IN ('.implode(',', $conf['admin_users']).')
 ;';
-  $admins = array_from_query($query, 'email');
-  
-  return implode(',', $admins);
+  return array_from_query($query, 'email');
 }
-  
-  
+
+/**
+ * checks if the user is administrator
+ */
+function isAdmin($user_id)
+{
+  global $conf;
+
+  return in_array($user_id, $conf['admin_users']);
+}
+
+/**
+ * checks if the user is translator
+ */
+function isTranslator($user_id)
+{
+  global $conf;
+
+  return isset($conf['translator_users'][$user_id]);
+}
+
+/**
+ * compare usernames of two users
+ */
+function compare_username($a, $b) {
+  return strcmp(strtolower($a["username"]), strtolower($b["username"]));
+}
+
+/**
+ * returns the username of an user or a set of users
+ */
+function get_author_name($ids)
+{
+  global $conf;
+
+  if (is_string($ids))
+  {
+    $authors = array($ids);
+  }
+  else
+  {
+    $authors = $ids;
+  }
+
+  $result = array();
+  foreach($authors as $author)
+  {
+    $user_infos_of = get_user_infos_of(array($author));
+
+    if (!empty($conf['user_url_template']))
+    {
+      $author_string = sprintf(
+        $conf['user_url_template'],
+        $user_infos_of[$author]['id'],
+        $user_infos_of[$author]['username']
+        );
+    }
+    else
+    {
+      $author_string = $user_infos_of[$author]['username'];
+    }
+    array_push($result, $author_string);
+  }
+  if (is_string($ids))
+  {
+    return $result[0];
+  }
+  return $result;
+}
+
 ?>

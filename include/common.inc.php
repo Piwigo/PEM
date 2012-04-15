@@ -36,7 +36,6 @@ require_once($root_path . 'include/config_default.inc.php');
 @include_once($root_path . 'include/config_local.inc.php');
 require_once($root_path . 'include/constants.inc.php');
 require_once($root_path . 'include/functions.inc.php');
-require_once($root_path . 'include/functions_user.inc.php');
 require_once($root_path . 'include/dblayer/common_db.php');
 require_once($root_path . 'include/template.class.php');
 
