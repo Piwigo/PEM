@@ -48,6 +48,8 @@ function get_absolute_home_url()
  */
 function versort($array)
 {
+  if (empty($array)) return array();
+  
   if (is_array($array[0])) {
     usort($array, 'pem_version_compare');
   }
