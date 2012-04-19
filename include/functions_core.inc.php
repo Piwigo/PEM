@@ -1206,9 +1206,17 @@ function insert_user_review(&$comm)
     return;
   }
   
-  $user_id = !isset($user['id']) ? 0 : $user['id'];
+  $user_anonymous = empty($user['id']);
+  $user_id = $user_anonymous ? 0 : $user['id'];
+
+  $ip_components = explode('.', $_SERVER["REMOTE_ADDR"]);
+  if (count($ip_components) > 3)
+  {
+    array_pop($ip_components);
+  }
+  $anonymous_id = implode('.', $ip_components);
   
-  if ( !$conf['comments_validation'] or isAdmin($user['id']) )
+  if ( !$conf['comments_validation'] or isAdmin(@$user['id']) )
   {
     $comm['action'] = 'validate';
   }
@@ -1220,15 +1228,10 @@ SELECT COUNT(1)
   WHERE 
     date > SUBDATE(NOW(), INTERVAL '.$conf['anti-flood_time'].' SECOND)
     AND idx_user = '.$user_id;
-  if ($user_id == 0)
+  if ($user_anonymous)
   {
-    $ip_components = explode('.', $_SERVER["REMOTE_ADDR"]);
-    if (count($ip_components) > 3)
-    {
-      array_pop($ip_components);
-    }
     $query.= '
-    AND anonymous_id = "'.implode('.', $ip_components).'"';
+    AND anonymous_id = "'.$anonymous_id.'"';
   }
   $query.= '
 ;';
