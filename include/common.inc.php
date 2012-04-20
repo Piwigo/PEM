@@ -134,11 +134,12 @@ if (isset($_GET['cid'])) {
     $_SESSION['filter']['category_mode'] = 'and';
   }
 }
-if (isset($_GET['tid'])) {
-  if (is_numeric($_GET['tid'])) {
-    $_SESSION['filter']['tag_ids'] = array($_GET['tid']);
-    $_SESSION['filter']['tag_mode'] = 'and';
-  }
+if ( isset($_GET['tid']) and is_numeric($_GET['tid']) ) {
+  $_SESSION['filter']['tag_ids'] = array($_GET['tid']);
+  $_SESSION['filter']['tag_mode'] = 'and';
+}
+if ( isset($_GET['uid']) and is_numeric($_GET['uid']) ) {
+  $_SESSION['filter']['id_user'] = $_GET['uid'];
 }
 
 // PWG Compatibility version set
@@ -176,7 +177,8 @@ if (isset($_POST['filter_submit'])) {
   }
 }
 
-if (isset($_POST['filter_reset'])) {
+// reset filter
+if (isset($_POST['filter_reset']) or isset($_GET['filter_reset'])) {
   if (isset($_SESSION['filter'])) {
     unset($_SESSION['filter']);
   }

@@ -163,6 +163,20 @@ ul.categoriesList {
   ul.categoriesList li.selected {
     font-weight:bold;
   }
+  
+div.tagsCloud {
+  margin:5px 0 10px 0;
+}
+  div.tagsCloud a {
+    display:inline-block;
+    padding-right:0 2px;
+  }
+  div.tagsCloud a.selected {
+    font-weight:bold;
+  }
+  div.tagsCloud i {
+    font-size:9px;
+  }
 
 /* Again, "be nice to Opera 5". */
 body>div.menu {width:150px;}
@@ -717,4 +731,8 @@ div.row  img.help_user
     color:#f22;
     background-color:#FF9BA3;
   }
+  .review_message.warning {
+    color:#FF9400;
+    background-color:#F9E4A2;
+   }
   

@@ -853,12 +853,16 @@ function get_languages_of_revision($revision_ids)
 /**
  * find extensions matching the search string
  *
- * search is performed on extension name (10 points), 
- * tags (8 pts), description (6 pts), revision note (4 pts)
+ * search is performed on 
+ *   extension name (10 points), 
+ *   tags (8 pts),
+ *   author name (8pts), 
+ *   description (6 pts), 
+ *   revision note (4 pts)
  * one point is removed every month of antiquity
  */
 function get_extension_ids_for_search($search) {
-  global $db;
+  global $db, $conf;
   $search_result = array();
 
   // Split words
@@ -924,6 +928,32 @@ SELECT
   WHERE '.implode("\n    OR ", $word_clauses).'
 ;';
   $result = array_from_query($query, 'idx_extension');
+  foreach ($result as $ext_id) {
+    if (!empty($search_result[$ext_id])) {
+      $search_result[$ext_id]+= 8;
+    } else {
+      $search_result[$ext_id] = 8;
+    }
+  }
+  
+  // search on author names
+  $word_clauses = array();
+  foreach ($words as $word) {
+    array_push($word_clauses, "LOWER(u.".$conf['user_fields']['username'].") LIKE '%".strtolower($word)."%'");
+  }
+  array_walk(
+    $word_clauses,
+    $add_bracked
+    );
+  $query = '
+SELECT
+    id_extension
+  FROM '.EXT_TABLE.' AS e
+    LEFT JOIN '.USERS_TABLE.' AS u
+    ON e.idx_user = u.'.$conf['user_fields']['id'].'
+  WHERE '.implode("\n    OR ", $word_clauses).'
+;';
+  $result = array_from_query($query, 'id_extension');
   foreach ($result as $ext_id) {
     if (!empty($search_result[$ext_id])) {
       $search_result[$ext_id]+= 8;

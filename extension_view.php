@@ -171,7 +171,7 @@ $tpl->assign(
         strip_tags($data['description'])
         )
       ),
-    'authors' => get_author_name($authors),
+    'authors' => array_combine($authors, get_author_name($authors)),
     'first_date' => l10n('no revision yet'),
     'last_date'  => l10n('no revision yet'),
     'compatible_with' => implode(

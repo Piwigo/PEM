@@ -17,7 +17,7 @@
     <div id="overall">
       <div id="Menus">
         <div class="menu">
-          {'Category'|@translate}
+          {'Categories'|@translate}
           <ul class="categoriesList">
             <li {if $cat_is_home}class="selected"{/if}>
               <a href="index.php?cid=null">{'All'|@translate} <span style="font-size:0.8em;">({$total_extensions})</span></a>
@@ -29,6 +29,15 @@
             </li>
           {/foreach}
           </ul>
+          
+        {if isset($tags)}
+          {'Tags'|@translate}
+          <div class="tagsCloud">
+          {foreach from=$tags item=tag}
+            <a href="{$tag.url}" style="font-size:{$tag.size}em;"{if $tag.selected}class="selected"{/if}>{$tag.name}<i> ({$tag.count})</i></a>
+          {/foreach}
+          </div>
+        {/if}
           
           <form method="post" action="{$action}" style="margin:0;padding:0;">
 
@@ -43,13 +52,13 @@
 {/foreach}
           </select><br />
 
-          {'Author'|@translate}<br />
+          {* <!--{'Author'|@translate}<br />
           <select name="id_user">
             <option value="0">-------</option>
 {foreach from=$filter_users item=user}
             <option value="{$user.id}" {$user.selected}>{$user.name}</option>
 {/foreach}
-          </select>
+          </select>--> *}
 
           <p class="filter_buttons">
             <input type="submit" value="{'Filter'|@translate}" name="filter_submit" />
@@ -94,7 +103,7 @@
       </div> <!-- Menus -->
     
       <div id="Content">
-        <div id="quickNav"><a href="index.php?cid=null" title="{'Index'|@translate}"><img class="nav" src="template/images/home.png" alt="{'Index'|@translate}"/></a>
+        <div id="quickNav"><a href="index.php?filter_reset" title="{'Index'|@translate}"><img class="nav" src="template/images/home.png" alt="{'Index'|@translate}"/></a>
 {if !$user_is_logged}
 	{if isset($has_help)}
           <a href="help_guest.php" title="{'help'|@translate}"><img class="nav" src="template/images/help.png" alt="{'help'|@translate}"/></a>

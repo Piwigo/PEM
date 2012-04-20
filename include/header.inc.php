@@ -29,8 +29,11 @@ if (!defined('INTERNAL'))
 $query = '
 SELECT
     idx_category,
-    COUNT(*) AS counter
+    COUNT(1) AS counter
   FROM '.EXT_CAT_TABLE.'
+  WHERE idx_extension IN (
+    SELECT DISTINCT(idx_extension) FROM '.REV_TABLE.'
+  )
   GROUP BY idx_category
 ;';
 $nb_ext_of_category = simple_hash_from_query($query, 'idx_category', 'counter');
@@ -86,8 +89,11 @@ foreach($categories as $cat)
 $tpl->assign('categories', $tpl_categories);
 
 $query = '
-SELECT COUNT(*) AS total
+SELECT COUNT(1)
   FROM '.EXT_TABLE.'
+  WHERE id_extension IN (
+    SELECT DISTINCT(idx_extension) FROM '.REV_TABLE.'
+  )
 ;';
 list($total_extensions) = $db->fetch_row($db->query($query));
 
@@ -99,10 +105,6 @@ $tpl->assign(array(
 // Gets the current search
 if (isset($_SESSION['filter']['search'])) {
   $tpl->assign('search', $_SESSION['filter']['search']);
-}
-
-if (isset($_SESSION['filter']['tag_ids'])) {
-  $tpl->assign('search', get_tag_name_from_id($_SESSION['filter']['tag_ids'][0]));
 }
 
 // Gets the list of the available versions (allows users to filter)
@@ -157,8 +159,10 @@ foreach ($versions as $version)
     );
 }
 
+$tpl->assign('menu_versions', $tpl_versions);
+
 // filter on authors
-$query = '
+/*$query = '
 SELECT idx_user, SUM(counter) AS counter 
   FROM (
     SELECT
@@ -209,7 +213,40 @@ foreach ($user_infos_of as $author) {
     );
 }
 
-$tpl->assign('filter_users', $tpl_filter_users);
+$tpl->assign('filter_users', $tpl_filter_users);*/
+
+// most used tags
+$query = '
+SELECT
+    COUNT(1) AS count,
+    id_tag,
+    name
+  FROM '.EXT_TAG_TABLE.' AS et
+    LEFT JOIN '.TAG_TABLE.' AS t
+    ON t.id_tag = et.idx_tag
+  WHERE idx_extension IN (
+    SELECT DISTINCT(idx_extension) FROM '.REV_TABLE.'
+  )
+  GROUP BY id_tag
+  LIMIT 10
+;';
+$tpl_tags = array_of_arrays_from_query($query, 'id_tag');
+
+if (count($tpl_tags))
+{
+  $counts = array_map(create_function('$v', 'return $v["count"];'), $tpl_tags);
+  $adapt_range = create_function('$v', 'return ('.max($counts).'-'.min($counts).' != 0) ? ($v-'.min($counts).')/(2*('.max($counts).'-'.min($counts).'))+1 : 1;');
+
+  foreach($tpl_tags as &$tag)
+  {
+    $tag['size'] = $adapt_range($tag['count']);
+    $tag['url'] = 'index.php?tid='.$tag['id_tag'];
+    $tag['selected'] = @$_SESSION['filter']['tag_ids'][0] == $tag['id_tag'];
+  }
+
+  // shuffle($tpl_tags);
+  $tpl->assign('tags', $tpl_tags);
+}
 
 
 if (isset($conf['specific_header_filepath']))
@@ -229,7 +266,7 @@ if (isset($conf['banner_filepath'])) {
   $tpl->assign('banner', $banner);
 }
 
-$tpl->assign('menu_versions', $tpl_versions);
+
 $tpl->assign('title', $conf['page_title']);
 $tpl->assign('action', !empty($_SESSION['filter']['category_ids']) ? 'index.php?cid='.$_SESSION['filter']['category_ids'][0] : 'index.php');
 

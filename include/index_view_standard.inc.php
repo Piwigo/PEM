@@ -123,7 +123,7 @@ foreach ($revision_ids as $revision_id)
           strip_tags($extension_infos_of[$extension_id]['description'])
           )
         ),
-      'authors' => get_author_name($authors),
+      'authors' => array_combine($authors, get_author_name($authors)),
       'name' => $revision_infos_of[$revision_id]['version'],
       'compatible_versions' => implode(', ', $versions_of[$revision_id]),
       'languages' => isset($languages_of[$revision_id]) ?

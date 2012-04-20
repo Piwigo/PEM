@@ -116,7 +116,7 @@ $(document).ready(function() {ldelim}
 
 </div>
 <ul class="extensionInfos">
-  <li><em>{if count($authors)>1}{'Authors'|@translate}{else}{'Author'|@translate}{/if}:</em> {', '|@implode:$authors}</li>
+  <li><em>{if count($authors)>1}{'Authors'|@translate}{else}{'Author'|@translate}{/if}:</em> {foreach from=$authors item=u_name key=u_id}<a href="index.php?uid={$u_id}">{$u_name}</a>{/foreach}</li>
   <li><em>{'Categories'|@translate}:</em> {$extension_categories}</li>
   {if !empty($extension_tags)}<li><em>{'Tags'|@translate}:</em> {$extension_tags}</li>{/if}
   <li><em>{'First revision date'|@translate}:</em> {$first_date}</li>
@@ -215,6 +215,7 @@ $(document).ready(function() {ldelim}
 {/if}
 
 <form id="review_form" method="post" action="{$user_review.form_action}" {if !isset($user_review.display)}style="display:none;"{/if}>
+  <p class="review_message warning">{'Please do not use this form to request assistance or report a bug. Use the forums instead.'|@translate}</p>
   <p {if isset($user_review.is_logged)}style="display:none;"{/if}><label for="author">{'Name'|@translate} :</label> <input id="author" type="text" name="author" size="30" value="{$user_review.author}"></p>
   <p {if isset($user_review.is_logged)}style="display:none;"{/if}><label for="email">{'Email (not displayed)'|@translate} :</label> <input id="email" type="text" name="email" size="30" value="{$user_review.email}"></p>
   <p><label for="title">{'Review summary'|@translate} :</label> <input id="title" type="text" name="title" size="60" value="{$user_review.title}"></p>
