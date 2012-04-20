@@ -1351,6 +1351,79 @@ INSERT INTO '.REVIEW_TABLE.' (
 }
 
 /**
+ * delete user review
+ */
+function delete_user_review($id)
+{
+  global $db;
+  
+  $query = '
+DELETE FROM '.REVIEW_TABLE.'
+  WHERE id_review = '.$id.'
+;';
+  $db->query($query);
+  
+  return $db->affected_rows() > 0;
+}
+
+/**
+ * validate user review and send a mail to user
+ */
+function validate_user_review($id)
+{
+  global $db, $conf;
+  
+  $query = '
+SELECT
+    email,
+    idx_extension,
+    author
+  FROM '.REVIEW_TABLE.'
+  WHERE
+    id_review = '.$id.'
+    AND validated = "false"
+';
+  $result = $db->query($query);
+  
+  if ($db->num_rows($result))
+  {
+    list($comm['email'], $comm['idx_extension'], $comm['author']) = $db->fetch_row($result);
+    
+    $query = '
+UPDATE '.REVIEW_TABLE.'
+  SET validated = "true"
+  WHERE id_review = '.$id.'
+;';
+    $db->query($query);
+    
+    
+    $u_extension = get_absolute_home_url().'/extension_view.php?eid='.$comm['idx_extension'];
+    $extension_infos = get_extension_infos_of($comm['idx_extension']);
+    
+    $content = '
+Hello '.$comm['author'].',<br>
+Your review about <a href="'.$u_extension.'">'.$extension_infos['name'].'</a> has been validated by an administrator.<br>
+<br>
+'.$conf['page_title'].',<br>
+please do not answer to this automated email.
+';
+
+    send_mail(
+      $comm['email'],
+      'Review validated on '.$conf['page_title'],
+      $content,
+      array('content_format'=>'text/html')
+      );
+      
+    return true;
+  }
+  else
+  {
+    return false;
+  }
+}
+
+/**
  * compute the tag string sended by jQuery TokenInput
  */
 function get_tag_ids($raw_tags, $allow_create=true)

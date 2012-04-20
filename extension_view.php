@@ -88,21 +88,12 @@ if (isAdmin(@$user['id']))
 {
   if (isset($_GET['delete_review']))
   {
-    $query = '
-DELETE FROM '.REVIEW_TABLE.'
-  WHERE id_review = '.$_GET['delete_review'].'
-;';
-    $db->query($query);
+    delete_user_review($_GET['delete_review']);
     header('Location: '.$self_url);
   }
   else if (isset($_GET['validate_review']))
   {
-    $query = '
-UPDATE '.REVIEW_TABLE.'
-  SET validated = "true"
-  WHERE id_review = '.$_GET['validate_review'].'
-;';
-    $db->query($query);
+    validate_user_review($_GET['validate_review']);
     header('Location: '.$self_url);
   }
 }
