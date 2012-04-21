@@ -60,7 +60,11 @@ if (isset($page['filtered_extension_ids'])) {
 }
 $query.= '
   GROUP BY idx_extension';
-if (!isset($_SESSION['filter']['search'])) {
+if (isset($_SESSION['filter']['search'])) {
+  $query.= '
+  ORDER BY FIND_IN_SET(idx_extension, "'.$page['filtered_extension_ids_string'].'")';
+}
+else {
   $query.= '
   ORDER BY max_date DESC';
 }
