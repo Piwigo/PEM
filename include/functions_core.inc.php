@@ -939,7 +939,8 @@ SELECT
   // search on author names
   $word_clauses = array();
   foreach ($words as $word) {
-    array_push($word_clauses, "LOWER(u1.".$conf['user_fields']['username'].") LIKE '%".strtolower($word)."%' OR LOWER(u2.".$conf['user_fields']['username'].") LIKE '%".strtolower($word)."%'");
+    array_push($word_clauses, "LOWER(u1.".$conf['user_fields']['username'].") LIKE '%".strtolower($word)."%'");
+    array_push($word_clauses, "LOWER(u2.".$conf['user_fields']['username'].") LIKE '%".strtolower($word)."%'");
   }
   array_walk(
     $word_clauses,
@@ -951,11 +952,11 @@ SELECT
     DISTINCT(id_extension)
   FROM '.EXT_TABLE.' AS e
     LEFT JOIN '.USERS_TABLE.' AS u1
-      ON u1.id_user = e.idx_user
+      ON u1.'.$conf['user_fields']['id'].' = e.idx_user
     LEFT JOIN '.AUTHORS_TABLE.' AS a 
       ON a.idx_extension = e.id_extension 
       LEFT JOIN '.USERS_TABLE.' AS u2 
-        ON u2.id_user = a.idx_user
+        ON u2.'.$conf['user_fields']['id'].' = a.idx_user
   WHERE '.implode("\n    OR ", $word_clauses).'
 ;';
   $result = array_from_query($query, 'id_extension');
