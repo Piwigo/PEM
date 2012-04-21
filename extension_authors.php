@@ -78,7 +78,7 @@ if (isset($_POST['submit_add']))
   $query = '
 SELECT '.$conf['user_fields']['id'].' AS id
   FROM '.USERS_TABLE.'
-  WHERE id = '.$_POST['author_select'].'
+  WHERE '.$conf['user_fields']['id'].' = '.$_POST['author_select'].'
 ;';
   list($author_id) = $db->fetch_array($db->query($query));
 

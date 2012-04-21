@@ -43,7 +43,11 @@ hs.lang['restoreTitle'] = '';
   <p><a href="{$revision.revision_url}">{'Revision'|@translate} {$revision.name}</a></p>
 
   <ul>
-    <li><em>{if count($revision.authors)>1}{'Authors'|@translate}{else}{'Author'|@translate}{/if}:</em> {foreach from=$revision.authors item=u_name key=u_id}<a href="index.php?uid={$u_id}">{$u_name}</a>{/foreach}</li>
+    <li><em>{if count($revision.authors)>1}{'Authors'|@translate}{else}{'Author'|@translate}{/if}:</em> 
+      {strip}{foreach from=$revision.authors item=u_name key=u_id name=authors_loop}
+        {if not $smarty.foreach.authors_loop.first}, {/if}<a href="index.php?uid={$u_id}">{$u_name}</a>
+      {/foreach}{/strip}
+    </li>
     <li><em>{'Categories'|@translate}:</em> {$revision.categories}</li>
     {if !empty($revision.tags)}<li><em>{'Tags'|@translate}:</em> {$revision.tags}</li>{/if}
     <li><em>{'Released on'|@translate}:</em> {$revision.date}</li>

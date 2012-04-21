@@ -116,7 +116,11 @@ $(document).ready(function() {ldelim}
 
 </div>
 <ul class="extensionInfos">
-  <li><em>{if count($authors)>1}{'Authors'|@translate}{else}{'Author'|@translate}{/if}:</em> {foreach from=$authors item=u_name key=u_id}<a href="index.php?uid={$u_id}">{$u_name}</a>{/foreach}</li>
+  <li><em>{if count($authors)>1}{'Authors'|@translate}{else}{'Author'|@translate}{/if}:</em> 
+    {strip}{foreach from=$authors item=u_name key=u_id name=authors_loop}
+      {if not $smarty.foreach.authors_loop.first}, {/if}<a href="index.php?uid={$u_id}">{$u_name}</a>
+    {/foreach}{/strip}
+  </li>
   <li><em>{'Categories'|@translate}:</em> {$extension_categories}</li>
   {if !empty($extension_tags)}<li><em>{'Tags'|@translate}:</em> {$extension_tags}</li>{/if}
   <li><em>{'First revision date'|@translate}:</em> {$first_date}</li>
