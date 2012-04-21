@@ -220,12 +220,24 @@ $(document).ready(function() {ldelim}
 
 <form id="review_form" method="post" action="{$user_review.form_action}" {if !isset($user_review.display)}style="display:none;"{/if}>
   <p class="review_message warning">{'Please do not use this form to request assistance or report a bug. Use the forums instead.'|@translate}</p>
-  <p {if isset($user_review.is_logged)}style="display:none;"{/if}><label for="author">{'Name'|@translate} :</label> <input id="author" type="text" name="author" size="30" value="{$user_review.author}"></p>
-  <p {if isset($user_review.is_logged)}style="display:none;"{/if}><label for="email">{'Email (not displayed)'|@translate} :</label> <input id="email" type="text" name="email" size="30" value="{$user_review.email}"></p>
-  <p><label for="title">{'Review summary'|@translate} :</label> <input id="title" type="text" name="title" size="60" value="{$user_review.title}"></p>
-  <p><textarea name="content" style="width:99%;" rows="6">{$user_review.content}</textarea></p>
-  <p><label>{'Your rating'|@translate} :</label> <span id="review_rate"></span></p>
-  <p style="text-align:right;"><input type="submit" value="{'Send'|@translate}"></p>
+  <p {if isset($user_review.is_logged)}style="display:none;"{/if}>
+    <label for="author">{'Name'|@translate}</label><br> 
+    <input id="author" type="text" name="author" size="30" value="{$user_review.author}">
+  </p>
+  <p {if isset($user_review.is_logged)}style="display:none;"{/if}>
+    <label for="email">{'Email (not displayed)'|@translate}</label><br> 
+    <input id="email" type="text" name="email" size="30" value="{$user_review.email}">
+  </p>
+  <p>
+    <label for="title">{'Review summary'|@translate}</label><br> 
+    <input id="title" type="text" name="title" style="width:99%;" value="{$user_review.title}">
+  </p>
+  <p>
+    <label for="content">{'Your review'|@translate}</label><br> 
+    <textarea id="content" name="content" style="width:99%;" rows="6">{$user_review.content}</textarea>
+  </p>
+  <p><label>{'Your rating'|@translate}</label> <span id="review_rate"></span></p>
+  <p><br><input type="submit" value="{'Send'|@translate}"></p>
 </form>
 
 {if !empty($reviews)}

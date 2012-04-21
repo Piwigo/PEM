@@ -713,11 +713,6 @@ div.row  img.help_user
   #review_form_show {
     cursor:pointer;
   }
-  #review_form label {
-    text-align:right;
-    display:inline-block;
-    width:200px;
-  }
   
 .review_message {
   font-weight:bold;

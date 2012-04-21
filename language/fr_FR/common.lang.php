@@ -195,7 +195,7 @@ $lang['Reviews'] = 'Avis';
 $lang['Add a review'] = 'Donnez votre avis';
 $lang['Email (not displayed)'] = 'Email (non publié)';
 $lang['Review summary'] = 'Résumé';
-
+$lang['Your review'] = 'Votre avis';
 $lang['Send'] = 'Envoyer';
 $lang['Please do not use this form to request assistance or report a bug. Use the forums instead.'] = 'Merci de ne pas utiliser ce formulaire pour les demandes d\'aide ou les rapports de bugs. Utilisez plutôt les forums.';
 
