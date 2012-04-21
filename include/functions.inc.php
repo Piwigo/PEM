@@ -400,7 +400,7 @@ function deltree($path)
  */
 function generate_static_stars($score, $space=true)
 {
-  if ($score == null) return null;
+  if ($score === null) return null;
   
   $score = min(max($score, 0), 5);
   $floor = floor($score);
@@ -412,21 +412,21 @@ function generate_static_stars($score, $space=true)
     $html.= '<img alt="'.$i.'" src="template/jquery.raty/star-on.png">'.$space;
   }
   
-  if ($score-$floor <= .25)
-  {
-    $html.= '<img alt="'.($floor+1).'" src="template/jquery.raty/star-off.png">'.$space;
-  }
-  else if ($score-$floor <= .75)
-  {
-    $html.= '<img alt="'.($floor+1).'" src="template/jquery.raty/star-half.png">'.$space;
-  }
-  else
-  {
-    $html.= '<img alt="'.($floor+1).'" src="template/jquery.raty/star-on.png">'.$space;
-  }
-  
   if ($score != 5)
   {
+    if ($score-$floor <= .25)
+    {
+      $html.= '<img alt="'.($floor+1).'" src="template/jquery.raty/star-off.png">'.$space;
+    }
+    else if ($score-$floor <= .75)
+    {
+      $html.= '<img alt="'.($floor+1).'" src="template/jquery.raty/star-half.png">'.$space;
+    }
+    else
+    {
+      $html.= '<img alt="'.($floor+1).'" src="template/jquery.raty/star-on.png">'.$space;
+    }
+  
     for ($i=$floor+2; $i<=5; $i++)
     {
       $html.= '<img alt="'.$i.'" src="template/jquery.raty/star-off.png">'.$space;
