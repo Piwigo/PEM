@@ -1403,7 +1403,7 @@ UPDATE '.REVIEW_TABLE.'
     $db->query($query);
     
     
-    $u_extension = get_absolute_home_url().'/extension_view.php?eid='.$comm['idx_extension'];
+    $u_extension = get_absolute_home_url().'extension_view.php?eid='.$comm['idx_extension'];
     $extension_infos = get_extension_infos_of($comm['idx_extension']);
     
     $content = '

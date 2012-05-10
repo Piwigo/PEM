@@ -30,7 +30,7 @@ include_once($root_path . 'include/functions_user.inc.php');
  */
 function get_absolute_home_url()
 {
-  if (isset($_SERVER['HTTPS']) && ( strtolower($_SERVER['HTTPS']) == 'on' or $_SERVER['HTTPS'] == 1 ) )
+  if ( isset($_SERVER['HTTPS']) && ( strtolower($_SERVER['HTTPS']) == 'on' or $_SERVER['HTTPS'] == 1 ) )
   {
     $host = 'https://';
   }
@@ -38,9 +38,18 @@ function get_absolute_home_url()
   {
     $host = 'http://';
   }
-  $host.= $_SERVER['SERVER_NAME'];
-  $host.= str_replace(basename($_SERVER['SCRIPT_NAME']), null, $_SERVER['SCRIPT_NAME']);
-  return $host;
+  
+  $host.= $_SERVER['HTTP_HOST'];
+  if ($_SERVER['SERVER_PORT'] != 80)
+  {
+    $url_port = ':'.$_SERVER['SERVER_PORT'];
+    if (strrchr($host, ':') != $url_port)
+    {
+      $host.= $url_port;
+    }
+  }
+
+  return $host.'/';
 }
 
 /**
