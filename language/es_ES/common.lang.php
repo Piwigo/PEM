@@ -192,7 +192,3 @@ $lang['Your review'] = 'Opinar';
 $lang['Send'] = 'Enviar';
 $lang['Please do not use this form to request assistance or report a bug. Use the forums instead.'] = 'Por favor, no utilice este formulario para pedir ayuda o para informar de errores. En toto caso, hágalo mediante el foro.';
 ?>
-
-
-
-
