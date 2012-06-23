@@ -261,4 +261,26 @@ function simple_hash_from_query($query, $keyname, $valuename)
   return $array;
 }
 
+/**
+ * create an associative array based on a query
+ *
+ * @param string $query
+ * @param string $keyname
+ * @return array
+ */
+function hash_from_query($query, $keyname)
+{
+  global $db;
+  
+  $array = array();
+
+  $result = $db->query($query);
+  while ($row = $db->fetch_array($result))
+  {
+    $array[ $row[$keyname] ] = $row;
+  }
+
+  return $array;
+}
+
 ?>

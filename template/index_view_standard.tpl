@@ -37,7 +37,8 @@ hs.lang['restoreTitle'] = '';
 {/if}
   <p class="extension_title">
     <strong><a href="extension_view.php?eid={$revision.extension_id}">{$revision.extension_name}</a></strong>
-    {if isset($revision.rating_score)}<div class="rating_score">{$revision.rating_score}</div>{/if}
+    <div>{if isset($revision.rating_score)}{$revision.rating_score}{/if}
+    {if isset($revision.nb_reviews)}<i style="vertical-align:top;">{$revision.nb_reviews}</i>{/if}</div>
   </p>
 
   <p><a href="{$revision.revision_url}">{'Revision'|@translate} {$revision.name}</a></p>

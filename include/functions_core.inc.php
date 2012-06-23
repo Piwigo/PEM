@@ -265,6 +265,15 @@ function get_extension_infos_of($extension_ids)
   }
   
   $query = '
+SELECT 
+    COUNT(1) AS count,
+    idx_extension
+  FROM '.REVIEW_TABLE.'
+  WHERE idx_extension IN ('.$ids_string.')
+;';
+  $nb_reviews = simple_hash_from_query($query, 'idx_extension', 'count');
+  
+  $query = '
 SELECT id_extension,
        name,
        rating_score,
@@ -281,6 +290,7 @@ SELECT id_extension,
   $result = $db->query($query);
   while ($row = $db->fetch_assoc($result))
   {
+    $row['nb_reviews'] = !empty($nb_reviews[ $row['id_extension'] ]) ? $nb_reviews[ $row['id_extension'] ] : 0;
     if (empty($row['description']))
     {
       $row['description'] = $row['default_description'];

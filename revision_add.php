@@ -516,6 +516,8 @@ SELECT idx_language,
   {
     $descriptions[$row['idx_language']] = $row['description'];
   }
+  
+  $tpl->assign('IN_EDIT', true);
 }
 else
 {

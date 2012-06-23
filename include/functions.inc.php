@@ -497,7 +497,7 @@ function send_mail($to, $subject, $content, $args = array())
     $headers.= 'Bcc: '.implode(',', $args['bcc'])."\n";
   }
 
-  $headers.= 'Content-Type: '.$args['content_format'].'; charset="utf-8"'."\n".
+  $headers.= 'Content-Type: '.$args['content_format'].'; charset="utf-8"'."\n";
   $headers.= 'X-Mailer: PEM'."\n";
 
   // content

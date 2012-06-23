@@ -14,6 +14,9 @@
       <tr>
         <th>{'Version'|@translate}</th>
         <td>
+        {if $IN_EDIT}
+          <input type="hidden" name="revision_version" value="{$name}">{$name}
+        {else}
           <input
             type="text"
             name="revision_version"
@@ -22,6 +25,7 @@
             value="{$name}"
             {if $translator}disabled="disabled"{/if}
           />
+        {/if}
         </td>
       </tr>
       {if $file_needed}

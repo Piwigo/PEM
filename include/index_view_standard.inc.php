@@ -122,6 +122,7 @@ foreach ($revision_ids as $revision_id)
       'extension_id' => $extension_id,
       'extension_name' => $extension_infos_of[$extension_id]['name'],
       'rating_score' => generate_static_stars($extension_infos_of[$extension_id]['rating_score']),
+      'nb_reviews' => !empty($extension_infos_of[$extension_id]['nb_reviews']) ? sprintf(l10n('%d reviews'), $extension_infos_of[$extension_id]['nb_reviews']) : null,
       'about' => nl2br(
         htmlspecialchars(
           strip_tags($extension_infos_of[$extension_id]['description'])
