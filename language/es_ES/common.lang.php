@@ -1,7 +1,7 @@
 <?php
 // +-----------------------------------------------------------------------+
 // | PEM - a PHP based Extension Manager                                   |
-// | Copyright (C) 2005-2009 PEM Team - http://home.gna.org/pem            |
+// | Copyright (C) 2005-2012 PEM Team - http://home.gna.org/pem            |
 // +-----------------------------------------------------------------------+
 // | This program is free software; you can redistribute it and/or modify  |
 // | it under the terms of the GNU General Public License as published by  |
@@ -49,7 +49,7 @@ $lang['Delete link'] = 'Eliminar enlace';
 $lang['Delete revision'] = 'Eliminar revisión';
 $lang['Delete screenshot'] = 'Eliminar captura de pantalla';
 $lang['Description'] = 'Descripción';
-$lang['Disclaimer'] = 'Renúncia';
+$lang['Disclaimer'] = 'Advertencia legal';
 $lang['Disconnect'] = 'Desconectar';
 $lang['Download revision'] = 'Descargar revisión';
 $lang['Downloads'] = 'Descargas';
@@ -165,20 +165,20 @@ $lang['Download last revision'] = 'Descargar la última revisión';
 $lang['Download'] = 'Descargar';
 $lang['releases'] = 'versiones';
 $lang['Choose compatibility versions...'] = 'Elige las versiones compatibles...';
-$lang['Tags'] = 'Etiquetas más activas';
+$lang['Tags'] = 'Etiquetas';
 $lang['Type in a search term'] = 'Introduzca un criterio de búsqueda';
 $lang['No results'] = 'No hay resultados';
 $lang['Searching...'] = 'Buscando...';
 $lang['new'] = 'nuevo';
-$lang['Rated %d times'] = '%d valoraciones';
-$lang['Average rating'] = 'Valoración';
-$lang['not rated yet'] = 'todavía no ha sido valorada';
-$lang['cancel this rating!'] = '¡Cancelar esta valoración!';
-$lang['Update your rating'] = 'Cambiar de valoración';
-$lang['Rate it!'] = 'Valorar!';
-$lang['Your rating'] = 'Su valoración';
+$lang['Rated %d times'] = '%d votos';
+$lang['Average rating'] = 'Puntuación';
+$lang['not rated yet'] = 'Ningún voto';
+$lang['cancel this rating!'] = '¡Cancelar esta votación!';
+$lang['Update your rating'] = 'Cambia tu voto';
+$lang['Rate it!'] = '¡Votar!';
+$lang['Your rating'] = 'Tu puntuación';
 $lang['All'] = 'Todas';
-$lang['Thank you!'] = 'Gracias!';
+$lang['Thank you!'] = '¡Gracias!';
 $lang['Thank you! Your review is awaiting moderation.'] = '¡Gracias! Su comentario está pendiente de validación.';
 $lang['Please enter your name'] = 'Por favor, introduzca su nombre';
 $lang['Please enter your email'] = 'Por favor, introduzca su correo electrónico';

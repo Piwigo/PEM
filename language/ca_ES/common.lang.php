@@ -1,7 +1,7 @@
 <?php
 // +-----------------------------------------------------------------------+
 // | PEM - a PHP based Extension Manager                                   |
-// | Copyright (C) 2005-2009 PEM Team - http://home.gna.org/pem            |
+// | Copyright (C) 2005-2012 PEM Team - http://home.gna.org/pem            |
 // +-----------------------------------------------------------------------+
 // | This program is free software; you can redistribute it and/or modify  |
 // | it under the terms of the GNU General Public License as published by  |
@@ -49,7 +49,7 @@ $lang['Delete link'] = 'Eliminar enllaç';
 $lang['Delete revision'] = 'Eliminar revisió';
 $lang['Delete screenshot'] = 'Eliminar captura de pantalla';
 $lang['Description'] = 'Descripció';
-$lang['Disclaimer'] = 'Renúncia';
+$lang['Disclaimer'] = 'Advertiment legal';
 $lang['Disconnect'] = 'Desconnectar';
 $lang['Download revision'] = 'Descarregar revisió';
 $lang['Downloads'] = 'Descàrregues';
@@ -165,17 +165,17 @@ $lang['Download last revision'] = 'Descarregar l\'última revisió';
 $lang['Download'] = 'Descarregar';
 $lang['releases'] = 'versions';
 $lang['Choose compatibility versions...'] = 'Escull les versions compatibles...';
-$lang['Tags'] = 'Etiquetes més actives';
+$lang['Tags'] = 'Etiquetes';
 $lang['Type in a search term'] = 'Introdueixi un criteri de cerca';
 $lang['No results'] = 'No hi ha resultats';
 $lang['Searching...'] = 'Cercant...';
 $lang['new'] = 'nou';
-$lang['Rated %d times'] = '%d valoraciones';
-$lang['Average rating'] = 'Valoració';
-$lang['not rated yet'] = 'encara no ha sigut valorat';
-$lang['cancel this rating!'] = 'Cancel·lar aquesta valoració!';
-$lang['Update your rating'] = 'Canviar de valoració';
-$lang['Rate it!'] = 'Valorar!';
+$lang['Rated %d times'] = '%d vots';
+$lang['Average rating'] = 'Puntuació';
+$lang['not rated yet'] = 'cap vot';
+$lang['cancel this rating!'] = 'Cancel·lar aquesta votació!';
+$lang['Update your rating'] = 'Canvia la teva puntuació';
+$lang['Rate it!'] = '¡Votar!';
 $lang['Your rating'] = 'La seva valoració';
 $lang['All'] = 'Totes';
 $lang['Thank you!'] = 'Gràcies!';
