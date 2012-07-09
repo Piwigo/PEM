@@ -71,7 +71,7 @@
         <th>{'Compatibility'|@translate}</th>
         <td>
           <div class="checkboxBox">
-          <select name="compatible_versions[]" id="compatible_versions" style="width:100%;" data-placeholder="{'Choose compatibility versions...'|@translate}" multiple>
+          <select name="compatible_versions[]" id="compatible_versions" style="width:665px;" data-placeholder="{'Choose compatibility versions...'|@translate}" multiple="multiple">
 {foreach from=$versions item=version}
             <option value="{$version.id_version}" {$version.selected}>{$version.name}</option>
 {/foreach}
@@ -113,10 +113,11 @@
         <th>{'Available languages'|@translate}</th>
         <td>
           <div class="checkboxBox">
-            {foreach from=$extensions_languages item=lang}
-            <label><input type="checkbox" name="extensions_languages[]" value="{$lang.id}" title="{$lang.name}" {$lang.checked} {if $translator}disabled="disabled"{/if}/>
-              <img src="language/{$lang.code}/icon.jpg" alt="{$lang.name}" title="{$lang.name}">&nbsp;</label>
-            {/foreach}
+          <select name="extensions_languages[]" id="extensions_languages" style="width:665px;" data-placeholder="{'Choose available languages...'|@translate}" multiple="multiple" {if $translator}disabled="disabled"{/if}>
+{foreach from=$extensions_languages item=lang}
+            <option value="{$lang.id}" {$lang.selected}>{$lang.name}</option>
+{/foreach}
+          </select>
           </div>
         </td>
       </tr>
@@ -186,6 +187,7 @@ $(document).ready(function() {ldelim}
     }
   });
   $('#compatible_versions').chosen();
+  $('#extensions_languages').chosen();
 });
 
 function set_default_description (id) {ldelim}

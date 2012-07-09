@@ -615,7 +615,10 @@ foreach($extensions_languages as $ext_lang)
       'id' => $ext_lang['id_language'],
       'code' => $ext_lang['code'],
       'name' => $ext_lang['name'],
-      'checked' => in_array($ext_lang['id_language'], $selected_languages) ? 'checked="checked"' : '',
+      'selected' =>
+        in_array($ext_lang['id_language'], $selected_languages)
+        ? 'selected="selected"'
+        : '',
       )
     );
 }
