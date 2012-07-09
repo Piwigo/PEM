@@ -609,12 +609,14 @@ $extensions_languages = array_of_arrays_from_query($query);
 $tpl_languages = array();
 foreach($extensions_languages as $ext_lang)
 {
+  $name = trim(substr($ext_lang['name'], 0, -4));
+
   array_push(
     $tpl_languages,
     array(
       'id' => $ext_lang['id_language'],
       'code' => $ext_lang['code'],
-      'name' => $ext_lang['name'],
+      'name' => $name,
       'selected' =>
         in_array($ext_lang['id_language'], $selected_languages)
         ? 'selected="selected"'

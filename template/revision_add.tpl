@@ -115,7 +115,7 @@
           <div class="checkboxBox">
           <select name="extensions_languages[]" id="extensions_languages" style="width:665px;" data-placeholder="{'Choose available languages...'|@translate}" multiple="multiple" {if $translator}disabled="disabled"{/if}>
 {foreach from=$extensions_languages item=lang}
-            <option value="{$lang.id}" {$lang.selected}>{$lang.name}</option>
+            <option value="{$lang.id}" {$lang.selected}>[{$lang.code}] {$lang.name}</option>
 {/foreach}
           </select>
           </div>
