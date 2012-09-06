@@ -29,55 +29,65 @@ $tpl->set_filenames(
   )
 );
 
-// Gets the total information about the extensions
+// Get owned extensions
 $query = '
-SELECT
-    id_extension,
-    name
+SELECT id_extension
   FROM '.EXT_TABLE.'
   WHERE idx_user = \''.$user['id'].'\'
   ORDER BY name ASC
 ;';
-$req = $db->query($query);
+$my_extension_ids = array_from_query($query, 'id_extension');
 
-$tpl_extensions = array();
-while ($data = $db->fetch_assoc($req))
-{
-  array_push(
-    $tpl_extensions,
-    array(
-      'name' => htmlspecialchars(strip_tags($data['name'])),
-      'id' => $data['id_extension']
-      )
-    );
-}
-$tpl->assign('extensions', $tpl_extensions);
-
-// Get other extension
+// Get other extensions
 $query = '
-SELECT
-    id_extension,
-    name
+SELECT id_extension
   FROM '.EXT_TABLE.' AS ext
   INNER JOIN '.AUTHORS_TABLE.' AS aut
     ON ext.id_extension = aut.idx_extension
   WHERE aut.idx_user = \''.$user['id'].'\'
   ORDER BY name ASC
 ;';
-$req = $db->query($query);
+$other_extension_ids = array_from_query($query, 'id_extension');
 
-$tpl_extensions = array();
-while ($data = $db->fetch_assoc($req))
+// Gets the total information about the extensions
+$extension_ids = array_merge($other_extension_ids, $my_extension_ids);
+$query = '
+SELECT * FROM (
+  SELECT 
+      version,
+      idx_extension
+    FROM '.REV_TABLE.'
+    WHERE idx_extension IN ('.implode(',',$extension_ids).')
+    ORDER BY date DESC 
+  ) AS t
+  GROUP BY t.idx_extension
+;';
+$revision_of = simple_hash_from_query($query, 'idx_extension', 'version');
+
+$extension_infos_of = get_extension_infos_of($extension_ids);
+$download_of_extension = get_download_of_extension($extension_ids);
+
+foreach ($extension_ids as $extension_id)
 {
-  array_push(
-    $tpl_extensions,
-    array(
-      'name' => htmlspecialchars(strip_tags($data['name'])),
-      'id' => $data['id_extension']
-      )
+  $extension = array(
+    'id' => $extension_id,
+    'name' => htmlspecialchars(strip_tags($extension_infos_of[$extension_id]['name'])),
+    'rating_score' => generate_static_stars($extension_infos_of[$extension_id]['rating_score'],0),
+    'nb_reviews' => $extension_infos_of[$extension_id]['nb_reviews'],
+    'nb_downloads' => $download_of_extension[$extension_id],
+    'revision' => @$revision_of[$extension_id],
     );
+    
+    if (in_array($extension_id, $my_extension_ids))
+    {
+      $tpl->append('extensions', $extension);
+    }
+    else
+    {
+      $tpl->append('other_extensions', $extension);
+    }
 }
-$tpl->assign('other_extensions', $tpl_extensions);
+
 
 // +-----------------------------------------------------------------------+
 // |                           html code display                           |

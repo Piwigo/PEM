@@ -7,7 +7,12 @@
 {if count($extensions) > 0}
 <ul>
   {foreach from=$extensions item=extension}
-  <li><a href="extension_view.php?eid={$extension.id}">{$extension.name}</a></li>
+  <li>
+    <a href="extension_view.php?eid={$extension.id}">{$extension.name} {$extension.revision}</a>
+    - {$extension.nb_downloads} downloads
+    - {$extension.nb_reviews} reviews
+    {$extension.rating_score}
+  </li>
   {/foreach}
 </ul>
 {/if}
@@ -17,7 +22,12 @@
 <p>{'Other extensions'|@translate}:</p>
 <ul>
   {foreach from=$other_extensions item=extension}
-  <li><a href="extension_view.php?eid={$extension.id}">{$extension.name}</a></li>
+  <li>
+    <a href="extension_view.php?eid={$extension.id}">{$extension.name} {$extension.revision}</a>
+    - {$extension.nb_downloads} downloads
+    - {$extension.nb_reviews} reviews
+    {$extension.rating_score}
+  </li>
   {/foreach}
 </ul>
 {/if}
