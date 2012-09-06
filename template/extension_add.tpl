@@ -25,7 +25,7 @@
         <th>{'Tags'|@translate}</th>
         <td>
           <select id="tags" name="tags" multiple="multiple">
-          {foreach from=$tags item=tag}
+          {foreach from=$ext_tags item=tag}
             {if $tag.selected}
             <option value="{$tag.id_tag}" class="selected">{$tag.name}</option>
             {/if}
@@ -112,15 +112,15 @@ $(document).ready(function() {ldelim}
   });
   
   $("#tags").tokenInput(
-    [{foreach from=$tags item=tag name=tags}{ldelim}"name":"{$tag.name|@escape:'javascript'}","id":"{$tag.id_tag}"{rdelim}{if !$smarty.foreach.tags.last},{/if}{/foreach}],
+    [{foreach from=$ext_tags item=tag name=tags}{ldelim}"name":"{$tag.name|@escape:'javascript'}","id":"{$tag.id_tag}"{rdelim}{if !$smarty.foreach.tags.last},{/if}{/foreach}],
     {ldelim}
       hintText: '{'Type in a search term'|@translate}',
       noResultsText: '{'No results'|@translate}',
       searchingText: '{'Searching...'|@translate}',
       newText: ' ({'new'|@translate})',
       animateDropdown: false,
-      preventDuplicates: true,
-      allowCreation: true
+      preventDuplicates: true
+      {if $allow_tag_creation}, allowCreation: true{/if}
     }
   );
   

@@ -41,6 +41,11 @@ $(document).ready(function() {ldelim}
   });
   $("#review_form_show").click(function() {ldelim}
     $("#review_form").slideToggle();
+    return false;
+  });
+  $("#review_form .language a").click(function() {ldelim}
+    $("#review_form .language").toggle();
+    return false;
   });
   
   $("#review_form").submit(function() {ldelim}
@@ -61,6 +66,13 @@ $(document).ready(function() {ldelim}
       return false;
     }
   });
+  
+  // restore interface for users with JS
+  {if !isset($user_review.display)}
+  $("#review_form").hide();
+  {/if}
+  $("select[name='score']").remove();
+  $("#user_rate_show").show();
 });
 </script>
 {/html_head}
@@ -103,7 +115,7 @@ $(document).ready(function() {ldelim}
     <div class="rating_infos">{$rate_summary.count_text}</div>
   {/if}
     <br>
-    <a id="user_rate_show">{if isset($user_rating.rate)}{'Update your rating'|@translate}{else}{'Rate it!'|@translate}{/if}</a>
+    <a id="user_rate_show" style="display:none;">{if isset($user_rating.rate)}{'Update your rating'|@translate}{else}{'Rate it!'|@translate}{/if}</a>
     <form id="user_rate" style="display:none;" method="post" action="{$user_rating.action}">
       <em>{'Your rating'|@translate} :</em>
       <div></div>
@@ -207,10 +219,10 @@ $(document).ready(function() {ldelim}
 {/if}
 
 <!-- reviews -->
-{if !empty($reviews)}
+{if $nb_reviews > 0}
 <h3>
   {$nb_reviews} {'Reviews'|@translate} 
-  <a id="review_form_show" name="add_review" style="font-size:0.8em;font-weight:normal;"><img src="template/images/comment.gif"> {'Add a review'|@translate}</a>
+  <a id="review_form_show" name="add_review" style="font-size:0.8em;"><img src="template/images/comment.gif"> {'Add a review'|@translate}</a>
 </h3>
 {else}
 <h3>
@@ -218,7 +230,7 @@ $(document).ready(function() {ldelim}
 </h3>
 {/if}
 
-<form id="review_form" method="post" action="{$user_review.form_action}" {if !isset($user_review.display)}style="display:none;"{/if}>
+<form id="review_form" method="post" action="{$user_review.form_action}">
   <p class="review_message warning">{'Please do not use this form to request assistance or report a bug. Use the forums instead.'|@translate}</p>
   <p {if isset($user_review.is_logged)}style="display:none;"{/if}>
     <label for="author">{'Name'|@translate}</label><br> 
@@ -236,25 +248,64 @@ $(document).ready(function() {ldelim}
     <label for="content">{'Your review'|@translate}</label><br> 
     <textarea id="content" name="content" style="width:99%;" rows="6">{$user_review.content}</textarea>
   </p>
-  <p><label>{'Your rating'|@translate}</label> <span id="review_rate"></span></p>
+  <p>
+    <label>{'Your rating'|@translate}</label>
+    <span id="review_rate"></span>
+    {html_options name=score options=$scores}
+  </p>
+  <p>
+    <label>{'Language'|@translate}</label> 
+    <span class="language"><b>{$languages[$user_language].name}</b> <a href="#">This is not your language ?</a></span>
+    <span class="language" style="display:none;">
+      <select name="idx_language">
+        <option value="0">-- {'Other'|@translate} --</option>
+      {foreach from=$languages item=language}
+        <option value="{$language.id}" {if $languages[$user_language].id == $language.id}selected="selected"{/if}>{$language.name}</option>
+      {/foreach}
+      </select>
+    </span>
+  </p>
   <p><br><input type="submit" value="{'Send'|@translate}"></p>
 </form>
 
-{if !empty($reviews)}
+{if $nb_reviews > 0}
+<a name="reviews"></a>
 <div id="reviews_list">
-  {foreach from=$reviews item=review name=review_loop}
-  <div class="reviewItem {if $smarty.foreach.review_loop.index is odd}odd{else}even{/if}">
+{foreach from=$reviews item=review name=review_loop}
+  <div class="reviewItem {if $smarty.foreach.review_loop.index is even}odd{else}even{/if}">
+  {if $review.in_edit}
+    <a name="review_edit"></a>
+    <form method="post" action="{$review.action}">
+  {/if}
     <div class="reviewInfos">
       <div class="rating">{$review.rate}</div>
       <div class="author">
-        {$review.author} on {$review.date}
-        {if isset($review.u_delete)}| <a href="{$review.u_delete}">Delete</a>{/if}
-        {if isset($review.u_validate)}| <a href="{$review.u_validate}">Validate</a>{/if}
+        {if $review.email}<a href="mailto:{$review.email}">{$review.author}</a>{else}{$review.author}{/if}
+        on {$review.date}
+        {if isset($review.u_delete)}| <a href="{$review.u_delete}#reviews">{'Delete'|@translate}</a>{/if}
+        {if isset($review.u_edit)}| <a href="{$review.u_edit}#review_edit">{'Edit'|@translate}</a>{/if}
+        {if isset($review.u_cancel)}| <a href="{$review.u_cancel}#reviews">{'Cancel'|@translate}</a>{/if}
+        {if isset($review.u_validate)}| <a href="{$review.u_validate}#reviews">{'Validate'|@translate}</a>{/if}
       </div>
-      <div class="title">{$review.title}</div>
+      <div class="title">
+      {if $review.in_edit}
+        <input id="title" type="text" name="title" style="width:600px;" value="{$review.title}">
+      {else}
+        {$review.title}
+      {/if}
+      </div>
     </div>
+  {if $review.in_edit}
+      <textarea id="content" name="content" style="width:600px;" rows="6">{$review.content}</textarea>
+      <input type="hidden" name="id_review" value="{$review.id_review}">
+      <br><input type="submit" value="{'Send'|@translate}">
+    </form>
+  {else}
     <blockquote>{$review.content}</blockquote>
+  {/if}
   </div>
-  {/foreach}
+{/foreach}
 </div>
+
+{if $U_DISPLAY_ALL_REVIEWS}<a id="displayAllReviews" href="{$U_DISPLAY_ALL_REVIEWS}">+ {'Show %d more reviews'|@translate|sprintf:$NB_REVIEWS_MASKED}</a>{/if}
 {/if}

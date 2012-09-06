@@ -47,6 +47,34 @@ DELETE
 }
 
 /**
+ * delete a tag and all dependencies
+ */
+function delete_tag($tag_id) {
+  global $db;
+  
+  $query = '
+DELETE
+  FROM '.EXT_TAG_TABLE.'
+  WHERE idx_tag = '.$tag_id.'
+;';
+  $db->query($query);
+
+  $query = '
+DELETE
+  FROM '.TAG_TABLE.'
+  WHERE id_tag = '.$tag_id.'
+;';
+  $db->query($query);
+
+  $query = '
+DELETE
+  FROM '.TAG_TRANS_TABLE.'
+  WHERE idx_tag = '.$tag_id.'
+;';
+  $db->query($query);
+}
+
+/**
  * delete a version and all dependencies
  */
 function delete_version($version_id) {

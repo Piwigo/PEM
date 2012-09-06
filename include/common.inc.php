@@ -158,8 +158,6 @@ if (isset($_POST['filter_submit'])) {
 
   // filter on a textual free search
   if (isset($_POST['search']) and !empty($_POST['search'])) {
-    // we can't do a textual search within an tag (from url) as textual search also finds tags
-    unset($_SESSION['filter']['tag_ids']);
     $_SESSION['filter']['search'] = $_POST['search'];
   }
   else {

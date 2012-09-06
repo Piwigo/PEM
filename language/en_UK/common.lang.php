@@ -199,4 +199,8 @@ $lang['Your review'] = 'Your review';
 $lang['Send'] = 'Send';
 $lang['Please do not use this form to request assistance or report a bug. Use the forums instead.'] = 'Please do not use this form to request assistance or report a bug. Use the forums instead.';
 
+$lang['Other'] = 'Other';
+$lang['%d reviews'] = '%d review(s)';
+$lang['Show %d more reviews'] = 'Show %d more review(s)';
+
 ?>

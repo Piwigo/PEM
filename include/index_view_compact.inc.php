@@ -115,7 +115,7 @@ $tpl->assign(
 // |                           html code display                           |
 // +-----------------------------------------------------------------------+
 
-$tpl->assign_var_from_handle('main_content', 'index_view_compact');
 include($root_path.'include/header.inc.php');
+$tpl->assign_var_from_handle('main_content', 'index_view_compact');
 include($root_path.'include/footer.inc.php');
 ?>

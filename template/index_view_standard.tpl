@@ -24,7 +24,7 @@ hs.lang['restoreTitle'] = '';
   </select>
 </div>
 
-<h2>{'Most recent extensions'|@translate}</h2>
+<h2>{$page_title}</h2>
 <div class="pages">
   {if !empty($navbar) }{include file='navigation_bar.tpl'}{/if}
   <div class="Results">({$nb_total} {'extensions'|@translate})</div>

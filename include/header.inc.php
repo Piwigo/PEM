@@ -24,6 +24,7 @@ if (!defined('INTERNAL'))
 }
 
 // Get the left nav menu
+$page_title = array();
 
 // categories
 $query = '
@@ -66,10 +67,10 @@ $tpl_categories = array();
 // Browse the categories and display them
 foreach($categories as $cat)
 {
-  $selected = '';
-  if (isset($_SESSION['filter']['category_ids'])
-      and in_array($cat['id_category'], $_SESSION['filter']['category_ids']))
+  $selected = false;
+  if ( isset($_SESSION['filter']['category_ids']) and $cat['id_category'] == $_SESSION['filter']['category_ids'][0] )
   {
+    array_push($page_title, l10n('Category').': '.$cat['name']);
     $selected = true;
   }
 
@@ -104,6 +105,7 @@ $tpl->assign(array(
 
 // Gets the current search
 if (isset($_SESSION['filter']['search'])) {
+  array_push($page_title, l10n('Search').': '.$_SESSION['filter']['search']);
   $tpl->assign('search', $_SESSION['filter']['search']);
 }
 
@@ -135,9 +137,9 @@ foreach ($versions as $version)
 {
   $version_id = $version['id_version'];
   $selected = '';
-  if (isset($_SESSION['filter']['id_version'])
-      and $_SESSION['filter']['id_version'] == $version_id)
+  if ( isset($_SESSION['filter']['id_version']) and $_SESSION['filter']['id_version'] == $version_id )
   {
+    array_push($page_title, l10n('Version').': '.$version['version']);
     $selected = 'selected="selected"';
   }
   
@@ -220,15 +222,20 @@ $query = '
 SELECT
     COUNT(1) AS count,
     id_tag,
-    name
+    t.name AS default_name,
+    tt.name
   FROM '.EXT_TAG_TABLE.' AS et
     LEFT JOIN '.TAG_TABLE.' AS t
-    ON t.id_tag = et.idx_tag
+      ON t.id_tag = et.idx_tag
+    LEFT JOIN '.TAG_TRANS_TABLE.' AS tt
+      ON t.id_tag = tt.idx_tag
+      AND tt.idx_language = \''.get_current_language_id().'\'
   WHERE idx_extension IN (
     SELECT DISTINCT(idx_extension) FROM '.REV_TABLE.'
   )
   GROUP BY id_tag
-  LIMIT 10
+  ORDER BY count DESC
+  LIMIT 30
 ;';
 $tpl_tags = array_of_arrays_from_query($query, 'id_tag');
 
@@ -237,15 +244,29 @@ if (count($tpl_tags))
   $counts = array_map(create_function('$v', 'return $v["count"];'), $tpl_tags);
   $adapt_range = create_function('$v', 'return ('.max($counts).'-'.min($counts).' != 0) ? ($v-'.min($counts).')/(2*('.max($counts).'-'.min($counts).'))+1 : 1;');
 
-  foreach($tpl_tags as &$tag)
+  $i = 0;
+  foreach($tpl_tags as $tag)
   {
+    if (empty($tag['name']))
+    {
+      $tag['name'] = $tag['default_name'];
+    }
+  
+    $selected = false;
+    if ( isset($_SESSION['filter']['tag_ids']) and $_SESSION['filter']['tag_ids'][0] == $tag['id_tag'] )
+    {
+      $selected = true;
+      array_push($page_title, l10n('Tag').': '.$tag['name']);
+    }
+    
     $tag['size'] = $adapt_range($tag['count']);
     $tag['url'] = 'index.php?tid='.$tag['id_tag'];
-    $tag['selected'] = @$_SESSION['filter']['tag_ids'][0] == $tag['id_tag'];
+    $tag['selected'] = $selected;
+    
+    if ($i<10) $tpl->append('tags', $tag);
+    else $tpl->append('more_tags', $tag);
+    $i++;
   }
-
-  // shuffle($tpl_tags);
-  $tpl->assign('tags', $tpl_tags);
 }
 
 
@@ -266,7 +287,7 @@ if (isset($conf['banner_filepath'])) {
   $tpl->assign('banner', $banner);
 }
 
-
+$tpl->assign('page_title', !empty($page_title) ? implode(', ', $page_title) : l10n('Most recent extensions'));
 $tpl->assign('title', $conf['page_title']);
 $tpl->assign('action', !empty($_SESSION['filter']['category_ids']) ? 'index.php?cid='.$_SESSION['filter']['category_ids'][0] : 'index.php');
 
@@ -281,5 +302,5 @@ else
   $tpl->assign('user_is_logged', false);
 }
 
-// echo '<pre>'; print_r($tpl->getTemplateVars()); echo '</pre>';
+// echo '<pre>'; print_r($tpl->get_template_vars()); echo '</pre>';
 ?>

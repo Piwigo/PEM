@@ -9,7 +9,8 @@
     <div class="reviewInfos">
        <div class="rating">extension: <b>{$review.extension_name}</b></div>
       <div class="author">
-        {$review.author} on {$review.date}
+        {if $review.email}<a href="mailto:{$review.email}">{$review.author}</a>{else}{$review.author}{/if}
+        on {$review.date}
         {if isset($review.u_delete)}| <a href="{$review.u_delete}">Delete</a>{/if}
         {if isset($review.u_validate)}| <a href="{$review.u_validate}">Validate</a>{/if}
       </div>

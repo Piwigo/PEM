@@ -250,7 +250,7 @@ SELECT
  */
 function get_extension_infos_of($extension_ids)
 {
-  global $db;
+  global $db, $user;
 
   $extension_infos_of = array();
 
@@ -269,7 +269,9 @@ SELECT
     COUNT(1) AS count,
     idx_extension
   FROM '.REVIEW_TABLE.'
-  WHERE idx_extension IN ('.$ids_string.')
+  WHERE 
+    idx_extension IN ('.$ids_string.')
+    '.(!isAdmin(@$user['id']) ? 'AND validated = "true"' : null).'
 ;';
   $nb_reviews = simple_hash_from_query($query, 'idx_extension', 'count');
   
@@ -1238,6 +1240,7 @@ function insert_user_review(&$comm)
 {
   global $conf, $user, $db;
   
+  // check required fields
   if ( empty($comm['author']) or empty($comm['email']) or empty($comm['content']) or empty($comm['rate']) )
   {
     $comm['action'] = 'reject';
@@ -1245,6 +1248,7 @@ function insert_user_review(&$comm)
     return;
   }
   
+  // check email validity
   if (filter_var($comm['email'], FILTER_VALIDATE_EMAIL) === false)
   {
     $comm['action'] = 'reject';
@@ -1252,6 +1256,10 @@ function insert_user_review(&$comm)
     return;
   }
   
+  // remove all html tags
+  $comm['content'] = strip_tags($comm['content']);
+  
+  // anonymous id = ip address
   $user_anonymous = empty($user['id']);
   $user_id = $user_anonymous ? 0 : $user['id'];
 
@@ -1262,6 +1270,7 @@ function insert_user_review(&$comm)
   }
   $anonymous_id = implode('.', $ip_components);
   
+  // comment validation and anti-spam
   if ( !$conf['comments_validation'] or isAdmin(@$user['id']) )
   {
     $comm['action'] = 'validate';
@@ -1299,17 +1308,24 @@ SELECT COUNT(1)
     $comm['action'] = 'moderate';
   }
   
+  // insert comment
   if ($comm['action'] != 'reject')
   {
     if (empty($comm['title']))
     {
       $comm['title'] = substr($comm['content'], 0, 64);
     }
+    
+    if (empty($comm['idx_language']))
+    {
+      $comm['idx_language'] = 0;
+    }
   
     $query = '
 INSERT INTO '.REVIEW_TABLE.' (
     idx_user,
     idx_extension,
+    idx_language,
     date,
     author,
     email,
@@ -1322,6 +1338,7 @@ INSERT INTO '.REVIEW_TABLE.' (
   VALUES (
     '.$user_id.',
     '.$comm['idx_extension'].',
+    "'.$comm['idx_language'].'",
     NOW(),
     "'.$comm['author'].'",
     "'.$comm['email'].'",
@@ -1450,7 +1467,7 @@ function get_tag_ids($raw_tags, $allow_create=true)
   
   if (empty($raw_tags)) return array();
   
-  global $db;
+  global $db, $conf, $interface_languages;
 
   $tag_ids = array();
   $raw_tags = explode(',',$raw_tags);
@@ -1475,10 +1492,11 @@ SELECT id_tag
       {
         mass_inserts(
           TAG_TABLE,
-          array('name'),
+          array('name', 'idx_language'),
           array(
             array(
               'name' => $raw_tag,
+              'idx_language' => $interface_languages[$conf['default_language']]['id'],
               )
             )
           );

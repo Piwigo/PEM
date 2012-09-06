@@ -34,8 +34,26 @@
           {'Tags'|@translate}
           <div class="tagsCloud">
           {foreach from=$tags item=tag}
-            <a href="{$tag.url}" style="font-size:{$tag.size}em;"{if $tag.selected}class="selected"{/if}>{$tag.name}<i> ({$tag.count})</i></a>
+            <a href="{$tag.url}" style="font-size:{$tag.size}em;" {if $tag.selected}class="selected"{/if}>{$tag.name}<i> ({$tag.count})</i></a>
           {/foreach}
+          
+          {if $more_tags}
+            {known_script id="jquery" src="template/jquery.min.js"}
+            {html_head}<script type="text/javascript">
+            jQuery("document").ready(function() {ldelim}
+              jQuery("#showMoreTags").click(function() {ldelim}
+                jQuery(this).hide();
+                jQuery(".moreTags").show();
+                return false;
+              });
+            });
+            </script>{/html_head}
+            
+            <a href="#" id="showMoreTags" style="display:block;">{'+ more'|@translate}</a>
+            {foreach from=$more_tags item=tag}
+              <a href="{$tag.url}" style="font-size:{$tag.size}em;display:none;" class="moreTags {if $tag.selected}selected{/if}">{$tag.name}<i> ({$tag.count})</i></a>
+            {/foreach}
+          {/if}
           </div>
         {/if}
           

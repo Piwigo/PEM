@@ -28,29 +28,99 @@ include_once($root_path . 'include/functions_user.inc.php');
 /**
  * get absolute home url of PEM installation
  */
-function get_absolute_home_url()
+function get_absolute_home_url($with_scheme=true)
 {
-  if ( isset($_SERVER['HTTPS']) && ( strtolower($_SERVER['HTTPS']) == 'on' or $_SERVER['HTTPS'] == 1 ) )
+  // TODO - add HERE the possibility to call PWG functions from external scripts
+  $url = '';
+  if ($with_scheme)
   {
-    $host = 'https://';
+    if (isset($_SERVER['HTTPS']) &&
+	((strtolower($_SERVER['HTTPS']) == 'on') or ($_SERVER['HTTPS'] == 1)))
+    {
+      $url .= 'https://';
+    }
+    else
+    {
+      $url .= 'http://';
+    }
+    $url .= $_SERVER['HTTP_HOST'];
+    if ($_SERVER['SERVER_PORT'] != 80)
+    {
+      $url_port = ':'.$_SERVER['SERVER_PORT'];
+      if (strrchr($url, ':') != $url_port)
+      {
+        $url .= $url_port;
+      }
+    }
+  }
+  $url .= cookie_path();
+  return $url;
+}
+
+/**
+ * cookie_path returns the path to use for the PEM cookie. (from Piwigo)
+ * If PEM is installed on :
+ * http://domain.org/meeting/gallery/category.php
+ * cookie_path will return : "/meeting/gallery"
+ */
+function cookie_path()
+{
+  global $root_path;
+  
+  if ( isset($_SERVER['REDIRECT_SCRIPT_NAME']) and
+       !empty($_SERVER['REDIRECT_SCRIPT_NAME']) )
+  {
+    $scr = $_SERVER['REDIRECT_SCRIPT_NAME'];
+  }
+  else if ( isset($_SERVER['REDIRECT_URL']) )
+  {
+    // mod_rewrite is activated for upper level directories. we must set the
+    // cookie to the path shown in the browser otherwise it will be discarded.
+    if
+      (
+        isset($_SERVER['PATH_INFO']) and !empty($_SERVER['PATH_INFO']) and
+        ($_SERVER['REDIRECT_URL'] !== $_SERVER['PATH_INFO']) and
+        (substr($_SERVER['REDIRECT_URL'],-strlen($_SERVER['PATH_INFO']))
+            == $_SERVER['PATH_INFO'])
+      )
+    {
+      $scr = substr($_SERVER['REDIRECT_URL'], 0,
+        strlen($_SERVER['REDIRECT_URL'])-strlen($_SERVER['PATH_INFO']));
+    }
+    else
+    {
+      $scr = $_SERVER['REDIRECT_URL'];
+    }
   }
   else
   {
-    $host = 'http://';
-  }
-  
-  $host.= $_SERVER['HTTP_HOST'];
-  if ($_SERVER['SERVER_PORT'] != 80)
-  {
-    $url_port = ':'.$_SERVER['SERVER_PORT'];
-    if (strrchr($host, ':') != $url_port)
-    {
-      $host.= $url_port;
-    }
+    $scr = $_SERVER['SCRIPT_NAME'];
   }
 
-  return $host.'/';
+  $scr = substr($scr,0,strrpos( $scr,'/'));
+
+  // add a trailing '/' if needed
+  if ((strlen($scr) == 0) or ($scr{strlen($scr)-1} !== '/'))
+  {
+    $scr .= '/';
+  }
+
+  if ( substr($root_path,0,3)=='../')
+  {
+    $scr = $scr.$root_path;
+    while (1)
+    {
+      $new = preg_replace('#[^/]+/\.\.(/|$)#', '', $scr);
+      if ($new==$scr)
+      {
+        break;
+      }
+      $scr=$new;
+    }
+  }
+  return $scr;
 }
+
 
 /**
  * sort an array by version number

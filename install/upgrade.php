@@ -432,6 +432,7 @@ if (!mysql_fetch_row($result))
 CREATE TABLE `'.TAG_TABLE.'` (
   `id_tag` smallint(5) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
+  `idx_language` int(11) NOT NULL,
   PRIMARY KEY (`id_tag`)
 ) DEFAULT CHARSET=utf8
 ;';
@@ -486,20 +487,63 @@ if (!mysql_fetch_row($result))
 CREATE TABLE `'.REVIEW_TABLE.'` (
   `id_review` int(11) NOT NULL AUTO_INCREMENT,
   `idx_user` smallint(5) unsigned NOT NULL,
-  `anonymous_id` varchar(45) NOT NULL,
   `idx_extension` int(11) NOT NULL,
+  `idx_language` varchar(5) NOT NULL DEFAULT \'0\',
   `date` datetime NOT NULL DEFAULT \'0000-00-00 00:00:00\',
   `author` varchar(20) NOT NULL,
   `email` varchar(255) NOT NULL,
   `title` varchar(255) NOT NULL,
   `content` text NOT NULL,
   `rate` float(5,2) NOT NULL,
+  `anonymous_id` varchar(45) NOT NULL,
   `validated` enum(\'true\',\'false\') NOT NULL DEFAULT \'false\',
   PRIMARY KEY (`id_review`)
 ) DEFAULT CHARSET=utf8;';
   $db->query($query);
 
   array_push($upgrade_infos, 'Reviews table has been created');
+}
+
+$columns = get_columns_of(array(REVIEW_TABLE));
+if (!in_array('idx_language', $columns[REVIEW_TABLE]))
+{
+  $query = 'ALTER TABLE '.REVIEW_TABLE.' ADD COLUMN `idx_language` varchar(5) NOT NULL DEFAULT \'0\';';
+  $db->query($query);
+
+  array_push($upgrade_infos, '- new column '.REVIEW_TABLE.'.idx_language');
+}
+
+// +-----------------------------------------------------------------------+
+// |                       Tags translation table                          |
+// +-----------------------------------------------------------------------+
+
+$query = 'SHOW TABLES LIKE "'.TAG_TRANS_TABLE.'";';
+$result = $db->query($query);
+if (!mysql_fetch_row($result))
+{
+  $query = '
+CREATE TABLE `'.TAG_TRANS_TABLE.'` (
+  `idx_tag` int(11) NOT NULL,
+  `idx_language` int(11) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  PRIMARY KEY  (`idx_tag`, `idx_language`)
+) DEFAULT CHARSET=utf8;';
+  $db->query($query);
+  
+  array_push($upgrade_infos, 'Tag translations table has been created');
+}
+
+$columns = get_columns_of(array(TAG_TABLE));
+if (!in_array('idx_language', $columns[TAG_TABLE]))
+{
+  $query = 'ALTER TABLE '.TAG_TABLE.' ADD `idx_language` int(11) NOT NULL;';
+  $db->query($query);
+  
+  $query = 'UPDATE '.TAG_TABLE.' SET idx_language = '.$interface_languages[$conf['default_language']]['id'].';';
+  $db->query($query);
+  
+  
+  array_push($upgrade_infos, '- new column '.TAG_TABLE.'.idx_language');
 }
 
 // +-----------------------------------------------------------------------+

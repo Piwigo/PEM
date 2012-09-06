@@ -351,14 +351,23 @@ foreach($cats as $cat)
 $query = '
 SELECT
     id_tag,
-    name
-  FROM '.TAG_TABLE.'
+    t.name AS default_name,
+    tt.name
+  FROM '.TAG_TABLE.' AS t
+  LEFT JOIN '.TAG_TRANS_TABLE.' AS tt
+      ON t.id_tag = tt.idx_tag
+      AND tt.idx_language = \''.get_current_language_id().'\'
 ;';
 $tags = array_of_arrays_from_query($query);
 
 $tpl_tags = array();
 foreach ($tags as $tag)
 {
+  if (empty($tag['name']))
+  {
+    $tag['name'] = $tag['default_name'];
+  }
+    
   $tag['id_tag'] = '~~'.$tag['id_tag'].'~~';
   array_push(
     $tpl_tags,
@@ -387,7 +396,8 @@ $tpl->assign(
     'descriptions' => $descriptions,
     'default_language' => $default_language,
     'extension_categories' => $tpl_extension_categories,
-    'tags' => $tpl_tags,
+    'ext_tags' => $tpl_tags,
+    'allow_tag_creation' => $conf['allow_tag_creation'],
     )
   );
 

@@ -113,6 +113,7 @@ CREATE TABLE `pem_reviews` (
   `id_review` int(11) NOT NULL AUTO_INCREMENT,
   `idx_user` smallint(5) unsigned NOT NULL,
   `idx_extension` int(11) NOT NULL,
+  `idx_language` int(11) NOT NULL DEFAULT '0',
   `date` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `author` varchar(20) NOT NULL,
   `email` varchar(255) NOT NULL,
@@ -165,7 +166,16 @@ DROP TABLE IF EXISTS `pem_tags`;
 CREATE TABLE `pem_tags` (
   `id_tag` smallint(5) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
+  `idx_language` int(11) NOT NULL,
   PRIMARY KEY (`id_tag`)
+) DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `pem_tags_translations`;
+CREATE TABLE `pem_tags_translations` (
+  `idx_tag` int(11) NOT NULL,
+  `idx_language` int(11) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  PRIMARY KEY  (`idx_tag`, `idx_language`)
 ) DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `pem_user_infos`;

@@ -56,9 +56,10 @@ if (isset($_GET['action']))
         'email' => trim($_POST['email']),
         'title' => trim($_POST['title']),
         'content' => $_POST['content'],
-        'rate' => (float)$_POST['score'],
+        'rate' => (float)@$_POST['score'],
+        'idx_language' => $_POST['idx_language'],
         );
-        
+      
       insert_user_review($user_review);
       switch ($user_review['action'])
       {
@@ -79,6 +80,22 @@ if (isset($_GET['action']))
           break;
       }
       
+      break;
+      
+    case 'edit_review':
+      if (!isAdmin(@$user['id'])) break;
+      
+      $query = '
+UPDATE '.REVIEW_TABLE.'
+  SET 
+    title = "'.$_POST['title'].'", 
+    content = "'.$_POST['content'].'"
+  WHERE
+    id_review = '.$_POST['id_review'].'
+;';
+      $db->query($query);
+      
+      header('Location: '.$self_url.'#reviews');
       break;
   }
 }
@@ -426,41 +443,109 @@ $tpl->assign('user_rating', array(
   'rate' => $user_rate,
   ));
   
-// reviews
+// REVIEWS
+// total reviews in each language
+$current_language_id = get_current_language_id();
+
+$query = '
+SELECT
+    idx_language,
+    COUNT(1) AS count
+  FROM '.REVIEW_TABLE.'
+  WHERE 
+    idx_extension = '.$page['extension_id'].'
+    '.(!isAdmin(@$user['id']) ? 'AND validated = "true"' : null).'
+  GROUP BY idx_language
+;';
+$total_reviews = hash_from_query($query, 'idx_language');
+
+$total=0;
+foreach ($total_reviews as $language) $total+= $language['count'];
+$tpl->assign('nb_reviews', $total);
+
+// reviews filter
+if ( isset($_GET['display_all_reviews']) or !array_key_exists($current_language_id, $total_reviews) )
+{
+  $where_clause = '1=1';
+}
+else
+{
+  $where_clause = 'idx_language = '.$current_language_id;
+  if ($total != $total_reviews[ $current_language_id ]['count'])
+  {
+    $tpl->assign('U_DISPLAY_ALL_REVIEWS', $self_url.'&amp;display_all_reviews#reviews');
+    $tpl->assign('NB_REVIEWS_MASKED', $total-$total_reviews[ $current_language_id ]['count']);
+  }
+}
+
+// get displayed reviews
 $query = '
 SELECT *
   FROM '.REVIEW_TABLE.'
   WHERE
     idx_extension = '.$page['extension_id'].'
+    AND '.$where_clause.'
     '.(!isAdmin(@$user['id']) ? 'AND validated = "true"' : null).'
   ORDER BY date DESC
 ;';
-$tpl_reviews = array_of_arrays_from_query($query, 'id_review');
+$all_reviews = array_of_arrays_from_query($query, 'id_review');
 
-foreach ($tpl_reviews as &$review)
+$language_reviews = $other_reviews = array();
+foreach ($all_reviews as $review)
 {
+  $review['in_edit'] = false;
   $review['rate'] = generate_static_stars($review['rate'], false);
-  $review['content'] = nl2br($review['content']);
   $review['date'] = date('d F Y', strtotime($review['date']));
   
   if (isAdmin(@$user['id']))
   {
-    $review['u_delete'] = $self_url.'&amp;delete_review='.$review['id_review'];
+    if ( isset($_GET['edit_review']) and $_GET['edit_review'] == $review['id_review'] ) 
+    {
+      $review['in_edit'] = true;
+      $review['u_cancel'] = $self_url;
+      $review['action'] = $self_url.'&amp;action=edit_review';
+    }
+    
+                                         $review['u_delete']   = $self_url.'&amp;delete_review='.$review['id_review'];
+    if (!$review['in_edit'])             $review['u_edit']     = $self_url.'&amp;edit_review='.$review['id_review'];
     if ($review['validated'] == 'false') $review['u_validate'] = $self_url.'&amp;validate_review='.$review['id_review'];
   }
+  else
+  {
+    unset($review['email']);
+  }
+  
+  if (!$review['in_edit'])
+  {
+    $review['content'] = nl2br($review['content']);
+  }
+  
+  if ($review['idx_language'] == $current_language_id)
+  {
+    array_push($language_reviews, $review);
+  }
+  else
+  {
+    array_push($other_reviews, $review);
+  }
 }
+$tpl->assign('reviews', array_merge($language_reviews, $other_reviews));
 
-$tpl->assign('nb_reviews', count($tpl_reviews));
-$tpl->assign('reviews', $tpl_reviews);
-
-if (!empty($user['id'])) {
+// prefilled and invisible inputs
+if (!empty($user['id']))
+{
   $user_review['author'] = $user['username'];
   $user_review['email'] = $user['email'];
   $user_review['is_logged'] = true;
 }
 $user_review['form_action'] = $self_url.'&amp;action=add_review';
-$user_review = array_map(create_function('$v', 'return stripslashes($v);'), $user_review);
+$user_review = array_map('stripslashes', $user_review);
 $tpl->assign('user_review', $user_review);
+
+$scores = array_combine(range(0.5,5,0.5), range(0.5,5,0.5));
+$scores[0] = '--';
+asort($scores);
+$tpl->assign('scores', $scores);
 
 
 // +-----------------------------------------------------------------------+

@@ -5,9 +5,9 @@
   </select>
 </div>
 
-<h2>{'Most recent extensions'|@translate}</h2>
+<h2>{$page_title}</h2>
 <div class="pages">
-  <div class="Results">({$nb_total} {'extensions'|@translate})</div>
+  <div class="Results">({$nb_total} {'revisions'|@translate})</div>
 </div>
 
 {if count($revisions) > 0}
@@ -21,6 +21,6 @@
 {/if}
 
 <div class="pages">
-  <div class="Results">({$nb_total} {'extensions'|@translate})</div>
+  <div class="Results">({$nb_total} {'revisions'|@translate})</div>
 </div>
 <div style="clear : both;"></div>
