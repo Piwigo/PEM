@@ -67,12 +67,22 @@ $revision_of = simple_hash_from_query($query, 'idx_extension', 'version');
 $extension_infos_of = get_extension_infos_of($extension_ids);
 $download_of_extension = get_download_of_extension($extension_ids);
 
+$query = '
+SELECT 
+    COUNT(rate) AS total,
+    idx_extension
+  FROM '.RATE_TABLE.'
+  GROUP BY idx_extension
+;';
+$total_rates_of_extension = simple_hash_from_query($query, 'idx_extension', 'total');
+
 foreach ($extension_ids as $extension_id)
 {
   $extension = array(
     'id' => $extension_id,
     'name' => htmlspecialchars(strip_tags($extension_infos_of[$extension_id]['name'])),
     'rating_score' => generate_static_stars($extension_infos_of[$extension_id]['rating_score'],0),
+    'total_rates' => @$total_rates_of_extension[$extension_id],
     'nb_reviews' => $extension_infos_of[$extension_id]['nb_reviews'],
     'nb_downloads' => $download_of_extension[$extension_id],
     'revision' => @$revision_of[$extension_id],

@@ -735,4 +735,35 @@ div.row  img.help_user
   display:block;
   margin:10px 0 0 10px;
 }
-  
+
+.my-extensions {
+  border-collapse:collapse;
+  border-bottom:1px dotted #888;
+}
+  .my-extensions td {
+    padding:2px 4px;
+    border-color:#888;
+    border-style:dotted;
+    border-width:0 1px;
+  }
+    .my-extensions tr.odd {
+      background:#eee;
+    }
+    .my-extensions tr.even {
+      background:#fff;
+    }
+    .my-extensions tr td:first-child {
+      min-width:200px;
+    }
+    .my-extensions tr td:last-child {
+      min-width:70px;
+    }
+  .my-extensions thead td {
+    font-weight:bold;
+    padding:2px 10px;
+    background:#bbb;
+    text-align:center;
+  }
+    .my-extensions thead tr td:first-child {
+      text-align:left;
+    }

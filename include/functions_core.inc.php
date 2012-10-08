@@ -1368,7 +1368,7 @@ INSERT INTO '.REVIEW_TABLE.' (
 <i>Date:</i> '.date('r').'<br>
 <br>
 <b>'.$comm['title'].'</b><br>
-'.$comm['content'].'<br>
+'.nl2br($comm['content']).'<br>
 <br>
 <a href="'.$u_delete.'">Delete</a> | <a href="'.$u_validate.'">Validate<a><br>
 ';
