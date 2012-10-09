@@ -158,7 +158,11 @@ $conf['email_admin_on_comment_validation'] = true;
 // anti flood time in seconds
 $conf['anti-flood_time'] = 60;
 
+// users can create tag in the extension properties page
 $conf['allow_tag_creation'] = true;
+
+// Akismet key, leave blank to not use
+$conf['akismet_key'] = null;
 
 // +-----------------------------------------------------------------------+
 // |                             SVN parameters                            |

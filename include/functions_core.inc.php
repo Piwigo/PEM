@@ -1256,6 +1256,20 @@ function insert_user_review(&$comm)
     return;
   }
   
+  // check spam with Akismet
+  if (!empty($conf['askimet_key']))
+  {
+    include_once($root_path . 'include/akismet.class.php');
+    $akismet = new Akismet($conf['website_url'], $conf['askimet_key'], $comm);
+    
+    if ( !$akismet->errorsExist() and $akismet->isSpam() )
+    {
+      $comm['action'] = 'reject';
+      $comm['message'] = l10n('Spammer!');
+      return;
+    }
+  }
+  
   // remove all html tags
   $comm['content'] = strip_tags($comm['content']);
   
