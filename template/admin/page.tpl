@@ -26,6 +26,7 @@
         <li><a href="languages.php">Languages</a></li>
         <li><a href="reviews.php">Reviews</a></li>
         <li><a href="tags.php">Tags</a></li>
+        <li><a href="extensions_translations.php">Translations</a></li>
       </ul>
     </div>
   </div>
