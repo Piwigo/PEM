@@ -31,20 +31,59 @@ $tpl->set_filenames(
   )
 );
 
-// Are there extension without a single revision?
+// search
+if (isset($_POST['reset']))
+{
+  unset($_POST);
+}
+
+$join = $where = array();
+if (isset($_POST['category']) and $_POST['category']!=-1)
+{
+  $join[] = '
+    INNER JOIN '.EXT_CAT_TABLE.' AS cat
+      ON cat.idx_extension = ext.id_extension
+      AND cat.idx_category = '.$_POST['category'];
+    
+  $tpl->assign('filter_category', $_POST['category']);
+}
+if (isset($_POST['version']) and $_POST['version']!=-1)
+{
+  $join[] = '
+    INNER JOIN '.REV_TABLE.' AS rev
+      ON rev.idx_extension = ext.id_extension
+    INNER JOIN '.COMP_TABLE.' AS comp
+      ON comp.idx_revision = rev.id_revision
+      AND comp.idx_revision = '.$_POST['version'];
+    
+  $tpl->assign('filter_version', $_POST['version']);
+}
+if (isset($_POST['name']))
+{
+  $where[] = 'LOWER(ext.name) LIKE "%'.strtolower($_POST['name']).'%"';
+  
+  $tpl->assign('filter_name', stripslashes($_POST['name']));
+}
+
+
+// get extensions
 $query = '
 SELECT
-    id_extension,
-    name,
+    ext.id_extension,
+    ext.name,
     ext.idx_language AS main_language,
     trans.idx_language AS other_language
   FROM '.EXT_TABLE.' AS ext
     LEFT JOIN '.EXT_TRANS_TABLE.' AS trans
       ON trans.idx_extension = ext.id_extension
-    INNER JOIN '.REV_TABLE.' AS rev
-      ON rev.idx_extension = ext.id_extension
-  GROUP BY CONCAT(other_language, rev.idx_extension)
-  ORDER BY date DESC
+    '.implode("\n    ", $join);
+if (count($where))
+{
+  $query.= 'WHERE
+  '.implode("\n    AND ", $where);
+}
+$query.= '
+  ORDER BY name ASC
 ;';
 $result = $db->query($query);
 
@@ -78,6 +117,23 @@ foreach ($extension_languages as $row)
   
   $tpl->append('extensions', $row);
 }
+
+
+// categories
+$query = '
+SELECT id_category, name   
+  FROM '.CAT_TABLE.' AS c
+  ORDER BY name ASC
+;';
+$tpl->assign('categories', simple_hash_from_query($query, 'id_category', 'name'));
+
+// versions
+$query = '
+SELECT id_version, version
+  FROM '.VER_TABLE.'
+  ORDER BY version DESC
+;';
+$tpl->assign('versions', simple_hash_from_query($query, 'id_version', 'version'));
 
 // +-----------------------------------------------------------------------+
 // |                           html code display                           |

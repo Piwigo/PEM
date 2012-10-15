@@ -17,12 +17,38 @@
 .my-extensions tr td:not(:first-child) {
   text-align:center;
 }
+.my-extensions thead tr td:not(:first-child) {
+  font-size:10px;
+}
 .my-extensions td.main {
   text-shadow:0 0 3px #0f0, 0 0 8px #0f0, 0 0 15px #0f0;
 }
 {/literal}</style>
 
-{if count($extensions) > 0}
+
+<form action="" method="post" style="margin-bottom:10px;">
+<fieldset>
+  <legend>Filter</legend>
+  Category :
+  <select name="category">
+    <option value="-1">----------</option>
+    {html_options options=$categories selected=$filter_category}
+  </select>
+  
+  Version :
+  <select name="version">
+    <option value="-1">----------</option>
+    {html_options options=$versions selected=$filter_version}
+  </select>
+  
+  Name :
+  <input name="name" value="{$filter_name}">
+  
+  <input type="submit" value="Filter">
+  <input type="submit" name="reset" value="Reset">
+</fieldset>
+</form>
+
 <table class="my-extensions">
   <thead>
     <tr>
@@ -45,7 +71,8 @@
       {/if}
     {/foreach}
     </tr>
+  {foreachelse}
+    <tr class="even"><td colspan="100">No results</td></tr>
   {/foreach}
   </tbody>
 </table>
-{/if}
