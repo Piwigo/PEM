@@ -41,7 +41,7 @@ hs.lang['restoreTitle'] = '';
     {if isset($revision.nb_reviews)}<i style="vertical-align:top;">{$revision.nb_reviews}</i>{/if}</div>
   </p>
 
-  <p><a href="{$revision.revision_url}">{'Revision'|@translate} {$revision.name}</a></p>
+  <p><a href="{$revision.revision_url}">{'Revision'|@translate} {$revision.name}</a> ({$revision.date})</p>
 
   <ul>
     <li><em>{if count($revision.authors)>1}{'Authors'|@translate}{else}{'Author'|@translate}{/if}:</em> 
@@ -51,8 +51,6 @@ hs.lang['restoreTitle'] = '';
     </li>
     <li><em>{'Categories'|@translate}:</em> {$revision.categories}</li>
     {if !empty($revision.tags)}<li><em>{'Tags'|@translate}:</em> {$revision.tags}</li>{/if}
-    <li><em>{'Released on'|@translate}:</em> {$revision.date}</li>
-    <li><em>{'Compatible with'|@translate}:</em> {$software} {'releases'|@translate} {$revision.compatible_versions}</li>
     {if !empty($revision.languages)}
     <li><em>{'Available languages'|@translate}:</em>
         {foreach from=$revision.languages item=language}{strip}
@@ -60,6 +58,7 @@ hs.lang['restoreTitle'] = '';
         {/strip}{/foreach}
     </li>
     {/if}
+    <li><em>{'Compatible with'|@translate}:</em> {$software} {'releases'|@translate} {$revision.compatible_versions}</li>
     <li><em>{'Downloads'|@translate}:</em> {$revision.downloads}</li>
   </ul>
 

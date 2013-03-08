@@ -25,7 +25,6 @@ p
   font: 100%/120% verdana, arial, helvetica, sans-serif;
   margin:5px 0px;
   padding:0px;
-  text-align : justify;
 }
 
 #Header a
@@ -240,7 +239,6 @@ div.row
   padding : 5px;
   margin-bottom : 10px;
   background-color : #FAFAFA;
-  text-align : justify;
   clear : both;
 }
 
