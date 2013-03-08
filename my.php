@@ -54,15 +54,20 @@ $extension_ids = array_merge($other_extension_ids, $my_extension_ids);
 $query = '
 SELECT * FROM (
   SELECT 
-      version,
-      idx_extension
-    FROM '.REV_TABLE.'
+      rev.version,
+      rev.idx_extension,
+      ver.version AS last_version
+    FROM '.REV_TABLE.' AS rev
+      INNER JOIN '.COMP_TABLE.' AS comp
+      ON comp.idx_revision = rev.id_revision
+      INNER JOIN '.VER_TABLE.' AS ver
+      ON ver.id_version = comp.idx_version
     WHERE idx_extension IN ('.implode(',',$extension_ids).')
     ORDER BY date DESC 
   ) AS t
   GROUP BY t.idx_extension
 ;';
-$revision_of = simple_hash_from_query($query, 'idx_extension', 'version');
+$revision_of = hash_from_query($query, 'idx_extension');
 
 $extension_infos_of = get_extension_infos_of($extension_ids);
 $download_of_extension = get_download_of_extension($extension_ids);
@@ -85,7 +90,8 @@ foreach ($extension_ids as $extension_id)
     'total_rates' => @$total_rates_of_extension[$extension_id],
     'nb_reviews' => $extension_infos_of[$extension_id]['nb_reviews'],
     'nb_downloads' => $download_of_extension[$extension_id],
-    'revision' => @$revision_of[$extension_id],
+    'revision' => @$revision_of[$extension_id]['version'],
+    'last_version' => @$revision_of[$extension_id]['last_version'],
     );
     
     if (in_array($extension_id, $my_extension_ids))
