@@ -136,6 +136,7 @@ CREATE TABLE `pem_revisions` (
   `version` varchar(25) NOT NULL default '',
   `accept_agreement` enum('true','false') default NULL,
   `author` int(11) NOT NULL default '0',
+  `nb_downloads` int(11),
   PRIMARY KEY  (`id_revision`)
 )   DEFAULT CHARSET=utf8;
 

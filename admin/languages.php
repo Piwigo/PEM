@@ -97,10 +97,7 @@ while ($file = readdir($dir))
     {
       $int_languages[$file] = $language_name;
     }
-    if (file_exists($path.'/icon.jpg'))
-    {
-      $ext_languages[$file] = $language_name;
-    }
+    $ext_languages[$file] = $language_name;
 
     if (isset($db_languages[$file])) {
       array_push(

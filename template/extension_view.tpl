@@ -188,9 +188,9 @@ $(document).ready(function() {ldelim}
       <p><em>{'Compatible with'|@translate}:</em> {$rev.versions_compatible}</p>
   {if !empty($rev.languages)}
       <p><em>{'Available languages'|@translate}:</em>
-        {foreach from=$rev.languages item=language}
-          <img class="icon" src="language/{$language.code}/icon.jpg" alt="{$language.name}" title="{$language.name}">
-        {/foreach}
+        {foreach from=$rev.languages item=language}{strip}
+          <span class="langflag langflag-{$language.code}" title="{$language.name}">{$language.name}</span>
+        {/strip}{/foreach}
       </p>
   {/if}
   {if !empty($rev.author)}

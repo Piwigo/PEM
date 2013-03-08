@@ -105,19 +105,19 @@ load_language('common.lang.php');
 load_language('local.lang.php', true);
 
 // do we have a disclaimer?
-if (is_file($root_path.'language/'.$_SESSION['language'].'/disclaimer.html')
+if (is_file($root_path.'language/'.$_SESSION['language']['code'].'/disclaimer.html')
   or is_file($root_path.'language/'.$conf['default_language'].'/disclaimer.html'))
 {
   $tpl->assign('has_disclaimer', true);
 }
 
 // do we have a HELP?
-if (is_file($root_path.'language/'.$_SESSION['language'].'/help_guest.html')
+if (is_file($root_path.'language/'.$_SESSION['language']['code'].'/help_guest.html')
   or is_file($root_path.'language/'.$conf['default_language'].'/help_guest.html'))
 {
   $tpl->assign('has_help', true);
 }
-if (is_file($root_path.'language/'.$_SESSION['language'].'/help_user.html')
+if (is_file($root_path.'language/'.$_SESSION['language']['code'].'/help_user.html')
   or is_file($root_path.'language/'.$conf['default_language'].'/help_user.html'))
 {
   $tpl->assign('has_help_user', true);

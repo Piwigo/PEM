@@ -54,11 +54,11 @@ if (isset($_POST['version']) and $_POST['version']!=-1)
       ON rev.idx_extension = ext.id_extension
     INNER JOIN '.COMP_TABLE.' AS comp
       ON comp.idx_revision = rev.id_revision
-      AND comp.idx_revision = '.$_POST['version'];
+      AND comp.idx_version = '.$_POST['version'];
     
   $tpl->assign('filter_version', $_POST['version']);
 }
-if (isset($_POST['name']))
+if (!empty($_POST['name']))
 {
   $where[] = 'LOWER(ext.name) LIKE "%'.strtolower($_POST['name']).'%"';
   
@@ -79,8 +79,9 @@ SELECT
     '.implode("\n    ", $join);
 if (count($where))
 {
-  $query.= 'WHERE
-  '.implode("\n    AND ", $where);
+  $query.= '
+  WHERE
+    '.implode("\n    AND ", $where);
 }
 $query.= '
   ORDER BY name ASC
@@ -108,15 +109,7 @@ while ($row = $db->fetch_assoc($result))
   }
 }
 
-foreach ($extension_languages as $row)
-{
-  if (count($row['all']) == count($interface_languages))
-  {
-    continue;
-  }
-  
-  $tpl->append('extensions', $row);
-}
+$tpl->assign('extensions', $extension_languages);
 
 
 // categories

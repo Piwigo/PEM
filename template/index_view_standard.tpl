@@ -55,9 +55,9 @@ hs.lang['restoreTitle'] = '';
     <li><em>{'Compatible with'|@translate}:</em> {$software} {'releases'|@translate} {$revision.compatible_versions}</li>
     {if !empty($revision.languages)}
     <li><em>{'Available languages'|@translate}:</em>
-        {foreach from=$revision.languages item=language}
-          <img class="icon" src="language/{$language.code}/icon.jpg" alt="{$language.name}" title="{$language.name}">
-        {/foreach}
+        {foreach from=$revision.languages item=language}{strip}
+          <span class="langflag langflag-{$language.code}" title="{$language.name}">{$language.name}</span>
+        {/strip}{/foreach}
     </li>
     {/if}
     <li><em>{'Downloads'|@translate}:</em> {$revision.downloads}</li>
