@@ -108,8 +108,8 @@
 {else}
           <p>{'Hello %s'|@translate|sprintf:$username}</p>
           <ul>
-            <li><a href="identification.php?action=logout">{'Disconnect'|@translate}</a></li>
-            <li><a href="my.php">{'Home'|@translate}</a></li>
+            <li><a href="index.php?action=logout">{'Disconnect'|@translate}</a></li>
+            <li><a href="my.php">{'My extensions'|@translate}</a></li>
             <li><a href="extension_add.php">{'Add an extension'|@translate}</a></li>
   {if $user_is_admin}
             <li><a href="admin/index.php">{'Administration'|@translate}</a></li>

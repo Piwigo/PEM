@@ -195,9 +195,9 @@ if (isset($_SESSION['filter']) and count($_SESSION['filter']) > 0) {
     $page['filtered_extension_ids']
     );
 }
-if (!isset($user['id']))
-{
-if (isset($_POST['quickconnect_submit']))
+
+// quick connect
+if (!isset($user['id']) and isset($_POST['quickconnect_submit']))
 {
   if ($user_id = check_user_password($_POST['username'], $_POST['password']))
   {
@@ -211,31 +211,27 @@ if (isset($_POST['quickconnect_submit']))
   }
 }
 
-if (isset($_GET['action']))
+// logout
+if (isset($_GET['action']) and $_GET['action']=='logout')
 {
-  switch ($_GET['action'])
-  {
-    case 'logout' :
-    {
-      $_SESSION = array();
-      session_unset();
-      session_destroy();
-      setcookie(
-        session_name(),
-        '',
-        0,
-        ini_get('session.cookie_path'),
-        ini_get('session.cookie_domain')
-        );
+  $_SESSION = array();
+  $user = array();
+  
+  session_unset();
+  session_destroy();
+  setcookie(
+    session_name(),
+    '',
+    0,
+    ini_get('session.cookie_path'),
+    ini_get('session.cookie_domain')
+    );
 
-      unset($_COOKIE[ $conf['user_cookie_name'] ]);
-      setcookie($conf['user_cookie_name'], false, 0, $conf['cookie_path']);
+  unset($_COOKIE[ $conf['user_cookie_name'] ]);
+  setcookie($conf['user_cookie_name'], false, 0, $conf['cookie_path']);
 
-      // redirect to index
-      message_success('Logout successful', 'index.php');
-      break;
-    }
-  }
+  // redirect to index
+  message_success('Logout successful', 'index.php');
 }
-}
+
 ?>

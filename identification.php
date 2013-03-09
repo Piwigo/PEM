@@ -43,33 +43,6 @@ if (isset($_POST['submit']))
   }
 }
 
-if (isset($_GET['action']))
-{
-  switch ($_GET['action'])
-  {
-    case 'logout' :
-    {
-      $_SESSION = array();
-      session_unset();
-      session_destroy();
-      setcookie(
-        session_name(),
-        '',
-        0,
-        ini_get('session.cookie_path'),
-        ini_get('session.cookie_domain')
-        );
-
-      unset($_COOKIE[ $conf['user_cookie_name'] ]);
-      setcookie($conf['user_cookie_name'], false, 0, $conf['cookie_path']);
-
-      // redirect to index
-      message_success('Logout successful', 'index.php');
-      break;
-    }
-  }
-}
-
 $tpl->assign('u_register', 'register.php');
 
 // +-----------------------------------------------------------------------+
