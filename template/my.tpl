@@ -21,7 +21,7 @@
     <tr class="{if $smarty.foreach.foo.index is odd}odd{else}even{/if}">
       <td><a href="extension_view.php?eid={$extension.id}">{$extension.name}</a></td>
       <td style="text-align:center;">{$extension.revision}</td>
-      <td style="text-align:center;">{$extension.last_version}
+      <td style="text-align:center;">{$extension.last_version}</td>
       <td style="text-align:right;">{$extension.nb_downloads}</td>
       <td style="text-align:right;">{$extension.nb_reviews}</td>
       <td style="text-align:center;">{if $extension.total_rates}{$extension.rating_score} ({$extension.total_rates}){/if}</td>
@@ -39,6 +39,7 @@
     <tr>
       <td>{'Name'|@translate}</td>
       <td>{'Revision'|@translate}</td>
+      <td>{$software}</td>
       <td>{'Downloads'|@translate}</td>
       <td>{'Reviews'|@translate}</td>
       <td>{'Score'|@translate}</td>
@@ -49,6 +50,7 @@
     <tr class="{if $smarty.foreach.foo.index is odd}odd{else}even{/if}">
       <td><a href="extension_view.php?eid={$extension.id}">{$extension.name}</a></td>
       <td style="text-align:center;">{$extension.revision}</td>
+      <td style="text-align:center;">{$extension.last_version}</td>
       <td style="text-align:right;">{$extension.nb_downloads}</td>
       <td style="text-align:right;">{$extension.nb_reviews}</td>
       <td style="text-align:center;">{if $extension.total_rates}{$extension.rating_score} ({$extension.total_rates}){/if}</td>
