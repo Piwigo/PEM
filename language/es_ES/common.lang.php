@@ -191,4 +191,7 @@ $lang['Review summary'] = 'Resumen';
 $lang['Your review'] = 'Opinar';
 $lang['Send'] = 'Enviar';
 $lang['Please do not use this form to request assistance or report a bug. Use the forums instead.'] = 'Por favor, no utilice este formulario para pedir ayuda o para informar de errores. En todo caso, hágalo mediante el foro.';
+$lang['Other'] = 'Otros';
+$lang['%d reviews'] = '%d comentario(s)';
+$lang['Show %d more reviews'] = 'Mostrar %d comentario(s) mas';
 ?>
