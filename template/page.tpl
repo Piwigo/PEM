@@ -92,7 +92,7 @@
 {if !$user_is_logged}
 	<form method="post" action="{$action}">
 			<ul class="ident">
-				<li><a href="register.php">{'Register'|@translate}</a><br /></li>
+				<li><a href="register.php" {if isset($external_register) and $external_register}target="_blank"{/if}>{'Register'|@translate}</a><br /></li>
 				<li><a href="identification.php">{'Login'|@translate}</a><br /></li>
 			</ul>
 			{'Username'|@translate}<br />

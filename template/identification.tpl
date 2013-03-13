@@ -19,7 +19,7 @@
       <input type="submit" name="submit" value="{'Submit'|@translate}" />
     </div>
 
-    <p>{'No account?'|@translate} <a href="{$u_register}">{'Register'|@translate}</a></p>
+    <p>{'No account?'|@translate} <a href="register.php" {if isset($external_register) and $external_register}target="_blank"{/if}>{'Register'|@translate}</a></p>
 
   </fieldset>
 </form>

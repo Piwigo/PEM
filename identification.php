@@ -43,7 +43,10 @@ if (isset($_POST['submit']))
   }
 }
 
-$tpl->assign('u_register', 'register.php');
+if (isset($conf['external_register_url']))
+{
+  $tpl->assign('external_register', true);
+}
 
 // +-----------------------------------------------------------------------+
 // |                           html code display                           |

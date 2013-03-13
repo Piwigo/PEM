@@ -218,4 +218,10 @@ $conf['compiled_template_cache_language'] = false;
 // or other plugin variables etc
 $conf['local_data_dir'] = dirname(dirname(__FILE__)).'/_data';
 
+// +-----------------------------------------------------------------------+
+// |                              authentication                           |
+// +-----------------------------------------------------------------------+
+
+// do you want visitors to register somewhere else?
+$conf['external_register_url'] = null;
 ?>

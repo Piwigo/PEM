@@ -300,6 +300,11 @@ if (isset($user['id']))
 else
 {
   $tpl->assign('user_is_logged', false);
+
+  if (isset($conf['external_register_url']))
+  {
+    $tpl->assign('external_register', true);
+  }
 }
 
 // echo '<pre>'; print_r($tpl->get_template_vars()); echo '</pre>';

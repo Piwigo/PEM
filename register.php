@@ -21,6 +21,13 @@
 define('INTERNAL', true);
 $root_path = './';
 require_once($root_path.'include/common.inc.php');
+
+if (isset($conf['external_register_url']))
+{
+  header('Location: '.$conf['external_register_url']);
+  exit();
+}
+
 $tpl->set_filenames(
   array(
     'page' => 'page.tpl',
