@@ -191,4 +191,7 @@ $lang['Review summary'] = 'Resum';
 $lang['Your review'] = 'Opinar';
 $lang['Send'] = 'Enviar';
 $lang['Please do not use this form to request assistance or report a bug. Use the forums instead.'] = 'Si us plau, no utilitzi aquest formulari per a demanar ajuda o per informar d\'errors. En tot cas faci-ho per mitjà del fòrum.';
+$lang['Other'] = 'Altres';
+$lang['%d reviews'] = 'Opinions: %d';
+$lang['Show %d more reviews'] = 'Veure %d opinions més';
 ?>
