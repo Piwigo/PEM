@@ -52,7 +52,7 @@ $lang['Description'] = 'Descrição';
 $lang['Disclaimer'] = 'Renúncia';
 $lang['Disconnect'] = 'Desligar';
 $lang['Download revision'] = 'Baixe revisão';
-$lang['Downloads'] = 'Downloads';
+$lang['Downloads'] = 'Baixados';
 $lang['Error'] = 'Erro';
 $lang['expand/collapse all'] = 'expandir/recolher todos';
 $lang['extensions'] = 'extenções';
@@ -65,7 +65,7 @@ $lang['Filter'] = 'Filtro';
 $lang['first'] = 'Primeiro';
 $lang['First revision date'] = 'Data da primeira revisão';
 $lang['Hello %s'] = 'Olá %s';
-$lang['Home'] = 'Home';
+$lang['Home'] = 'Página Principal';
 $lang['Identification successful'] = 'Identificação bem sucedida';
 $lang['Incorrect extension identifier'] = 'Identificador de extensão incorreta';
 $lang['Incorrect revision identifier'] = 'Identificador de revisão incorreto';
@@ -76,7 +76,7 @@ $lang['Index'] = 'Índice';
 $lang['last'] = 'Último';
 $lang['Latest revision date'] = 'Data da última revisão';
 $lang['Link name must not be empty'] = 'Nome do link não pode estar vazio';
-$lang['Login'] = 'Login';
+$lang['Login'] = 'Entrar';
 $lang['Logout successful'] = 'Logout bem sucedido';
 $lang['Mail address'] = 'Endereço de email';
 $lang['Manage links'] = 'Gerenciar links';
@@ -98,8 +98,8 @@ $lang['Only *.zip files are allowed'] = 'Somente arquivos *.zip são permitidos'
 $lang['page generated in %s'] = 'página gerada em %s';
 $lang['Password'] = 'Senha';
 $lang['Personnal informations'] = 'Informações pessoais';
-$lang['powered by'] = 'powered by <a href="https://gna.org/projects/pem/">PEM</a>';
-$lang['prev'] = 'Prev';
+$lang['powered by'] = 'alimentado por <a href="https://gna.org/projects/pem/">PEM</a>';
+$lang['prev'] = 'Anterior';
 $lang['Problem during upload'] = 'Problema durante o upload';
 $lang['Rank'] = 'Pontução';
 $lang['Register'] = 'Registrar';
@@ -131,7 +131,6 @@ $lang['You must be the extension author to modify it.'] = 'Você deve ser o auto
 $lang['help'] = 'Ajuda';
 $lang['You must be connected to read help user'] = 'Você deve estar conectado para ler a ajuda do usuário';
 $lang['You mustn\'t be connected to read help guest'] = 'Você não deve estar conectado para ler a ajuda do convidado';
-
 $lang['Language'] = 'Idioma';
 $lang['Authors'] = 'Autores';
 $lang['Manage authors'] = 'Gerenciar autores';
@@ -142,7 +141,6 @@ $lang['You must select at least one author.'] = 'Você deve selecionar pelo meno
 $lang['This user does not exist in database.'] = 'Este usuário não existe no banco de dados.';
 $lang['Added by']  = 'Adicionado por';
 $lang['Other extensions'] = 'Outras extensões';
-
 $lang['SVN configuration'] = 'Configuração SVN';
 $lang['Repository URL'] = 'URL do repositório';
 $lang['Archive root directory'] = 'Diretório raiz de arquivo';
@@ -158,19 +156,15 @@ $lang['Upload a file'] = 'Enviar um arquivo';
 $lang['Use SVN file creation'] = 'Use a criação do arquivo SVN';
 $lang['SVN revision'] = 'SVN revisão';
 $lang['An error occured during SVN export.'] = 'Ocorreu um erro durante a exportação SVN.';
-
 $lang['Available languages'] = 'Idiomas disponíveis';
 $lang['Default description'] = 'Descrição padrão';
 $lang['Default description can not be empty'] = 'Descrição padrão não pode estar vazia';
 $lang['extension'] = 'extensão';
 $lang['no extension'] = 'sem estenção';
-
 $lang['Download last revision'] = 'Baixar última versão';
-$lang['Download'] = 'Download';
+$lang['Download'] = 'Baixar';
 $lang['releases'] = 'lançamentos';
-
 $lang['Choose compatibility versions...'] = 'Escolha versões de compatibilidade ...';
-
 $lang['Tags'] = 'Etiquetas';
 $lang['Type in a search term'] = 'Digite um termo de pesquisa';
 $lang['No results'] = 'Sem resultados';
@@ -184,7 +178,6 @@ $lang['Update your rating'] = 'Atualizar sua avaliação';
 $lang['Rate it!'] = 'Avalie!';
 $lang['Your rating'] = 'Sua avaliação';
 $lang['All'] = 'Tudo';
-
 $lang['Thank you!'] = 'Obrigado!';
 $lang['Thank you! Your review is awaiting moderation.'] = 'Obrigado! Sua opinião está aguardando moderação.';
 $lang['Please enter your name'] = 'Digite seu nome';
@@ -198,7 +191,6 @@ $lang['Review summary'] = 'Síntese da avaliação';
 $lang['Your review'] = 'Sua opinião';
 $lang['Send'] = 'Enviar';
 $lang['Please do not use this form to request assistance or report a bug. Use the forums instead.'] = 'Por favor, não use este formulário para solicitar assistência ou relatar um bug. Use os fóruns.';
-
 $lang['Other'] = 'Outro';
 $lang['%d reviews'] = '%d avaliação(ões)';
 $lang['Show %d more reviews'] = 'Mostrar %d mais avaliação(ões)';
