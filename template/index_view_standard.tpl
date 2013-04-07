@@ -53,9 +53,9 @@ hs.lang['restoreTitle'] = '';
     {if !empty($revision.tags)}<li><em>{'Tags'|@translate}:</em> {$revision.tags}</li>{/if}
     {if !empty($revision.languages)}
     <li><em>{'Available languages'|@translate}:</em>
-        {foreach from=$revision.languages item=language}{strip}
+        {foreach from=$revision.languages item=language name=flags}{strip}
           <span class="langflag langflag-{$language.code}" title="{$language.name}">{$language.name}</span>
-        {/strip}{/foreach}
+        {/strip}{/foreach} {if $user_is_admin}{$smarty.foreach.flags.total}{/if}
     </li>
     {/if}
     <li><em>{'Compatible with'|@translate}:</em> {$software} {'releases'|@translate} {$revision.compatible_versions}</li>

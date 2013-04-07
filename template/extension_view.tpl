@@ -188,9 +188,9 @@ $(document).ready(function() {ldelim}
       <p><em>{'Compatible with'|@translate}:</em> {$rev.versions_compatible}</p>
   {if !empty($rev.languages)}
       <p><em>{'Available languages'|@translate}:</em>
-        {foreach from=$rev.languages item=language}{strip}
+        {foreach from=$rev.languages item=language name=flag}{strip}
           <span class="langflag langflag-{$language.code}" title="{$language.name}">{$language.name}</span>
-        {/strip}{/foreach}
+        {/strip}{/foreach} {if isset($can_modify)}{$smarty.foreach.flag.total}{/if}
       </p>
   {/if}
   {if !empty($rev.author)}
