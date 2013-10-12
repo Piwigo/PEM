@@ -106,6 +106,7 @@
 .langflag-id { background-position:-96px -96px; }
 .langflag-id_ID{ background-position:-96px -96px; }
 .langflag-ie { background-position:-120px -96px; }
+.langflag-ga_IE { background-position:-120px -96px; }
 .langflag-he_IL { background-position:-144px -96px; }
 .langflag-im { background-position:-168px -96px; }
 .langflag-kok_IN { background-position:-192px -96px; }
@@ -140,6 +141,7 @@
 .langflag-ls { background-position:-96px -128px; }
 .langflag-lt_LT { background-position:-120px -128px; }
 .langflag-lu { background-position:-144px -128px; }
+.langflag-lb_LU { background-position:-144px -128px; }
 .langflag-lv_LV { background-position:-168px -128px; }
 .langflag-ly { background-position:-192px -128px; }
 .langflag-ma { background-position:-216px -128px; }
@@ -250,3 +252,4 @@
 .langflag-zm { background-position:-144px -240px; }
 .langflag-zw { background-position:-168px -240px; }
 .langflag-gl_ES { background-position:-192px -240px; }
+.langflag-br_FR { background-position:-216px -240px; }
