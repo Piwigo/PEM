@@ -83,7 +83,7 @@
           </p>
           </form>
         </div>
-    
+
         <div class="menu">
 {if isset($has_disclaimer)}
           <a href="disclaimer.php">{'Disclaimer'|@translate}</a><br/>
@@ -116,7 +116,7 @@
   {/if}
           </ul>
 {/if}
-        </div>        
+        </div>
       </div> <!-- Menus -->
     
       <div id="Content">

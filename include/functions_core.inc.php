@@ -272,6 +272,7 @@ SELECT
   WHERE 
     idx_extension IN ('.$ids_string.')
     '.(!isAdmin(@$user['id']) ? 'AND validated = "true"' : null).'
+  GROUP BY idx_extension
 ;';
   $nb_reviews = simple_hash_from_query($query, 'idx_extension', 'count');
   
