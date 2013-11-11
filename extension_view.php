@@ -286,7 +286,8 @@ $tpl_revisions = array();
 if (count($revision_ids) > 0)
 {
   $versions_of = get_versions_of_revision($revision_ids);
-  $languages_of = get_languages_of_revision($revision_ids);
+  // $languages_of = get_languages_of_revision($revision_ids);
+  $languages_of = get_diff_languages_of_extension($page['extension_id']);
   
   $revisions = array();
 
@@ -319,17 +320,12 @@ SELECT id_revision,
     }
     if (!isset($last_date_set))
     {
-      $tpl->assign(
-        'last_date',
-        date(
-          'Y-m-d',
-          $row['date']
-          )
-        );
-      $tpl->assign(
-        'download_last_url',
-        'download.php?rid='.$row['id_revision']
-        );
+      $last_languages = get_languages_of_revision(array($row['id_revision']));
+      $tpl->assign(array(
+        'last_date' => date('Y-m-d', $row['date']),
+        'download_last_url' => 'download.php?rid='.$row['id_revision'],
+        'ext_languages' => array_shift($last_languages),
+        ));
       $last_date_set = true;
     }
 

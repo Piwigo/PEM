@@ -160,6 +160,7 @@ $lang['SVN revision'] = 'Révision SVN';
 $lang['An error occured during SVN export.'] = 'Une erreur est survenue pendant l\'export SVN';
 
 $lang['Available languages'] = 'Langues disponibles';
+$lang['New languages'] = 'Nouvelles langues';
 $lang['Default description'] = 'Description par défaut';
 $lang['Default description can not be empty'] = 'Vous devez renseigner la description par défaut';
 $lang['extension'] = 'extension';

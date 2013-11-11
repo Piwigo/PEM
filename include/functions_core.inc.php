@@ -818,7 +818,7 @@ SELECT rv.idx_revision,
   
   $result = $db->query($query);
   
-  while ($row = $db->fetch_array($result))
+  while ($row = $db->fetch_assoc($result))
   {
     $languages_of[ $row['idx_revision'] ][] = $row['id_language'];
   }
@@ -839,7 +839,7 @@ function get_languages_of_revision($revision_ids)
   $query = 'SELECT id_language, code, name FROM '.LANG_TABLE.';';
   $result = $db->query($query);
   $languages_data = array();
-  while ($row = mysql_fetch_assoc($result))
+  while ($row = $db->fetch_assoc($result))
   {
     $languages_data[ $row['id_language'] ] = $row;
   }
@@ -860,6 +860,38 @@ function get_languages_of_revision($revision_ids)
     }
   }
 
+  return $languages_of;
+}
+
+/**
+ * returns new languages of each revisions of an extension
+ */
+function get_diff_languages_of_extension($extension_id)
+{
+  global $db;
+  
+  $query = '
+SELECT id_revision, id_language, code, name
+  FROM '.REV_TABLE.' r
+    INNER JOIN '.REV_LANG_TABLE.' rl ON rl.idx_revision = r.id_revision
+    INNER JOIN '.LANG_TABLE.' l ON l.id_language = rl.idx_language
+  WHERE idx_extension = '.$extension_id.'
+  ORDER BY r.date ASC
+;';
+  $result = $db->query($query);
+  
+  $existing_lang = array();
+  $languages_of = array();
+  
+  while ($row = $db->fetch_assoc($result))
+  {
+    if (!in_array($row['id_language'], $existing_lang))
+    {
+      $existing_lang[] = $row['id_language'];
+      $languages_of[ $row['id_revision'] ][] = $row;
+    }
+  }
+  
   return $languages_of;
 }
 

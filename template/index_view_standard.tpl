@@ -11,7 +11,7 @@ hs.registerOverlay({ldelim}
 hs.align = 'center';
 hs.showCredits = false;
 hs.outlineType = 'rounded-white';
-hs.expandDuration = 400;
+hs.expandDuration = 200;
 hs.allowSizeReduction = false;
 hs.lang['restoreTitle'] = '';
 </script>
@@ -53,9 +53,12 @@ hs.lang['restoreTitle'] = '';
     {if !empty($revision.tags)}<li><em>{'Tags'|@translate}:</em> {$revision.tags}</li>{/if}
     {if !empty($revision.languages)}
     <li><em>{'Available languages'|@translate}:</em>
-        {foreach from=$revision.languages item=language name=flags}{strip}
-          <span class="langflag langflag-{$language.code}" title="{$language.name}">{$language.name}</span>
-        {/strip}{/foreach} {if $user_is_admin}{$smarty.foreach.flags.total}{/if}
+      <a href="#" class="highslide" onclick="return hs.htmlExpand(this,{ldelim}wrapperClassName:'draggable-header',align:'auto',headingText:'{'Available languages'|@translate}: {$revision.extension_name|escape:javascript}'})">{$revision.languages|@count}</a>
+      <div class="highslide-maincontent">
+      {foreach from=$revision.languages item=language}{strip}
+        <span class="langflag langflag-{$language.code}" title="{$language.name}">{$language.name}</span>
+      {/strip}{/foreach}
+      </div>
     </li>
     {/if}
     <li><em>{'Compatible with'|@translate}:</em> {$software} {'releases'|@translate} {$revision.compatible_versions}</li>

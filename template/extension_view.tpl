@@ -14,7 +14,7 @@ hs.registerOverlay({ldelim}
 hs.align = 'center';
 hs.showCredits = false;
 hs.outlineType = 'rounded-white';
-hs.expandDuration = 400;
+hs.expandDuration = 200;
 hs.allowSizeReduction = false;
 hs.lang['restoreTitle'] = '';
 
@@ -137,6 +137,16 @@ $(document).ready(function() {ldelim}
   {if !empty($extension_tags)}<li><em>{'Tags'|@translate}:</em> {$extension_tags}</li>{/if}
   <li><em>{'First revision date'|@translate}:</em> {$first_date}</li>
   <li><em>{'Latest revision date'|@translate}:</em> {$last_date}</li>
+  {if !empty($ext_languages)}
+  <li><em>{'Available languages'|@translate}:</em>
+    <a href="#" class="highslide" onclick="return hs.htmlExpand(this,{ldelim}wrapperClassName:'draggable-header',align:'auto',headingText:'{'Available languages'|@translate}'})">{$ext_languages|@count}</a>
+    <div class="highslide-maincontent">
+    {foreach from=$ext_languages item=language}{strip}
+      <span class="langflag langflag-{$language.code}" title="{$language.name}">{$language.name}</span>
+    {/strip}{/foreach}
+    </div>
+  </li>
+  {/if}
   <li><em>{'Compatible with'|@translate}:</em> {$software} {'releases'|@translate} {$compatible_with}</li>
   <li><em>{'Downloads'|@translate}:</em> {$extension_downloads}</li>
 </ul>
@@ -187,7 +197,7 @@ $(document).ready(function() {ldelim}
       <a href="{$rev.u_download}" title="{'Download revision'|@translate} {$rev.version}" rel="nofollow"><img class="download" src="template/images/download.png" alt="{'Download revision'|@translate} {$rev.version}"/></a>
       <p><em>{'Compatible with'|@translate}:</em> {$rev.versions_compatible}</p>
   {if !empty($rev.languages)}
-      <p><em>{'Available languages'|@translate}:</em>
+      <p><em>{'New languages'|@translate}:</em>
         {foreach from=$rev.languages item=language name=flag}{strip}
           <span class="langflag langflag-{$language.code}" title="{$language.name}">{$language.name}</span>
         {/strip}{/foreach} {if isset($can_modify)}{$smarty.foreach.flag.total}{/if}
