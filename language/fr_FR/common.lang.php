@@ -203,5 +203,7 @@ $lang['Please do not use this form to request assistance or report a bug. Use th
 $lang['Other'] = 'Autre';
 $lang['%d reviews'] = '%d avis';
 $lang['Show %d more reviews'] = 'Afficher %d avis de plus';
+$lang['Total :'] = 'Total :';
+$lang['(see)'] = '(voir)';
 
 ?>

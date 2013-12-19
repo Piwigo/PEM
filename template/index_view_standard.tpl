@@ -1,19 +1,12 @@
-{known_script id="highslide" src="template/highslide/highslide-full.packed.js"}
+{known_script id="jquery" src="template/jquery.min.js"}
+{known_script id="colorbox" src="template/colorbox/jquery.colorbox-min.js"}
 {html_head}
-<link rel="stylesheet" type="text/css" href="template/highslide/highslide.css">
+<link rel="stylesheet" type="text/css" href="template/colorbox/colorbox.css">
 <script type="text/javascript">
-hs.graphicsDir = 'template/highslide/graphics/';
-hs.registerOverlay({ldelim}
-  html: '<div class="closebutton" onclick="return hs.close(this)"></div>',
-  position: 'top right',
-  fade: 2
+jQuery(function(){ldelim}
+  jQuery('.screenshot').colorbox();
+  jQuery('.flags-popup').colorbox({ldelim}inline:true});
 });
-hs.align = 'center';
-hs.showCredits = false;
-hs.outlineType = 'rounded-white';
-hs.expandDuration = 200;
-hs.allowSizeReduction = false;
-hs.lang['restoreTitle'] = '';
 </script>
 {/html_head}
 
@@ -33,7 +26,7 @@ hs.lang['restoreTitle'] = '';
 {foreach from=$revisions item=revision}
 <div class="row" id="extension_{$revision.id}">
 {if isset($revision.thumbnail_src)}
-  <a class="screenshot highslide" href="{$revision.screenshot_url}" onclick="return hs.expand(this)"><img src="{$revision.thumbnail_src}"/></a>
+  <a class="screenshot" href="{$revision.screenshot_url}"><img src="{$revision.thumbnail_src}"/></a>
 {/if}
   <p class="extension_title">
     <strong><a href="extension_view.php?eid={$revision.extension_id}">{$revision.extension_name}</a></strong>
@@ -53,17 +46,21 @@ hs.lang['restoreTitle'] = '';
     {if !empty($revision.tags)}<li><em>{'Tags'|@translate}:</em> {$revision.tags}</li>{/if}
     {if !empty($revision.languages)}
     <li><em>{'Available languages'|@translate}:</em>
-      <a href="#" class="highslide" onclick="return hs.htmlExpand(this,{ldelim}wrapperClassName:'draggable-header',align:'auto',headingText:'{'Available languages'|@translate}: {$revision.extension_name|escape:javascript}'})">{$revision.languages|@count}</a>
-      <div class="highslide-maincontent">
-      {foreach from=$revision.languages item=language}{strip}
-        <span class="langflag langflag-{$language.code}" title="{$language.name}">{$language.name}</span>
-      {/strip}{/foreach}
-      </div>
+      <a href="#flags-{$revision.id}" class="flags-popup">{$revision.languages|@count} {'(see)'|translate}</a>
     </li>
     {/if}
     <li><em>{'Compatible with'|@translate}:</em> {$software} {'releases'|@translate} {$revision.compatible_versions}</li>
     <li><em>{'Downloads'|@translate}:</em> {$revision.downloads}</li>
   </ul>
+  
+  <div style="display:none">
+    <table class="flags-table" id="flags-{$revision.id}"><tr>
+    {foreach from=$revision.languages item=language name=langs}{strip}
+      <td><span class="langflag-{$language.code}" title="{$language.name}"></span> {$language.name}</td>
+      {if ($smarty.foreach.langs.index+1) % 3 == 0}</tr><tr>{/if}
+    {/strip}{/foreach}
+    </tr></table>
+  </div>
 
   <p class="revision_about"><strong>{'About'|@translate}:</strong> {$revision.about}</p>
 

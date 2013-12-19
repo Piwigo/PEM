@@ -1,24 +1,13 @@
 {known_script id="jquery" src="template/jquery.min.js"}
 {known_script id="jquery.raty" src="template/jquery.raty/jquery.raty.min.js"}
-{known_script id="highslide" src="template/highslide/highslide-full.packed.js"}
-
+{known_script id="colorbox" src="template/colorbox/jquery.colorbox-min.js"}
 {html_head}
-<link rel="stylesheet" type="text/css" href="template/highslide/highslide.css">
+<link rel="stylesheet" type="text/css" href="template/colorbox/colorbox.css">
 <script type="text/javascript">
-hs.graphicsDir = 'template/highslide/graphics/';
-hs.registerOverlay({ldelim}
-  html: '<div class="closebutton" onclick="return hs.close(this)"></div>',
-  position: 'top right',
-  fade: 2
-});
-hs.align = 'center';
-hs.showCredits = false;
-hs.outlineType = 'rounded-white';
-hs.expandDuration = 200;
-hs.allowSizeReduction = false;
-hs.lang['restoreTitle'] = '';
+jQuery(function(){ldelim}
+  jQuery('.screenshot').colorbox();
+  jQuery('.flags-popup').colorbox({ldelim}inline:true});
 
-$(document).ready(function() {ldelim}
   $('#user_rate div').raty({ldelim}
     path: "template/jquery.raty/",
     cancelHint: '{'cancel this rating!'|@translate}',
@@ -123,7 +112,7 @@ $(document).ready(function() {ldelim}
   </div>
   
 {if isset($thumbnail)}
-<a class="screenshot highslide" href="{$thumbnail.url}" onclick="return hs.expand(this)"><img src="{$thumbnail.src}"/></a>
+<a class="screenshot" href="{$thumbnail.url}"><img src="{$thumbnail.src}"/></a>
 {/if}
 
 </div>
@@ -139,17 +128,21 @@ $(document).ready(function() {ldelim}
   <li><em>{'Latest revision date'|@translate}:</em> {$last_date}</li>
   {if !empty($ext_languages)}
   <li><em>{'Available languages'|@translate}:</em>
-    <a href="#" class="highslide" onclick="return hs.htmlExpand(this,{ldelim}wrapperClassName:'draggable-header',align:'auto',headingText:'{'Available languages'|@translate}'})">{$ext_languages|@count}</a>
-    <div class="highslide-maincontent">
-    {foreach from=$ext_languages item=language}{strip}
-      <span class="langflag langflag-{$language.code}" title="{$language.name}">{$language.name}</span>
-    {/strip}{/foreach}
-    </div>
+    <a href="#flags-all" class="flags-popup">{$ext_languages|@count} {'(see)'|translate}</a>
   </li>
   {/if}
   <li><em>{'Compatible with'|@translate}:</em> {$software} {'releases'|@translate} {$compatible_with}</li>
   <li><em>{'Downloads'|@translate}:</em> {$extension_downloads}</li>
 </ul>
+
+<div style="display:none">
+  <table class="flags-table" id="flags-all"><tr>
+  {foreach from=$ext_languages item=language name=langs}{strip}
+    <td><span class="langflag-{$language.code}" title="{$language.name}"></span> {$language.name}</td>
+    {if ($smarty.foreach.langs.index+1) % 3 == 0}</tr><tr>{/if}
+  {/strip}{/foreach}
+  </tr></table>
+</div>
 
 <p><strong>{'About'|@translate}:</strong> {$description}</p>
 
@@ -198,10 +191,20 @@ $(document).ready(function() {ldelim}
       <p><em>{'Compatible with'|@translate}:</em> {$rev.versions_compatible}</p>
   {if !empty($rev.languages)}
       <p><em>{'New languages'|@translate}:</em>
-        {foreach from=$rev.languages item=language name=flag}{strip}
-          <span class="langflag langflag-{$language.code}" title="{$language.name}">{$language.name}</span>
-        {/strip}{/foreach} {if isset($can_modify)}{$smarty.foreach.flag.total}{/if}
+        {foreach from=$rev.languages_diff item=language name=flag}{strip}
+          <span class="langflag-{$language.code}" title="{$language.name}">{$language.name}</span>
+        {/strip}{/foreach}
+        <a href="#flags-{$rev.id}" class="flags-popup">{'Total :'|translate} {$rev.languages|@count}</a>
       </p>
+      
+      <div style="display:none">
+        <table class="flags-table" id="flags-{$rev.id}"><tr>
+        {foreach from=$rev.languages item=language name=langs}{strip}
+          <td><span class="langflag-{$language.code}" title="{$language.name}"></span> {$language.name}</td>
+          {if ($smarty.foreach.langs.index+1) % 3 == 0}</tr><tr>{/if}
+        {/strip}{/foreach}
+        </tr></table>
+      </div>
   {/if}
   {if !empty($rev.author)}
       <p><em>{'Added by'|@translate}:</em> {$rev.author}</p>

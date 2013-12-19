@@ -1,4 +1,4 @@
-.langflag {
+[class*='langflag-'] {
     background: url('images/flag_sprite.jpg') no-repeat 24px 16px;
     margin: 2px;
     width: 24px;

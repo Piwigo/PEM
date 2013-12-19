@@ -199,7 +199,7 @@ div.row
   padding-bottom : 2px;
   overflow:hidden;
 }
-div.row .screenshot img
+.screenshot img
 {
   margin:10px;
   padding:10px;
@@ -767,3 +767,12 @@ div.row  img.help_user
     .my-extensions thead tr td:first-child {
       text-align:left;
     }
+    
+.flags-table {
+  background:white;
+  padding:10px;
+}
+.flags-table td {
+  white-space:nowrap;
+  padding:0;
+}

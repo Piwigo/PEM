@@ -286,8 +286,8 @@ $tpl_revisions = array();
 if (count($revision_ids) > 0)
 {
   $versions_of = get_versions_of_revision($revision_ids);
-  // $languages_of = get_languages_of_revision($revision_ids);
-  $languages_of = get_diff_languages_of_extension($page['extension_id']);
+  $languages_of = get_languages_of_revision($revision_ids);
+  $diff_languages_of = get_diff_languages_of_extension($page['extension_id']);
   
   $revisions = array();
 
@@ -356,6 +356,8 @@ SELECT id_revision,
           ),
         'languages' => isset($languages_of[$row['id_revision']]) ?
           $languages_of[$row['id_revision']] : array(),
+        'languages_diff' => isset($diff_languages_of[$row['id_revision']]) ?
+          $diff_languages_of[$row['id_revision']] : array(),
         'date' => date('Y-m-d', $row['date']),
         'author' => (count($authors) > 1 or $row['author'] != $data['idx_user']) ?
                       get_author_name($row['author']) : '',
