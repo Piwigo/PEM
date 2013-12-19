@@ -774,5 +774,8 @@ div.row  img.help_user
 }
 .flags-table td {
   white-space:nowrap;
-  padding:0;
+  padding:2px;
+}
+.flags-table td span {
+  vertical-align:middle;
 }
