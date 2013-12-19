@@ -190,13 +190,18 @@ jQuery(function(){ldelim}
       <a href="{$rev.u_download}" title="{'Download revision'|@translate} {$rev.version}" rel="nofollow"><img class="download" src="template/images/download.png" alt="{'Download revision'|@translate} {$rev.version}"/></a>
       <p><em>{'Compatible with'|@translate}:</em> {$rev.versions_compatible}</p>
   {if !empty($rev.languages)}
+    {if !empty($rev.languages_diff)}
       <p><em>{'New languages'|@translate}:</em>
         {foreach from=$rev.languages_diff item=language name=flag}{strip}
           <span class="langflag-{$language.code}" title="{$language.name}">{$language.name}</span>
         {/strip}{/foreach}
         <a href="#flags-{$rev.id}" class="flags-popup">{'Total :'|translate} {$rev.languages|@count}</a>
       </p>
-      
+    {else}
+      <p><em>{'Available languages'|@translate}:</em>
+        <a href="#flags-{$rev.id}" class="flags-popup">{$rev.languages|@count} {'(see)'|translate}</a>
+      </p>
+    {/if}
       <div style="display:none">
         <table class="flags-table" id="flags-{$rev.id}"><tr>
         {foreach from=$rev.languages item=language name=langs}{strip}
