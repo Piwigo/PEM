@@ -89,7 +89,7 @@ if (!in_array($user['id'], $authors) and !isAdmin($user['id']) and !isTranslator
 
 if (isset($_POST['submit']))
 {
-  // Form sumbmitted for translator
+  // Form submitted for translator
   if (!in_array($user['id'], $authors) and !isAdmin($user['id']))
   {
     $query = 'SELECT idx_language FROM '.REV_TABLE.' WHERE id_revision = '.$page['revision_id'].';';
@@ -105,11 +105,13 @@ DELETE
     $db->query($query);
 
     $inserts = array();
+    $new_default_desc = null;
     foreach ($_POST['revision_descriptions'] as $lang_id => $desc)
     {
       if ($lang_id == $def_language and empty($desc))
       {
-        message_die('Default description can not be empty');
+        $page['errors'][] = l10n('Default description can not be empty');
+        break;
       }
       if (!in_array($lang_id, $conf['translator_users'][$user['id']]) or empty($desc))
       {
@@ -117,12 +119,7 @@ DELETE
       }
       if ($lang_id == $def_language)
       {
-        $query = '
-    UPDATE '.REV_TABLE.'
-      SET description = \''.$desc.'\'
-      WHERE id_revision = '.$page['revision_id'].'
-    ;';
-        $db->query($query);
+        $new_default_lang = $desc;
       }
       else
       {
@@ -136,26 +133,47 @@ DELETE
           );
       }
     }
-    if (!empty($inserts))
+    
+    if (empty($page['errors']))
     {
-      mass_inserts(REV_TRANS_TABLE, array_keys($inserts[0]), $inserts);
+      if (!empty($inserts))
+      {
+        mass_inserts(REV_TRANS_TABLE, array_keys($inserts[0]), $inserts);
+      }
+      if (!empty($new_default_desc))
+      {
+        $query = '
+UPDATE '.REV_TABLE.'
+  SET description = \''.$new_default_desc.'\'
+  WHERE id_revision = '.$page['revision_id'].'
+;';
+        $db->query($query);
+      }
+    
+      message_success(
+        'Revision successfuly added. Thank you.',
+        sprintf(
+          'extension_view.php?eid=%u&amp;rid=%u#rev%u',
+          $page['extension_id'],
+          $page['revision_id'],
+          $page['revision_id']
+          )
+        );
+        
+      unset($_POST);
     }
-    message_success(
-      'Revision successfuly added. Thank you.',
-      sprintf(
-        'extension_view.php?eid=%u&amp;rid=%u#rev%u',
-        $page['extension_id'],
-        $page['revision_id'],
-        $page['revision_id']
-        )
-      );
   }
   // The file is mandatory only when we add a revision, not when we modify it
+  $file_to_upload = null;
   if ('revision_add.php' == basename($_SERVER['SCRIPT_FILENAME']))
   {
     if (isset($_POST['file_type']) and in_array($_POST['file_type'], array('upload', 'svn', 'url')))
     {
       $file_to_upload = $_POST['file_type'];
+    }
+    else
+    {
+      $page['errors'][] = l10n('Some fields are missing');
     }
   }
   else
@@ -169,21 +187,21 @@ DELETE
     // Check file extension
     if (strtolower(substr($_FILES['revision_file']['name'], -3)) != 'zip')
     {
-      message_die('Only *.zip files are allowed');
+      $page['errors'][] = l10n('Only *.zip files are allowed');
     }
   
     // Check file size
-    if ($_FILES['revision_file']['error'] == UPLOAD_ERR_INI_SIZE)
+    else if ($_FILES['revision_file']['error'] == UPLOAD_ERR_INI_SIZE)
     {
-      message_die(
-        sprintf(
-          l10n('File too big. Filesize must not exceed %s.'),
-          ini_get('upload_max_filesize')
-        )
-      );
+      $page['errors'][] = sprintf(
+        l10n('File too big. Filesize must not exceed %s.'),
+        ini_get('upload_max_filesize')
+        );
     }
-
-    $archive_name = $_FILES['revision_file']['name'];
+    else
+    {
+      $archive_name = $_FILES['revision_file']['name'];
+    }
   }
 
   if ($file_to_upload == 'svn')
@@ -191,44 +209,48 @@ DELETE
     $svn_url = $_POST['svn_url'];
     if (empty($svn_url))
     {
-      message_die('Some fields are missing');
+      $page['errors'][] = l10n('Some fields are missing');
     }
-
-    $temp_svn_path = $conf['local_data_dir'] . '/svn_import';
-    if (!is_dir($temp_svn_path))
+    else
     {
-      umask(0000);
-      if (!mkdir($temp_svn_path, 0777))
+      $temp_svn_path = $conf['local_data_dir'] . '/svn_import';
+      if (!is_dir($temp_svn_path))
       {
-        die("problem during ".$temp_svn_path." creation");
+        umask(0000);
+        if (!mkdir($temp_svn_path, 0777))
+        {
+          die("problem during ".$temp_svn_path." creation");
+        }
       }
-    }
 
-    // Create random path
-    $temp_svn_path .= '/' . md5(uniqid(rand(), true));
+      // Create random path
+      $temp_svn_path .= '/' . md5(uniqid(rand(), true));
 
-    // SVN export
-    $svn_command = $conf['svn_path'] . ' export';
-    $svn_command .= is_numeric($_POST['svn_revision']) ? ' -r'.$_POST['svn_revision'] : '';
-    $svn_command .= ' ' . escapeshellarg($svn_url);
-    $svn_command .= ' ' . $temp_svn_path;
+      // SVN export
+      $svn_command = $conf['svn_path'] . ' export';
+      $svn_command .= is_numeric($_POST['svn_revision']) ? ' -r'.$_POST['svn_revision'] : '';
+      $svn_command .= ' ' . escapeshellarg($svn_url);
+      $svn_command .= ' ' . $temp_svn_path;
 
-    exec($svn_command, $svn_infos);
+      exec($svn_command, $svn_infos);
 
-    if (empty($svn_infos))
-    {
-      message_die('An error occured during SVN export.');
-    }
+      if (empty($svn_infos))
+      {
+        $page['errors'][] = l10n('An error occured during SVN export.');
+      }
+      else
+      {
+        $archive_name = str_replace('%', @$_POST['revision_version'], $archive_name);
+        $svn_revision = preg_replace('/exported revision (\d+)\./i', '$1', end($svn_infos));
 
-    $archive_name = str_replace('%', @$_POST['revision_version'], $archive_name);
-    $svn_revision = preg_replace('/exported revision (\d+)\./i', '$1', end($svn_infos));
-
-    if (!empty($conf['archive_comment']) and !file_exists($temp_svn_path.'/'.$conf['archive_comment_filename']))
-    {
-      file_put_contents(
-        $temp_svn_path.'/'.$conf['archive_comment_filename'],
-        sprintf($conf['archive_comment'], $svn_url, $svn_revision)
-      );
+        if (!empty($conf['archive_comment']) and !file_exists($temp_svn_path.'/'.$conf['archive_comment_filename']))
+        {
+          file_put_contents(
+            $temp_svn_path.'/'.$conf['archive_comment_filename'],
+            sprintf($conf['archive_comment'], $svn_url, $svn_revision)
+          );
+        }
+      }
     }
   }
 
@@ -237,23 +259,28 @@ DELETE
     $download_url = $_POST['download_url'];
     if (empty($download_url))
     {
-      message_die('Some fields are missing');
+      $page['errors'][] = l10n('Some fields are missing');
     }
-    
-    $sch = parse_url($download_url, PHP_URL_SCHEME);
-    if (!in_array($sch, array('http', 'https')))
+    else
     {
-      message_die('The download URL must start with "http"');
+      $sch = parse_url($download_url, PHP_URL_SCHEME);
+      if (!in_array($sch, array('http', 'https')))
+      {
+        $page['errors'][] = l10n('The download URL must start with "http"');
+      }
+      else
+      {
+        $headers = get_headers($download_url, 1);
+        if ($headers["Content-Length"] > $conf['download_url_max_filesize']*1024*1024)
+        {
+          $page['errors'][] = l10n('The archive on the download URL is bigger than '.$conf['download_url_max_filesize'].'MB');
+        }
+        else
+        {
+          $archive_name = basename($download_url);
+        }
+      }
     }
-    
-    $headers = get_headers($download_url, 1);
-
-    if ($headers["Content-Length"] > $conf['download_url_max_filesize']*1024*1024)
-    {
-      message_die('The archive on the download URL is bigger than '.$conf['download_url_max_filesize'].'MB');
-    }
-    
-    $archive_name = basename($download_url);
   }
 
   $required_fields = array(
@@ -266,194 +293,200 @@ DELETE
     if (empty($_POST[$field]))
     {
       @deltree($temp_svn_path);
-      message_die('Some fields are missing');
+      $page['errors'][] = l10n('Some fields are missing');
+      break;
     }
   }
   if (empty($_POST['revision_descriptions'][@$_POST['default_description']]))
   {
     @deltree($temp_svn_path);
-    message_die('Default description can not be empty');
+    $page['errors'][] = l10n('Default description can not be empty');
   }
   
-  if (basename($_SERVER['SCRIPT_FILENAME']) == 'revision_mod.php')
+  if (empty($page['errors']))
   {
-    mass_updates(
-      REV_TABLE,
-      array(
-        'primary' => array('id_revision'),
-        'update'  => array('version', 'description', 'idx_language', 'author'),
-        ),
-      array(
+    if (basename($_SERVER['SCRIPT_FILENAME']) == 'revision_mod.php')
+    {
+      mass_updates(
+        REV_TABLE,
         array(
-          'id_revision'    => $page['revision_id'],
-          'version'        => $_POST['revision_version'],
-          'description'    => $_POST['revision_descriptions'][$_POST['default_description']],
-          'idx_language'   => $_POST['default_description'],
-          'author'         => isset($_POST['author']) ? $_POST['author'] : $revision_infos_of[$page['revision_id']]['author'],
+          'primary' => array('id_revision'),
+          'update'  => array('version', 'description', 'idx_language', 'author'),
           ),
-        )
-      );
-    $query = '
+        array(
+          array(
+            'id_revision'    => $page['revision_id'],
+            'version'        => $_POST['revision_version'],
+            'description'    => $_POST['revision_descriptions'][$_POST['default_description']],
+            'idx_language'   => $_POST['default_description'],
+            'author'         => isset($_POST['author']) ? $_POST['author'] : $revision_infos_of[$page['revision_id']]['author'],
+            ),
+          )
+        );
+      $query = '
 DELETE
   FROM '.REV_TRANS_TABLE.'
   WHERE idx_revision = '.$page['revision_id'].'
 ;';
-    $db->query($query);
-  }
-  else
-  {
-    $insert = array(
-      'version'        => $_POST['revision_version'],
-      'idx_extension'  => $page['extension_id'],
-      'date'           => mktime(),
-      'description'    => $_POST['revision_descriptions'][$_POST['default_description']],
-      'idx_language'   => $_POST['default_description'],
-      'url'            => $archive_name,
-      'author'         => isset($_POST['author']) ? $_POST['author'] : $user['id'],
-      );
-
-    if ($conf['use_agreement'])
-    {
-      $insert['accept_agreement'] = isset($_POST['accept_agreement'])
-        ? 'true'
-        : 'false'
-        ;
+      $db->query($query);
     }
-    
-    mass_inserts(
-      REV_TABLE,
-      array_keys($insert),
-      array($insert)
-      );
-
-    $page['revision_id'] = $db->insert_id();
-  }
-
-  if ($file_to_upload != 'none')
-  {
-    // Moves the file to its final destination:
-    // upload/extension-X/revision-Y
-    $extension_dir = $conf['upload_dir'].'extension-'.$page['extension_id'];
-    $revision_dir = $extension_dir.'/revision-'.$page['revision_id'];
-    
-    if (!is_dir($extension_dir))
+    else
     {
-      umask(0000);
-      if (!mkdir($extension_dir, 0777))
+      $insert = array(
+        'version'        => $_POST['revision_version'],
+        'idx_extension'  => $page['extension_id'],
+        'date'           => mktime(),
+        'description'    => $_POST['revision_descriptions'][$_POST['default_description']],
+        'idx_language'   => $_POST['default_description'],
+        'url'            => $archive_name,
+        'author'         => isset($_POST['author']) ? $_POST['author'] : $user['id'],
+        );
+
+      if ($conf['use_agreement'])
       {
-        die("problem during ".$extension_dir." creation");
+        $insert['accept_agreement'] = isset($_POST['accept_agreement'])
+          ? 'true'
+          : 'false'
+          ;
+      }
+      
+      mass_inserts(
+        REV_TABLE,
+        array_keys($insert),
+        array($insert)
+        );
+
+      $page['revision_id'] = $db->insert_id();
+    }
+
+    if ($file_to_upload != 'none')
+    {
+      // Moves the file to its final destination:
+      // upload/extension-X/revision-Y
+      $extension_dir = $conf['upload_dir'].'extension-'.$page['extension_id'];
+      $revision_dir = $extension_dir.'/revision-'.$page['revision_id'];
+      
+      if (!is_dir($extension_dir))
+      {
+        umask(0000);
+        if (!mkdir($extension_dir, 0777, true))
+        {
+          die("problem during ".$extension_dir." creation");
+        }
+      }
+      
+      umask(0000);
+      @mkdir($revision_dir, 0777);
+
+      if ($file_to_upload == 'upload')
+      {
+        move_uploaded_file(
+          $_FILES['revision_file']['tmp_name'],
+          $revision_dir.'/'.$_FILES['revision_file']['name']
+        );
+      }
+      elseif ('svn' == $file_to_upload)
+      {
+        // Create zip archive
+        include_once($root_path.'include/pclzip.lib.php');
+        $zip = new PclZip($revision_dir.'/'.$archive_name);
+        $zip->create($temp_svn_path,
+          PCLZIP_OPT_REMOVE_PATH, $temp_svn_path,
+          PCLZIP_OPT_ADD_PATH, $archive_root_dir);
+      }
+      elseif ('url' == $file_to_upload)
+      {
+        copy($download_url, $revision_dir.'/'.$archive_name);
       }
     }
+
+    // Insert translations
+    $inserts = array();
+    foreach ($_POST['revision_descriptions'] as $lang_id => $desc)
+    {
+      if ($lang_id == $_POST['default_description'] or empty($desc))
+      {
+        continue;
+      }
+      array_push(
+        $inserts,
+        array(
+          'idx_revision'  => $page['revision_id'],
+          'idx_language'   => $lang_id,
+          'description'    => $desc,
+          )
+        );
+    }
+    if (!empty($inserts))
+    {
+      mass_inserts(REV_TRANS_TABLE, array_keys($inserts[0]), $inserts);
+    }
+
+    $query = '
+  DELETE
+    FROM '.COMP_TABLE.'
+    WHERE idx_revision = '.$page['revision_id'].'
+  ;';
+    $db->query($query);
     
-    umask(0000);
-    @mkdir($revision_dir, 0777);
-
-    if ($file_to_upload == 'upload')
-    {
-      move_uploaded_file(
-        $_FILES['revision_file']['tmp_name'],
-        $revision_dir.'/'.$_FILES['revision_file']['name']
-      );
-    }
-    elseif ('svn' == $file_to_upload)
-    {
-      // Create zip archive
-      include_once($root_path.'include/pclzip.lib.php');
-      $zip = new PclZip($revision_dir.'/'.$archive_name);
-      $zip->create($temp_svn_path,
-        PCLZIP_OPT_REMOVE_PATH, $temp_svn_path,
-        PCLZIP_OPT_ADD_PATH, $archive_root_dir);
-    }
-    elseif ('url' == $file_to_upload)
-    {
-      copy($download_url, $revision_dir.'/'.$archive_name);
-    }
-  }
-
-  // Insert translations
-  $inserts = array();
-  foreach ($_POST['revision_descriptions'] as $lang_id => $desc)
-  {
-    if ($lang_id == $_POST['default_description'] or empty($desc))
-    {
-      continue;
-    }
-    array_push(
-      $inserts,
-      array(
-        'idx_revision'  => $page['revision_id'],
-        'idx_language'   => $lang_id,
-        'description'    => $desc,
-        )
-      );
-  }
-  if (!empty($inserts))
-  {
-    mass_inserts(REV_TRANS_TABLE, array_keys($inserts[0]), $inserts);
-  }
-
-  $query = '
-DELETE
-  FROM '.COMP_TABLE.'
-  WHERE idx_revision = '.$page['revision_id'].'
-;';
-  $db->query($query);
-  
-  // Inserts the revisions <-> compatibilities link
-  $inserts = array();
-  foreach ($_POST['compatible_versions'] as $version_id)
-  {
-    array_push(
-      $inserts,
-      array(
-        'idx_revision'  => $page['revision_id'],
-        'idx_version'   => $version_id,
-        )
-      );
-  }
-  mass_inserts(
-    COMP_TABLE,
-    array_keys($inserts[0]),
-    $inserts
-    );
-
-  $query = '
-DELETE
-  FROM '.REV_LANG_TABLE.'
-  WHERE idx_revision = '.$page['revision_id'].'
-;';
-  $db->query($query);
-
-  // Inserts the revisions <-> languages
-  $inserts = array();
-  if (!empty($_POST['extensions_languages']))
-  {
-    foreach ($_POST['extensions_languages'] as $language_id)
+    // Inserts the revisions <-> compatibilities link
+    $inserts = array();
+    foreach ($_POST['compatible_versions'] as $version_id)
     {
       array_push(
         $inserts,
         array(
           'idx_revision'  => $page['revision_id'],
-          'idx_language'  => $language_id,
+          'idx_version'   => $version_id,
           )
         );
     }
     mass_inserts(
-      REV_LANG_TABLE,
+      COMP_TABLE,
       array_keys($inserts[0]),
       $inserts
       );
-  }
 
-  message_success(
-    'Revision successfuly added. Thank you.',
-    sprintf(
-      'extension_view.php?eid=%u&amp;rid=%u#rev%u',
-      $page['extension_id'],
-      $page['revision_id'],
-      $page['revision_id']
-      )
-    );
+    $query = '
+DELETE
+  FROM '.REV_LANG_TABLE.'
+  WHERE idx_revision = '.$page['revision_id'].'
+;';
+    $db->query($query);
+
+    // Inserts the revisions <-> languages
+    $inserts = array();
+    if (!empty($_POST['extensions_languages']))
+    {
+      foreach ($_POST['extensions_languages'] as $language_id)
+      {
+        array_push(
+          $inserts,
+          array(
+            'idx_revision'  => $page['revision_id'],
+            'idx_language'  => $language_id,
+            )
+          );
+      }
+      mass_inserts(
+        REV_LANG_TABLE,
+        array_keys($inserts[0]),
+        $inserts
+        );
+    }
+
+    message_success(
+      'Revision successfuly added. Thank you.',
+      sprintf(
+        'extension_view.php?eid=%u&amp;rid=%u#rev%u',
+        $page['extension_id'],
+        $page['revision_id'],
+        $page['revision_id']
+        )
+      );
+      
+    unset($_POST);
+  }
 }
 
 // +-----------------------------------------------------------------------+
@@ -470,11 +503,11 @@ if (basename($_SERVER['SCRIPT_FILENAME']) == 'revision_mod.php')
     array($page['revision_id'])
     );
 
-  $version = $revision_infos_of[ $page['revision_id'] ]['version'];
-  $selected_versions = $version_ids_of_revision[ $page['revision_id'] ];
-  $selected_author = $revision_infos_of[ $page['revision_id'] ]['author'];
-  $selected_languages = !empty($language_ids_of_revision[$page['revision_id']]) ?
-    $language_ids_of_revision[$page['revision_id']] : array();
+  $version = isset($_POST['revision_version']) ? $_POST['revision_version'] : $revision_infos_of[ $page['revision_id'] ]['version'];
+  $selected_versions = isset($_POST['compatible_versions']) ? $_POST['compatible_versions'] : $version_ids_of_revision[ $page['revision_id'] ];
+  $selected_author = isset($_POST['author']) ? $_POST['author'] : $revision_infos_of[ $page['revision_id'] ]['author'];
+  $selected_languages = isset($_POST['extensions_languages']) ? $_POST['extensions_languages'] : 
+    (!empty($language_ids_of_revision[$page['revision_id']]) ? $language_ids_of_revision[$page['revision_id']] : array());
 
   $accept_agreement = get_boolean(
     $revision_infos_of[ $page['revision_id'] ]['accept_agreement'],
@@ -492,40 +525,47 @@ if (basename($_SERVER['SCRIPT_FILENAME']) == 'revision_mod.php')
 
   // Get descriptions
   $descriptions = array();
-  $query = '
+  if (isset($_POST['revision_descriptions']))
+  {
+    $descriptions = $_POST['revision_descriptions'];
+  }
+  else
+  {
+    $query = '
 SELECT idx_language,
        description
   FROM '.REV_TABLE.'
   WHERE id_revision = '.$page['revision_id'].'
 ;';
-  $result = $db->query($query);
-  if ($row = mysql_fetch_assoc($result))
-  {
-    $descriptions[$row['idx_language']] = $row['description'];
-    $default_language = $row['idx_language'];
-  }
+    $result = $db->query($query);
+    if ($row = mysql_fetch_assoc($result))
+    {
+      $descriptions[$row['idx_language']] = $row['description'];
+      $default_language = $row['idx_language'];
+    }
 
-  $query = '
+    $query = '
 SELECT idx_language,
        description
   FROM '.REV_TRANS_TABLE.'
   WHERE idx_revision = '.$page['revision_id'].'
 ;';
-  $result = $db->query($query);
-  while($row = mysql_fetch_assoc($result))
-  {
-    $descriptions[$row['idx_language']] = $row['description'];
+    $result = $db->query($query);
+    while($row = mysql_fetch_assoc($result))
+    {
+      $descriptions[$row['idx_language']] = $row['description'];
+    }
   }
   
   $tpl->assign('IN_EDIT', true);
 }
 else
 {
-  $version = '';
-  $descriptions = array();
-  $selected_versions = array();
-  $selected_author = $user['id'];
-  $selected_languages = array();
+  $version = isset($_POST['revision_version']) ? $_POST['revision_version'] : '';
+  $descriptions = isset($_POST['revision_descriptions']) ? $_POST['revision_descriptions'] : array();
+  $selected_versions = isset($_POST['compatible_versions']) ? $_POST['compatible_versions'] : array();
+  $selected_author = isset($_POST['author']) ? $_POST['author'] : $user['id'];
+  $selected_languages = isset($_POST['extensions_languages']) ? $_POST['extensions_languages'] : array();
   $default_language = $interface_languages[$conf['default_language']]['id'];
 
   // Get selected languages of last revision
@@ -643,7 +683,8 @@ if (basename($_SERVER['SCRIPT_FILENAME']) == 'revision_add.php' and $conf['allow
   $tpl->assign(
     array(
       'allow_svn_file_creation' => true,
-      'SVN_URL' => $svn_url,
+      'SVN_URL' => isset($_POST['svn_url']) ? $_POST['svn_url'] : $svn_url,
+      'SVN_REVISON' => isset($_POST['svn_revision']) ? $_POST['svn_revision'] : 'HEAD',
     )
   );
 }
@@ -658,15 +699,18 @@ if ($conf['allow_svn_file_creation'])
   array_push($upload_methods, 'svn');
 }
 
+
 $tpl->assign(
   array(
     'upload_methods' => $upload_methods,
+    'form' => $_POST,
     )
   );
+
 // +-----------------------------------------------------------------------+
 // |                           html code display                           |
 // +-----------------------------------------------------------------------+
-
+flush_page_messages();
 $tpl->assign_var_from_handle('main_content', 'revision_add');
 include($root_path.'include/header.inc.php');
 include($root_path.'include/footer.inc.php');

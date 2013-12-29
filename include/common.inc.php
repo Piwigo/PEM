@@ -18,6 +18,12 @@
 // | USA.                                                                  |
 // +-----------------------------------------------------------------------+
 
+$page = array(
+  'errors' => array(),
+  'warnings' => array(),
+  'infos' => array(),
+  );
+
 // determine the initial instant to indicate the generation time of this page
 $page['start'] = intval(microtime(true) * 1000);
 

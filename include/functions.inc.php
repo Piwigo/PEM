@@ -599,4 +599,26 @@ function get_Subversion_revision() {
   return null;
 }
 
+/**
+ * Sends to the template all messages stored in $page and in the session.
+ */
+function flush_page_messages()
+{
+  global $tpl, $page;
+
+  foreach (array('errors','infos','warnings') as $mode)
+  {
+    if (isset($_SESSION['page_'.$mode]))
+    {
+      $page[$mode] = array_merge($page[$mode], $_SESSION['page_'.$mode]);
+      unset($_SESSION['page_'.$mode]);
+    }
+
+    if (count($page[$mode]) != 0)
+    {
+      $tpl->assign($mode, $page[$mode]);
+    }
+  }
+}
+
 ?>
