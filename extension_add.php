@@ -66,11 +66,13 @@ DELETE
     $db->query($query);
 
     $inserts = array();
+    $new_default_desc = null;
     foreach ($_POST['extension_descriptions'] as $lang_id => $desc)
     {
       if ($lang_id == $def_language and empty($desc))
       {
-        message_die('Default description can not be empty');
+        $page['errors'][] = l10n('Default description can not be empty');
+        break;
       }
       if (!in_array($lang_id, $conf['translator_users'][$user['id']]) or empty($desc))
       {
@@ -78,12 +80,7 @@ DELETE
       }
       if ($lang_id == $def_language)
       {
-        $query = '
-    UPDATE '.EXT_TABLE.'
-      SET description = \''.$desc.'\'
-      WHERE id_extension = '.$page['extension_id'].'
-    ;';
-        $db->query($query);
+        $new_default_desc = $desc;
       }
       else
       {
@@ -97,11 +94,25 @@ DELETE
           );
       }
     }
-    if (!empty($inserts))
+    
+    if (empty($page['errors']))
     {
-      mass_inserts(EXT_TRANS_TABLE, array_keys($inserts[0]), $inserts);
+      if (!empty($inserts))
+      {
+        mass_inserts(EXT_TRANS_TABLE, array_keys($inserts[0]), $inserts);
+      }
+      if (!empty($new_default_desc))
+      {
+        $query = '
+    UPDATE '.EXT_TABLE.'
+      SET description = \''.$new_default_desc.'\'
+      WHERE id_extension = '.$page['extension_id'].'
+    ;';
+        $db->query($query);
+      }
+      
+      message_success('Extension successfuly added. Thank you.', 'extension_view.php?eid='.$page['extension_id']);
     }
-    message_success('Extension successfuly added. Thank you.', 'extension_view.php?eid='.$page['extension_id']);
   }
 
   // Checks that all the fields have been well filled
@@ -114,118 +125,122 @@ DELETE
   {
     if (empty($_POST[$field]))
     {
-      message_die('Some fields are missing');
+      $page['errors'][] = l10n('Some fields are missing');
+      break;
     }
   }
 
   if (empty($_POST['extension_descriptions'][@$_POST['default_description']]))
   {
-    message_die('Default description can not be empty');
+    $page['errors'][] = l10n('Default description can not be empty');
   }
-    
-  if (basename($_SERVER['SCRIPT_FILENAME']) == 'extension_mod.php')
+  
+  if (empty($page['errors']))
   {
-    // Update the extension
-    $query = '
+    if (basename($_SERVER['SCRIPT_FILENAME']) == 'extension_mod.php')
+    {
+      // Update the extension
+      $query = '
 UPDATE '.EXT_TABLE.'
   SET name = \''.$_POST['extension_name'].'\',
       description = \''.$_POST['extension_descriptions'][$_POST['default_description']].'\',
       idx_language = '.$_POST['default_description'].'
   WHERE id_extension = '.$page['extension_id'].'
 ;';
-    $db->query($query);
+      $db->query($query);
 
-    $query = '
+      $query = '
 DELETE
   FROM '.EXT_TRANS_TABLE.'
   WHERE idx_extension = '.$page['extension_id'].'
 ;';
-    $db->query($query);
+      $db->query($query);
     
-    $query = '
+      $query = '
 DELETE
   FROM '.EXT_CAT_TABLE.'
   WHERE idx_extension = '.$page['extension_id'].'
 ;';
-    $db->query($query);
+      $db->query($query);
     
-    $query = '
+      $query = '
 DELETE
   FROM '.EXT_TAG_TABLE.'
   WHERE idx_extension = '.$page['extension_id'].'
 ;';
-    $db->query($query);
-  }
-  else
-  {
-    // Inserts the extension (need to be done before the other includes, to
-    // retrieve the insert id
-    $insert = array(
-      'idx_user'   => $user['id'],
-      'name'         => $_POST['extension_name'],
-      'description'  => $_POST['extension_descriptions'][$_POST['default_description']],
-      'idx_language' => $_POST['default_description'],
-      );
-    mass_inserts(EXT_TABLE, array_keys($insert), array($insert));
-    $page['extension_id'] = $db->insert_id();
-  }
-
-  // Insert translations
-  $inserts = array();
-  foreach ($_POST['extension_descriptions'] as $lang_id => $desc)
-  {
-    if ($lang_id == $_POST['default_description'] or empty($desc))
-    {
-      continue;
+      $db->query($query);
     }
-    array_push(
-      $inserts,
-      array(
-        'idx_extension'  => $page['extension_id'],
-        'idx_language'   => $lang_id,
-        'description'    => $desc,
-        )
-      );
-  }
-  if (!empty($inserts))
-  {
-    mass_inserts(EXT_TRANS_TABLE, array_keys($inserts[0]), $inserts);
-  }
-  
-  // Inserts the extensions <-> categories link
-  $inserts = array();
-  foreach ($_POST['extension_category'] as $category)
-  {
-    array_push(
-      $inserts,
-      array(
-        'idx_category'   => $category,
-        'idx_extension'  => $page['extension_id'],
-        )
-      );
-  }
-  mass_inserts(EXT_CAT_TABLE, array_keys($inserts[0]), $inserts);
-  
-  // Inserts the extensions <-> tags link
-  if (!empty($_POST['tags']))
-  {
-    $_POST['tags'] = get_tag_ids($_POST['tags'], true);
+    else
+    {
+      // Inserts the extension (need to be done before the other includes, to
+      // retrieve the insert id
+      $insert = array(
+        'idx_user'   => $user['id'],
+        'name'         => $_POST['extension_name'],
+        'description'  => $_POST['extension_descriptions'][$_POST['default_description']],
+        'idx_language' => $_POST['default_description'],
+        );
+      mass_inserts(EXT_TABLE, array_keys($insert), array($insert));
+      $page['extension_id'] = $db->insert_id();
+    }
+
+    // Insert translations
     $inserts = array();
-    foreach ($_POST['tags'] as $tag)
+    foreach ($_POST['extension_descriptions'] as $lang_id => $desc)
+    {
+      if ($lang_id == $_POST['default_description'] or empty($desc))
+      {
+        continue;
+      }
+      array_push(
+        $inserts,
+        array(
+          'idx_extension'  => $page['extension_id'],
+          'idx_language'   => $lang_id,
+          'description'    => $desc,
+          )
+        );
+    }
+    if (!empty($inserts))
+    {
+      mass_inserts(EXT_TRANS_TABLE, array_keys($inserts[0]), $inserts);
+    }
+    
+    // Inserts the extensions <-> categories link
+    $inserts = array();
+    foreach ($_POST['extension_category'] as $category)
     {
       array_push(
         $inserts,
         array(
-          'idx_tag'   => $tag,
+          'idx_category'   => $category,
           'idx_extension'  => $page['extension_id'],
           )
         );
     }
-    mass_inserts(EXT_TAG_TABLE, array_keys($inserts[0]), $inserts);
+    mass_inserts(EXT_CAT_TABLE, array_keys($inserts[0]), $inserts);
+    
+    // Inserts the extensions <-> tags link
+    if (!empty($_POST['tags']))
+    {
+      $_POST['tags'] = get_tag_ids($_POST['tags'], true);
+      $inserts = array();
+      foreach ($_POST['tags'] as $tag)
+      {
+        array_push(
+          $inserts,
+          array(
+            'idx_tag'   => $tag,
+            'idx_extension'  => $page['extension_id'],
+            )
+          );
+      }
+      mass_inserts(EXT_TAG_TABLE, array_keys($inserts[0]), $inserts);
+    }
+    
+    message_success('Extension successfuly added. Thank you.',
+      'extension_view.php?eid='.$page['extension_id']);
   }
-  
-  message_success('Extension successfuly added. Thank you.',
-    'extension_view.php?eid='.$page['extension_id']);
 }
 
 // Get the category listing
@@ -269,64 +284,85 @@ SELECT name,
     $extension['default_language'] = $row['idx_language'];
   }
 
-  $query = '
+  if (isset($_POST['extension_descriptions']))
+  {
+    $extension['descriptions'] = $_POST['extension_descriptions'];
+  }
+  else
+  {
+    $query = '
 SELECT idx_language,
        description
   FROM '.EXT_TRANS_TABLE.'
   WHERE idx_extension = '.$page['extension_id'].'
 ;';
-  $result = $db->query($query);
-  while($row = mysql_fetch_assoc($result))
-  {
-    $extension['descriptions'][$row['idx_language']] = $row['description'];
+    $result = $db->query($query);
+    while($row = mysql_fetch_assoc($result))
+    {
+      $extension['descriptions'][$row['idx_language']] = $row['description'];
+    }
   }
 
-  $extension['categories'] = array();
+  if (isset($_POST['extension_category']))
+  {
+    $extension['categories'] = $_POST['extension_category'];
+  }
+  else
+  {
+    $extension['categories'] = array();
 
-  $query = '
+    $query = '
 SELECT idx_category
   FROM '.EXT_CAT_TABLE.'
   WHERE idx_extension = '.$page['extension_id'].'
 ;';
-  $result = $db->query($query);
+    $result = $db->query($query);
 
-  while ($row = $db->fetch_array($result))
-  {
-    array_push(
-      $extension['categories'],
-      $row['idx_category']
-      );
+    while ($row = $db->fetch_array($result))
+    {
+      array_push(
+        $extension['categories'],
+        $row['idx_category']
+        );
+    }
   }
   
-  $extension['tags'] = array();
-  
-  $query = '
+  if (isset($_POST['tags']))
+  {
+    $extension['tags'] = get_tag_ids($_POST['tags'], false);
+  }
+  else
+  {
+    $extension['tags'] = array();
+    
+    $query = '
 SELECT idx_tag
   FROM '.EXT_TAG_TABLE.'
   WHERE idx_extension = '.$page['extension_id'].'
 ;';
-  $result = $db->query($query);
+    $result = $db->query($query);
 
-  while ($row = $db->fetch_array($result))
-  {
-    array_push(
-      $extension['tags'],
-      '~~'.$row['idx_tag'].'~~'
-      );
+    while ($row = $db->fetch_array($result))
+    {
+      array_push(
+        $extension['tags'],
+        $row['idx_tag']
+        );
+    }
   }
 
   $selected_categories = $extension['categories'];
   $selected_tags = $extension['tags'];
-  $name = $extension['name'];
+  $name = isset($_POST['extension_name']) ? $_POST['extension_name'] : $extension['name'];
   $descriptions = $extension['descriptions'];
   $default_language = $extension['default_language'];
 }
 else
 {
-  $name = '';
-  $descriptions = array();
-  $selected_categories = array();
-  $selected_tags = array();
+  $name = isset($_POST['extension_name']) ? $_POST['extension_name'] : '';
+  $descriptions = isset($_POST['extension_descriptions']) ? $_POST['extension_descriptions'] : array();
+  $selected_categories = isset($_POST['extension_category']) ? $_POST['extension_category'] : array();
+  $selected_tags = isset($_POST['tags']) ? get_tag_ids($_POST['tags'], false) : array();
   $default_language = $interface_languages[$conf['default_language']]['id'];
 }
 
@@ -367,15 +403,10 @@ foreach ($tags as $tag)
   {
     $tag['name'] = $tag['default_name'];
   }
-    
+  
+  $tag['selected'] = in_array($tag['id_tag'], $selected_tags);
   $tag['id_tag'] = '~~'.$tag['id_tag'].'~~';
-  array_push(
-    $tpl_tags,
-    array_merge(
-      $tag, 
-      array('selected' => in_array($tag['id_tag'], $selected_tags))
-      )
-    );
+  array_push($tpl_tags, $tag);
 }
 
 if (basename($_SERVER['SCRIPT_FILENAME']) == 'extension_mod.php')
@@ -404,7 +435,7 @@ $tpl->assign(
 // +-----------------------------------------------------------------------+
 // |                           html code display                           |
 // +-----------------------------------------------------------------------+
-
+flush_page_messages();
 $tpl->assign_var_from_handle('main_content', 'extension_add');
 include($root_path.'include/header.inc.php');
 include($root_path.'include/footer.inc.php');
