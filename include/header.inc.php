@@ -37,7 +37,7 @@ SELECT
   )
   GROUP BY idx_category
 ;';
-$nb_ext_of_category = simple_hash_from_query($query, 'idx_category', 'counter');
+$nb_ext_of_category = query2array($query, 'idx_category', 'counter');
 
 $query = '
 SELECT
@@ -118,7 +118,7 @@ SELECT
     JOIN '.REV_TABLE.' AS r ON r.id_revision = c.idx_revision
   GROUP BY idx_version
 ;';
-$nb_ext_of_version = simple_hash_from_query($query, 'idx_version', 'counter');
+$nb_ext_of_version = query2array($query, 'idx_version', 'counter');
 
 $query = '
 SELECT
@@ -126,7 +126,7 @@ SELECT
     version
   FROM '.VER_TABLE.'
 ;';
-$versions = array_of_arrays_from_query($query);
+$versions = query2array($query);
 $versions = versort($versions);
 $versions = array_reverse($versions);
 
@@ -181,7 +181,7 @@ SELECT idx_user, SUM(counter) AS counter
   ) AS t
   GROUP BY idx_user
 ;';
-$nb_ext_of_user = simple_hash_from_query($query, 'idx_user', 'counter');
+$nb_ext_of_user = query2array($query, 'idx_user', 'counter');
 
 $user_infos_of = get_user_infos_of(array_keys($nb_ext_of_user));
 usort($user_infos_of, 'compare_username');
@@ -237,7 +237,7 @@ SELECT
   ORDER BY count DESC
   LIMIT 30
 ;';
-$tpl_tags = array_of_arrays_from_query($query, 'id_tag');
+$tpl_tags = query2array($query, 'id_tag');
 
 if (count($tpl_tags))
 {

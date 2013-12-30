@@ -46,7 +46,7 @@ SELECT *
   WHERE validated = "false"
   ORDER BY date DESC
 ;';
-$tpl_reviews = array_of_arrays_from_query($query, 'id_review');
+$tpl_reviews = query2array($query);
 
 if (count($tpl_reviews))
 {

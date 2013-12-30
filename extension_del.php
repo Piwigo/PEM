@@ -62,7 +62,7 @@ SELECT id_revision
   FROM '.REV_TABLE.'
   WHERE idx_extension = '.$page['extension_id'].'
 ;';
-$rev_to_delete = array_from_query($query, 'id_revision');
+$rev_to_delete = query2array($query, null, 'id_revision');
 delete_revisions($rev_to_delete);
 
 // Deletes all the categories relations

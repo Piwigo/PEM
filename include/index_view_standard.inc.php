@@ -71,7 +71,7 @@ else {
 $query.= '
 ;';
 
-$all_revision_ids = array_from_query($query, 'id_revision');
+$all_revision_ids = query2array($query, null, 'id_revision');
 $nb_total = count($all_revision_ids);
 
 $first = ($page['page'] - 1) * $conf['extensions_per_page'];

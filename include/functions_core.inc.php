@@ -274,7 +274,7 @@ SELECT
     '.(!isAdmin(@$user['id']) ? 'AND validated = "true"' : null).'
   GROUP BY idx_extension
 ;';
-  $nb_reviews = simple_hash_from_query($query, 'idx_extension', 'count');
+  $nb_reviews = query2array($query, 'idx_extension', 'count');
   
   $query = '
 SELECT id_extension,
@@ -320,13 +320,13 @@ function get_extension_ids_without_revision()
 SELECT id_extension
   FROM '.EXT_TABLE.'
 ;';
-  $all_extension_ids = array_from_query($query, 'id_extension');
+  $all_extension_ids = query2array($query, null, 'id_extension');
 
   $query = '
 SELECT DISTINCT idx_extension
   FROM '.REV_TABLE.'
 ;';
-  $non_empty_extension_ids = array_from_query($query, 'idx_extension');
+  $non_empty_extension_ids = query2array($query, null, 'idx_extension');
 
   return array_diff($all_extension_ids, $non_empty_extension_ids);
 }
@@ -567,7 +567,7 @@ SELECT idx_extension
   FROM '.EXT_CAT_TABLE.'
   WHERE idx_category = '.$cid.'
 ;';
-      $eids_for_category[$cid] = array_from_query($query, 'idx_extension');
+      $eids_for_category[$cid] = query2array($query, null, 'idx_extension');
     }
   
     // then we calculate the intersection, the images that are associated to
@@ -584,7 +584,7 @@ SELECT
   FROM '.EXT_CAT_TABLE.'
   WHERE idx_category IN ('.implode(',', $category_ids).')
 ;';
-    $eids = array_from_query($query, 'idx_extension');
+    $eids = query2array($query, null, 'idx_extension');
   }
 
   return array_unique($eids);
@@ -612,7 +612,7 @@ SELECT idx_extension
   FROM '.EXT_TAG_TABLE.'
   WHERE idx_tag = '.$tid.'
 ;';
-      $eids_for_tag[$tid] = array_from_query($query, 'idx_extension');
+      $eids_for_tag[$tid] = query2array($query, null, 'idx_extension');
     }
   
     // then we calculate the intersection, the images that are associated to
@@ -629,7 +629,7 @@ SELECT
   FROM '.EXT_TAG_TABLE.'
   WHERE idx_tag IN ('.implode(',', $tag_ids).')
 ;';
-    $eids = array_from_query($query, 'idx_extension');
+    $eids = query2array($query, null, 'idx_extension');
   }
 
   return array_unique($eids);
@@ -751,7 +751,7 @@ SELECT
     JOIN '.COMP_TABLE.' AS c ON c.idx_revision = r.id_revision
   WHERE idx_version = '.$id_version.'
 ;';
-  return array_from_query($query, 'id_extension');
+  return query2array($query, null, 'id_extension');
 }
 
 /**
@@ -769,7 +769,7 @@ SELECT
  FROM '.AUTHORS_TABLE.'
  WHERE idx_user = '.$user_id.'
 ;';
-  return array_from_query($query, 'id_extension');
+  return query2array($query, null, 'id_extension');
 }
 
 /**
@@ -789,7 +789,7 @@ SELECT idx_user
   WHERE idx_extension = '.$extension_id.'
 ;';
 
-  return array_from_query($query, 'idx_user');
+  return query2array($query, null, 'idx_user');
 }
 
 /**
@@ -946,7 +946,7 @@ SELECT
   FROM '.EXT_TABLE.' AS e
   WHERE '.implode("\n    AND ", $word_clauses).'
 ;';
-  $result = array_from_query($query, 'id_extension');
+  $result = query2array($query, null, 'id_extension');
   foreach ($result as $ext_id) {
     if (!empty($search_result[$ext_id])) {
       $search_result[$ext_id]+= 10;
@@ -972,7 +972,7 @@ SELECT
       ON et.idx_tag = t.id_tag
   WHERE '.implode("\n    OR ", $word_clauses).'
 ;';
-  $result = array_from_query($query, 'idx_extension');
+  $result = query2array($query, null, 'idx_extension');
   foreach ($result as $ext_id) {
     if (!empty($search_result[$ext_id])) {
       $search_result[$ext_id]+= 8;
@@ -1004,7 +1004,7 @@ SELECT
         ON u2.'.$conf['user_fields']['id'].' = a.idx_user
   WHERE '.implode("\n    OR ", $word_clauses).'
 ;';
-  $result = array_from_query($query, 'id_extension');
+  $result = query2array($query, null, 'id_extension');
   foreach ($result as $ext_id) {
     if (!empty($search_result[$ext_id])) {
       $search_result[$ext_id]+= 8;
@@ -1038,7 +1038,7 @@ SELECT
       AND et.idx_language = '.$_SESSION['language']['id'].'
   WHERE '.implode("\n    AND ", $word_clauses).'
 ;';
-  $result = array_from_query($query, 'id_extension');
+  $result = query2array($query, null, 'id_extension');
   foreach ($result as $ext_id) {
     if (!empty($search_result[$ext_id])) {
       $search_result[$ext_id]+= 6;
@@ -1072,7 +1072,7 @@ SELECT
       AND rt.idx_language = '.$_SESSION['language']['id'].'
   WHERE '.implode("\n    AND ", $word_clauses).'
 ;';
-  $result = array_from_query($query, 'id_extension');
+  $result = query2array($query, null, 'id_extension');
   foreach ($result as $ext_id) {
     if (!empty($search_result[$ext_id])) {
       $search_result[$ext_id]+= 4;
@@ -1183,7 +1183,7 @@ SELECT idx_extension
     idx_user = '.$user_id.'
     AND anonymous_id = "'.$anonymous_id.'"
 ;';
-      $already_there = array_from_query($query, 'idx_extension');
+      $already_there = query2array($query, null, 'idx_extension');
 
       if (count($already_there) > 0)
       {
@@ -1256,7 +1256,7 @@ SELECT rate
   FROM '.RATE_TABLE.'
   WHERE idx_extension = '.$extension_id.'
 ;';
-  $rates = array_from_query($query, 'rate');
+  $rates = query2array($query, null, 'rate');
   
   $query = '
 UPDATE '.EXT_TABLE.'
@@ -1533,7 +1533,7 @@ SELECT id_tag
   FROM '.TAG_TABLE.'
   WHERE name = "'.$raw_tag.'"
 ;';
-      $existing_tags = array_from_query($query, 'id_tag');
+      $existing_tags = query2array($query, null, 'id_tag');
 
       if (count($existing_tags) == 0)
       {

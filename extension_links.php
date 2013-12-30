@@ -41,7 +41,7 @@ SELECT id_link
   WHERE idx_extension = '.$extension_id.'
   ORDER by rank ASC
 ;';
-  $sorted_link_ids = array_from_query($query, 'id_link');
+  $sorted_link_ids = query2array($query, null, 'id_link');
 
   save_order_links($sorted_link_ids);
 }

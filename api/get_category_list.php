@@ -29,7 +29,7 @@ SELECT
   FROM '.EXT_CAT_TABLE.'
   GROUP BY idx_category
 ;';
-$nb_ext_of_category = simple_hash_from_query($query, 'idx_category', 'counter');
+$nb_ext_of_category = query2array($query, 'idx_category', 'counter');
 
 $query = '
 SELECT
@@ -42,7 +42,7 @@ SELECT
     AND ct.idx_language = '.$_SESSION['language']['id'].'
   ORDER BY name ASC
 ;';
-$output = array_of_arrays_from_query($query);
+$output = query2array($query);
 foreach ($output as $i => $category) {
   if (empty($output[$i]['name']))
   {

@@ -118,7 +118,7 @@ SELECT id_category, name
   FROM '.CAT_TABLE.' AS c
   ORDER BY name ASC
 ;';
-$tpl->assign('categories', simple_hash_from_query($query, 'id_category', 'name'));
+$tpl->assign('categories', query2array($query, 'id_category', 'name'));
 
 // versions
 $query = '
@@ -126,7 +126,7 @@ SELECT id_version, version
   FROM '.VER_TABLE.'
   ORDER BY version DESC
 ;';
-$tpl->assign('versions', simple_hash_from_query($query, 'id_version', 'version'));
+$tpl->assign('versions', query2array($query, 'id_version', 'version'));
 
 // +-----------------------------------------------------------------------+
 // |                           html code display                           |

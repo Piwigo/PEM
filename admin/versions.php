@@ -106,9 +106,7 @@ SELECT
 ;';
 $versions = array_reverse(
   versort(
-    array_of_arrays_from_query(
-      $query
-      )
+    query2array($query)
     )
   );
 

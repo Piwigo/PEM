@@ -196,91 +196,40 @@ DROP TABLE '.$temporary_tablename.'
 }
 
 /**
- * creates an array based on a query
+ * Builds an data array from a SQL query.
  *
  * @param string $query
- * @param string $fieldname
+ * @param string $key_name
+ * @param string $value_name
  * @return array
  */
-function array_from_query($query, $fieldname)
+function query2array($query, $key_name=null, $value_name=null)
 {
   global $db;
-  
-  $array = array();
-
   $result = $db->query($query);
-  while ($row = $db->fetch_array($result))
-  {
-    array_push($array, $row[$fieldname]);
-  }
+  $data = array();
 
-  return $array;
-}
-
-/**
- * create a complete associative array based on a query
- *
- * @param string $query
- * @return array
- */
-function array_of_arrays_from_query($query)
-{
-  global $db;
-  
-  $array = array();
-
-  $result = $db->query($query);
   while ($row = $db->fetch_assoc($result))
   {
-    array_push($array, $row);
+    if (isset($value_name))
+    {
+      $value = $row[ $value_name ];
+    }
+    else
+    {
+      $value = $row;
+    }
+    if (isset($key_name))
+    {
+      $data[ $row[$key_name] ] = $value;
+    }
+    else
+    {
+      $data[] = $value;
+    }
   }
 
-  return $array;
-}
-
-/**
- * create a simple associative array based on a query
- *
- * @param string $query
- * @param string $keyname
- * @param string $valuename
- * @return array
- */
-function simple_hash_from_query($query, $keyname, $valuename)
-{
-  global $db;
-  
-  $array = array();
-
-  $result = $db->query($query);
-  while ($row = $db->fetch_array($result))
-  {
-    $array[ $row[$keyname] ] = $row[$valuename];
-  }
-
-  return $array;
-}
-
-/**
- * create an associative array based on a query
- *
- * @param string $query
- * @param string $keyname
- * @return array
- */
-function hash_from_query($query, $keyname)
-{
-  global $db;
-  
-  $array = array();
-
-  $result = $db->query($query);
-  while ($row = $db->fetch_array($result))
-  {
-    $array[ $row[$keyname] ] = $row;
-  }
-
-  return $array;
+  return $data;
 }
 
 ?>

@@ -49,7 +49,7 @@ if (isset($category_id)) {
 $query.= '
   GROUP BY idx_version
 ;';
-$nb_ext_of_version = simple_hash_from_query($query, 'idx_version', 'counter');
+$nb_ext_of_version = query2array($query, 'idx_version', 'counter');
 
 $query = '
 SELECT
@@ -59,9 +59,7 @@ SELECT
 ;';
 $versions = array_reverse(
   versort(
-    array_of_arrays_from_query(
-      $query
-      )
+    query2array($query)
     )
   );
 

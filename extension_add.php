@@ -394,7 +394,7 @@ SELECT
       ON t.id_tag = tt.idx_tag
       AND tt.idx_language = \''.get_current_language_id().'\'
 ;';
-$tags = array_of_arrays_from_query($query);
+$tags = query2array($query);
 
 $tpl_tags = array();
 foreach ($tags as $tag)

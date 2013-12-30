@@ -84,7 +84,7 @@ SELECT '.$conf['user_fields']['email'].' AS email
   FROM '.USERS_TABLE.'
   WHERE '.$conf['user_fields']['id'].' IN ('.implode(',', $conf['admin_users']).')
 ;';
-  return array_from_query($query, 'email');
+  return query2array($query, null, 'email');
 }
 
 /**

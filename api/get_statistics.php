@@ -129,7 +129,7 @@ if (count($filter) > 0) {
   
   $query.= '
 ;';
-$contributor_ids = array_from_query($query, 'idx_user');
+$contributor_ids = query2array($query, null, 'idx_user');
 $output['contributor_ids'] = $contributor_ids;
 
 // +-----------------------------------------------------------------------+
@@ -264,7 +264,7 @@ SELECT
     id_extension
   FROM '.EXT_TABLE.'
 ;';
-  $extension_ids = array_from_query($query, 'id_extension');
+  $extension_ids = query2array($query, null, 'id_extension');
 }
 $download_of_extension = get_download_of_extension($extension_ids);
 

@@ -182,7 +182,7 @@ SELECT
   FROM '.VER_TABLE.'
 ;';
   
-  return implode(',', versort(array_from_query($query, 'version')));
+  return implode(',', versort(query2array($query, null, 'version')));
 }
 
 // new get_revision_list to replace getRevisionList because Talend Open

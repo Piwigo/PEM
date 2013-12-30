@@ -73,7 +73,7 @@ SELECT
     LEFT JOIN '.COMP_TABLE.' ON id_revision = idx_revision
   WHERE idx_version IS NULL
 ;';
-$tpl->assign('no_compat_revs', array_of_arrays_from_query($query));
+$tpl->assign('no_compat_revs', query2array($query));
 
 // Reviews awaiting validation
 $query = '

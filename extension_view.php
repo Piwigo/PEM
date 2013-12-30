@@ -279,7 +279,7 @@ if (isset($_SESSION['filter']['id_version']))
   
 $query.= '
 ;';
-$revision_ids = array_from_query($query, 'id_revision');
+$revision_ids = query2array($query, null, 'id_revision');
 
 $tpl_revisions = array();
 
@@ -455,7 +455,7 @@ SELECT
     '.(!isAdmin(@$user['id']) ? 'AND validated = "true"' : null).'
   GROUP BY idx_language
 ;';
-$total_reviews = hash_from_query($query, 'idx_language');
+$total_reviews = query2array($query, 'idx_language');
 
 $total=0;
 foreach ($total_reviews as $language) $total+= $language['count'];
@@ -486,7 +486,7 @@ SELECT *
     '.(!isAdmin(@$user['id']) ? 'AND validated = "true"' : null).'
   ORDER BY date DESC
 ;';
-$all_reviews = array_of_arrays_from_query($query, 'id_review');
+$all_reviews = query2array($query);
 
 $language_reviews = $other_reviews = array();
 foreach ($all_reviews as $review)

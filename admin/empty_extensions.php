@@ -40,7 +40,7 @@ SELECT
     LEFT JOIN '.REV_TABLE.' ON idx_extension = id_extension
   WHERE id_revision IS NULL
 ;';
-$tpl->assign('extensions', array_of_arrays_from_query($query));
+$tpl->assign('extensions', query2array($query));
 
 // +-----------------------------------------------------------------------+
 // |                           html code display                           |

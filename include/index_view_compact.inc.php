@@ -52,7 +52,7 @@ $query.= '
   ORDER BY max_date DESC
 ;';
 
-$all_revision_ids = array_from_query($query, 'id_revision');
+$all_revision_ids = query2array($query, null, 'id_revision');
 $nb_total = count($all_revision_ids);
 $revision_ids = $all_revision_ids;
 

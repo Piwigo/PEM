@@ -36,7 +36,7 @@ SELECT id_extension
   WHERE idx_user = \''.$user['id'].'\'
   ORDER BY name ASC
 ;';
-$my_extension_ids = array_from_query($query, 'id_extension');
+$my_extension_ids = query2array($query, null, 'id_extension');
 
 // Get other extensions
 $query = '
@@ -47,7 +47,7 @@ SELECT id_extension
   WHERE aut.idx_user = \''.$user['id'].'\'
   ORDER BY name ASC
 ;';
-$other_extension_ids = array_from_query($query, 'id_extension');
+$other_extension_ids = query2array($query, null, 'id_extension');
 
 // Gets the total information about the extensions
 $extension_ids = array_merge($other_extension_ids, $my_extension_ids);
@@ -87,7 +87,7 @@ SELECT
   WHERE idx_extension IN ('.implode(',',$extension_ids).')
   GROUP BY idx_extension
 ;';
-  $total_rates_of_extension = simple_hash_from_query($query, 'idx_extension', 'total');
+  $total_rates_of_extension = query2array($query, 'idx_extension', 'total');
 
   foreach ($extension_ids as $extension_id)
   {

@@ -613,7 +613,7 @@ SELECT
     version
   FROM '.VER_TABLE.'
 ;';
-$versions = array_of_arrays_from_query($query);
+$versions = query2array($query);
 $versions = versort($versions);
 $versions = array_reverse($versions);
 
@@ -645,7 +645,7 @@ SELECT
   WHERE extensions = "true"
   ORDER BY name
 ;';
-$extensions_languages = array_of_arrays_from_query($query);
+$extensions_languages = query2array($query);
 $tpl_languages = array();
 foreach($extensions_languages as $ext_lang)
 {

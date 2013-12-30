@@ -247,7 +247,7 @@ INSERT INTO '.$trans_table.' (`idx_'.$type.'`, `idx_language`, `'.$column.'`)
 // +-----------------------------------------------------------------------+
 
 $query = 'SHOW FULL COLUMNS FROM ' . LINKS_TABLE . ';';
-$fields = (array_from_query($query, 'Field'));
+$fields = query2array($query, null, 'Field');
 
 if (in_array('lang', $fields))
 {
