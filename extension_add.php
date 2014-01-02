@@ -286,7 +286,7 @@ SELECT name,
 
   if (isset($_POST['extension_descriptions']))
   {
-    $extension['descriptions'] = $_POST['extension_descriptions'];
+    $extension['descriptions'] = array_map('sanitize_linebreaks', $_POST['extension_descriptions']);
   }
   else
   {
