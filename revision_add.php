@@ -528,6 +528,7 @@ if (basename($_SERVER['SCRIPT_FILENAME']) == 'revision_mod.php')
   if (isset($_POST['revision_descriptions']))
   {
     $descriptions = $_POST['revision_descriptions'];
+    $default_language = $interface_languages[$conf['default_language']]['id'];
   }
   else
   {

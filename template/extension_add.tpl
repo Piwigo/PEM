@@ -1,5 +1,7 @@
 <h2>{'Add/Modify an extension'|@translate}</h2>
 
+{include file='infos_errors.tpl'}
+
 <form method="post" action="{$f_action}" enctype="multipart/form-data">
   <fieldset>
     <legend>{'Extension informations'|@translate}</legend>

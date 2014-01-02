@@ -781,13 +781,12 @@ div.row  img.help_user
 }
 
 .messages {
-  clear:both;
   padding:10px;
   position:relative;
   border-radius:2px;
   min-height:30px;
   border:1px solid #222;
-  margin-top:5px;
+  margin:5px 0;
 }
   .messages ul {
     margin:0;
