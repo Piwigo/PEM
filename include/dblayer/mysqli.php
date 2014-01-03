@@ -162,6 +162,18 @@ class DBLayer
 		return mysqli_real_escape_string($this->link_id, $str);
 	}
 
+  function escape_array($array_to_escape) {
+    foreach ($array_to_escape as $key => $element) {
+      if(!is_array($element)) {
+        $array_to_escape[$key] = $this->escape($element);
+      }
+      else {
+        $array_to_escape[$key] = $this->escape_array($element);
+      }
+    }
+    return $array_to_escape;
+  }
+
 
 	function error()
 	{

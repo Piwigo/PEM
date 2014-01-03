@@ -70,27 +70,27 @@ class DBLayer
 		return;
 	}
 
-        // my_error returns (or send to standard output) the message concerning the
-// error occured for the last mysql query.
-function my_error($header)
-{
-  global $conf;
-  
-  $error = '<pre>';
-  $error.= $header;
-  $error.= '[mysql error '.mysql_errno().'] ';
-  $error.= mysql_error();
-  $error.= '</pre>';
+  // my_error returns (or send to standard output) the message concerning the
+  // error occured for the last mysql query.
+  function my_error($header)
+  {
+    global $conf;
+    
+    $error = '<pre>';
+    $error.= $header;
+    $error.= '[mysql error '.mysql_errno().'] ';
+    $error.= mysql_error();
+    $error.= '</pre>';
 
-  if ($conf['die_on_sql_error'])
-  {
-    die($error);
+    if ($conf['die_on_sql_error'])
+    {
+      die($error);
+    }
+    else
+    {
+      echo $error;
+    }
   }
-  else
-  {
-    echo $error;
-  }
-}
 
 	function query($sql, $unbuffered = false)
 	{

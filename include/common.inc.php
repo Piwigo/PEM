@@ -57,11 +57,6 @@ debug($_COOKIE);
 // echo '<pre>session: '; print_r($_SESSION); echo '</pre>';
 // echo '<pre>user: '; print_r($user); echo '</pre>';
 
-// Then we "sanitize" data out own way
-$_GET = $db->escape_array($_GET);
-$_POST = $db->escape_array($_POST);
-$_COOKIE = $db->escape_array($_COOKIE);
-
 // user informations
 $user = array();
 

@@ -1243,7 +1243,7 @@ INSERT
     '.$user_id.',
     '.$extension_id.',
     "'.$anonymous_id.'",
-    '.$rate.',
+    '.$db->escape($rate).',
     NOW()
   )
 ;';
@@ -1387,11 +1387,11 @@ INSERT INTO '.REVIEW_TABLE.' (
     '.$comm['idx_extension'].',
     "'.$comm['idx_language'].'",
     NOW(),
-    "'.$comm['author'].'",
-    "'.$comm['email'].'",
-    "'.$comm['title'].'",
-    "'.$comm['content'].'",
-    '.$comm['rate'].',
+    "'. $db->escape($comm['author']) .'",
+    "'. $comm['email'].'",
+    "'. $db->escape($comm['title']) .'",
+    "'. $db->escape($comm['content']) .'",
+    '. $db->escape($comm['rate']) .',
     "'.$anonymous_id.'",
     "'.($comm['action']=='validate' ? 'true':'false').'"
   )

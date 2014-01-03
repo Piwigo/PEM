@@ -77,7 +77,7 @@ if (isset($_POST['submit']))
 {
   if (empty($svn_url))
   {
-    $svn_url = mysql_real_escape_string($_POST['url']);
+    $svn_url = $db->escape($_POST['url']);
     $root_dir = ltrim(strrchr(rtrim($svn_url, '/\\'), '/'), '/\\');
     $archive_name = $root_dir . '_%.zip';
   }
@@ -92,9 +92,9 @@ if (isset($_POST['submit']))
       message_die('Characters not allowed in archive name.');
     }
 
-    $svn_url = mysql_real_escape_string($_POST['url']);
-    $root_dir = mysql_real_escape_string($_POST['root_dir']);
-    $archive_name = mysql_real_escape_string($_POST['archive_name']);
+    $svn_url = $db->escape($_POST['url']);
+    $root_dir = $db->escape($_POST['root_dir']);
+    $archive_name = $db->escape($_POST['archive_name']);
 
     $extension = substr(strrchr($_POST['archive_name'], '.' ), 1, strlen($_POST['archive_name']));
     if ($extension != 'zip')

@@ -119,7 +119,7 @@ DELETE
       }
       if ($lang_id == $def_language)
       {
-        $new_default_lang = $desc;
+        $new_default_lang = $db->escape($desc);
       }
       else
       {
@@ -128,7 +128,7 @@ DELETE
           array(
             'idx_revision'  => $page['revision_id'],
             'idx_language'   => $lang_id,
-            'description'    => $desc,
+            'description'    => $db->escape($desc),
             )
           );
       }
@@ -316,10 +316,10 @@ UPDATE '.REV_TABLE.'
         array(
           array(
             'id_revision'    => $page['revision_id'],
-            'version'        => $_POST['revision_version'],
-            'description'    => $_POST['revision_descriptions'][$_POST['default_description']],
-            'idx_language'   => $_POST['default_description'],
-            'author'         => isset($_POST['author']) ? $_POST['author'] : $revision_infos_of[$page['revision_id']]['author'],
+            'version'        => $db->escape($_POST['revision_version']),
+            'description'    => $db->escape($_POST['revision_descriptions'][$_POST['default_description']]),
+            'idx_language'   => $db->escape($_POST['default_description']),
+            'author'         => isset($_POST['author']) ? $db->escape($_POST['author']) : $revision_infos_of[$page['revision_id']]['author'],
             ),
           )
         );
@@ -333,13 +333,13 @@ DELETE
     else
     {
       $insert = array(
-        'version'        => $_POST['revision_version'],
+        'version'        => $db->escape($_POST['revision_version']),
         'idx_extension'  => $page['extension_id'],
         'date'           => mktime(),
-        'description'    => $_POST['revision_descriptions'][$_POST['default_description']],
-        'idx_language'   => $_POST['default_description'],
+        'description'    => $db->escape($_POST['revision_descriptions'][$_POST['default_description']]),
+        'idx_language'   => $db->escape($_POST['default_description']),
         'url'            => $archive_name,
-        'author'         => isset($_POST['author']) ? $_POST['author'] : $user['id'],
+        'author'         => isset($_POST['author']) ? $db->escape($_POST['author']) : $user['id'],
         );
 
       if ($conf['use_agreement'])
@@ -413,7 +413,7 @@ DELETE
         array(
           'idx_revision'  => $page['revision_id'],
           'idx_language'   => $lang_id,
-          'description'    => $desc,
+          'description'    => $db->escape($desc),
           )
         );
     }
@@ -437,7 +437,7 @@ DELETE
         $inserts,
         array(
           'idx_revision'  => $page['revision_id'],
-          'idx_version'   => $version_id,
+          'idx_version'   => $db->escape($version_id),
           )
         );
     }
@@ -464,7 +464,7 @@ DELETE
           $inserts,
           array(
             'idx_revision'  => $page['revision_id'],
-            'idx_language'  => $language_id,
+            'idx_language'  => $db->escape($language_id),
             )
           );
       }
@@ -527,7 +527,7 @@ if (basename($_SERVER['SCRIPT_FILENAME']) == 'revision_mod.php')
   $descriptions = array();
   if (isset($_POST['revision_descriptions']))
   {
-    $descriptions = array_map('sanitize_linebreaks', $_POST['revision_descriptions']);
+    $descriptions = $_POST['revision_descriptions'];
     $default_language = $interface_languages[$conf['default_language']]['id'];
   }
   else
@@ -694,6 +694,11 @@ $upload_methods = array('upload');
 if ($conf['allow_download_url'])
 {
   array_push($upload_methods, 'url');
+  $tpl->assign(
+    array(
+      'DOWNLOAD_URL' => isset($_POST['download_url']) ? $_POST['download_url'] : '',
+      )
+    );
 }
 if ($conf['allow_svn_file_creation'])
 {
@@ -704,7 +709,7 @@ if ($conf['allow_svn_file_creation'])
 $tpl->assign(
   array(
     'upload_methods' => $upload_methods,
-    'form' => $_POST,
+    'FILE_TYPE' => isset($_POST['file_type']) ? $_POST['file_type'] : '',
     )
   );
 

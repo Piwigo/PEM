@@ -36,13 +36,13 @@
         <td>
             <div style="margin-bottom: 5px;">
             {if in_array('upload', $upload_methods)}
-              <label><input type="radio" name="file_type" value="upload" onClick="javascript:showOnlyThisChild('upload_types', 'upload_type');" {if !$form.file_type || $form.file_type=='upload'}checked{/if}> {'Upload a file'|@translate}</label>
+              <label><input type="radio" name="file_type" value="upload" onClick="javascript:showOnlyThisChild('upload_types', 'upload_type');" {if $FILE_TYPE=='upload'}checked{/if}> {'Upload a file'|@translate}</label>
             {/if}
             {if in_array('svn', $upload_methods)}
-              <label><input type="radio" name="file_type" value="svn" onClick="javascript:showOnlyThisChild('upload_types', 'svn_type');" {if $form.file_type=='svn'}checked{/if}> {'Use SVN file creation'|@translate}</label>
+              <label><input type="radio" name="file_type" value="svn" onClick="javascript:showOnlyThisChild('upload_types', 'svn_type');" {if $FILE_TYPE=='svn'}checked{/if}> {'Use SVN file creation'|@translate}</label>
             {/if}
             {if in_array('url', $upload_methods)}
-              <label><input type="radio" name="file_type" value="url" onClick="javascript:showOnlyThisChild('upload_types', 'url_type');" {if $form.file_type=='url'}checked{/if}> {'Download from URL'|@translate}</label>
+              <label><input type="radio" name="file_type" value="url" onClick="javascript:showOnlyThisChild('upload_types', 'url_type');" {if $FILE_TYPE=='url'}checked{/if}> {'Download from URL'|@translate}</label>
             </div>
             {/if}
 
@@ -62,7 +62,7 @@
 
           {if in_array('url', $upload_methods)}
             <div id="url_type" style="display: none;">
-              {'URL'|@translate} <input type="text" name="download_url" value="{$form.download_url}" size="65">
+              {'URL'|@translate} <input type="text" name="download_url" value="{$DOWNLOAD_URL}" size="65">
             </div>
           {/if}
           </div>

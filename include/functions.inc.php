@@ -621,9 +621,4 @@ function flush_page_messages()
   }
 }
 
-function sanitize_linebreaks($str)
-{
-  return str_replace(array('\\r\\n','\\n','\\r'), "\n", $str);
-}
-
 ?>

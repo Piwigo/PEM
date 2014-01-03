@@ -50,7 +50,7 @@ if (basename($_SERVER['SCRIPT_FILENAME']) == 'extension_mod.php')
 // Form submitted
 if (isset($_POST['submit']))
 {
-  // Form sumbmitted for translator
+  // Form submitted for translator
   if (basename($_SERVER['SCRIPT_FILENAME']) == 'extension_mod.php' and !in_array($user['id'], $authors) and !isAdmin($user['id']))
   {
     $query = 'SELECT idx_language FROM '.EXT_TABLE.' WHERE id_extension = '.$page['extension_id'].';';
@@ -80,7 +80,7 @@ DELETE
       }
       if ($lang_id == $def_language)
       {
-        $new_default_desc = $desc;
+        $new_default_desc = $db->escape($desc);
       }
       else
       {
@@ -89,7 +89,7 @@ DELETE
           array(
             'idx_extension'  => $page['extension_id'],
             'idx_language'   => $lang_id,
-            'description'    => $desc,
+            'description'    => $db->escape($desc),
             )
           );
       }
@@ -142,9 +142,9 @@ DELETE
       // Update the extension
       $query = '
 UPDATE '.EXT_TABLE.'
-  SET name = \''.$_POST['extension_name'].'\',
-      description = \''.$_POST['extension_descriptions'][$_POST['default_description']].'\',
-      idx_language = '.$_POST['default_description'].'
+  SET name = \''. $db->escape($_POST['extension_name']) .'\',
+      description = \''. $db->escape($_POST['extension_descriptions'][$_POST['default_description']]) .'\',
+      idx_language = '. $db->escape($_POST['default_description']) .'
   WHERE id_extension = '.$page['extension_id'].'
 ;';
       $db->query($query);
@@ -176,9 +176,9 @@ DELETE
       // retrieve the insert id
       $insert = array(
         'idx_user'   => $user['id'],
-        'name'         => $_POST['extension_name'],
-        'description'  => $_POST['extension_descriptions'][$_POST['default_description']],
-        'idx_language' => $_POST['default_description'],
+        'name'         => $db->escape($_POST['extension_name']),
+        'description'  => $db->escape($_POST['extension_descriptions'][$_POST['default_description']]),
+        'idx_language' => $db->escape($_POST['default_description']),
         );
       mass_inserts(EXT_TABLE, array_keys($insert), array($insert));
       $page['extension_id'] = $db->insert_id();
@@ -197,7 +197,7 @@ DELETE
         array(
           'idx_extension'  => $page['extension_id'],
           'idx_language'   => $lang_id,
-          'description'    => $desc,
+          'description'    => $db->escape($desc),
           )
         );
     }
@@ -213,7 +213,7 @@ DELETE
       array_push(
         $inserts,
         array(
-          'idx_category'   => $category,
+          'idx_category'   => $db->escape($category),
           'idx_extension'  => $page['extension_id'],
           )
         );
@@ -223,9 +223,8 @@ DELETE
     // Inserts the extensions <-> tags link
     if (!empty($_POST['tags']))
     {
-      $_POST['tags'] = get_tag_ids($_POST['tags'], true);
       $inserts = array();
-      foreach ($_POST['tags'] as $tag)
+      foreach (get_tag_ids($_POST['tags'], true) as $tag)
       {
         array_push(
           $inserts,
@@ -286,7 +285,7 @@ SELECT name,
 
   if (isset($_POST['extension_descriptions']))
   {
-    $extension['descriptions'] = array_map('sanitize_linebreaks', $_POST['extension_descriptions']);
+    $extension['descriptions'] = $_POST['extension_descriptions'];
   }
   else
   {

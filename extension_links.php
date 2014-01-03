@@ -143,15 +143,15 @@ SELECT MAX(rank) AS current_rank
   }
 
   $insert = array(
-    'name'            => $_POST['link_name'],
-    'url'             => $_POST['link_url'],
-    'description'     => $_POST['link_description'],
+    'name'            => $db->escape($_POST['link_name']),
+    'url'             => $db->escape($_POST['link_url']),
+    'description'     => $db->escape($_POST['link_description']),
     'rank'            => $current_rank + 1,
     'idx_extension'   => $page['extension_id'],
     );
 
   if (!empty($_POST['link_language'])) {
-    $insert['idx_language'] = $_POST['link_language'];
+    $insert['idx_language'] = $db->escape($_POST['link_language']);
   }
 
   mass_inserts(
@@ -163,8 +163,9 @@ SELECT MAX(rank) AS current_rank
 
 if (isset($_POST['submit_order']))
 {
-  asort($_POST['linkRank'], SORT_NUMERIC);
-  save_order_links(array_keys($_POST['linkRank']));
+  $links = $db->escape_array($_POST['linkRank']);
+  asort($links, SORT_NUMERIC);
+  save_order_links(array_keys($links));
 }
 
 if (isset($_GET['delete']) and is_numeric($_GET['delete']))

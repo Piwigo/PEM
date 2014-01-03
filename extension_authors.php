@@ -78,7 +78,7 @@ if (isset($_POST['submit_add']))
   $query = '
 SELECT '.$conf['user_fields']['id'].' AS id
   FROM '.USERS_TABLE.'
-  WHERE '.$conf['user_fields']['id'].' = '.$_POST['author_select'].'
+  WHERE '.$conf['user_fields']['id'].' = '. $db->escape($_POST['author_select']) .'
 ;';
   list($author_id) = $db->fetch_array($db->query($query));
 
@@ -105,7 +105,7 @@ if (isset($_POST['submit_delete']))
   {
     message_die('You must select at least one author.');
   }
-  $author_delete = mysql_real_escape_string(implode(',', $_POST['author_id']));
+  $author_delete = $db->escape(implode(',', $_POST['author_id']));
 
   $query = '
 DELETE FROM '.AUTHORS_TABLE.'

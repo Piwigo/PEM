@@ -30,7 +30,7 @@ function check_user_password($username, $password)
 SELECT '.$conf['user_fields']['id'].' AS id,
        '.$conf['user_fields']['password'].' AS password
   FROM '.USERS_TABLE.'
-  WHERE '.$conf['user_fields']['username'].' = \''.$username.'\'
+  WHERE '.$conf['user_fields']['username'].' = \''. $db->escape($username) .'\'
 ;';
 
   $row = $db->fetch_assoc($db->query($query));
@@ -64,6 +64,13 @@ function register_user($username, $password, $email)
     array_push(
       $errors,
       l10n('Incorrect username')
+      );
+  }
+  else if (filter_var($email, FILTER_VALIDATE_EMAIL) === false)
+  {
+    array_push(
+      $errors,
+      l10n('Mail address must be like xxx@yyy.eee (example : jack@altern.org)')
       );
   }
   else if (get_userid($username))
