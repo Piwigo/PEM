@@ -121,51 +121,54 @@ if (isset($_POST['submit_add']))
 {
   if (!preg_match('/^https?:/', $_POST['link_url']))
   {
-    message_die('Incorrect URL');
+    $page['errors'][] = l10n('Incorrect URL');
   }
 
   if (empty($_POST['link_name']))
   {
-    message_die('Link name must not be empty');
+    $page['errors'][] = l10n('Link name must not be empty');
   }
 
-  // find next rank
-  $query = '
+  if (empty($page['errors']))
+  {
+    // find next rank
+    $query = '
 SELECT MAX(rank) AS current_rank
   FROM '.LINKS_TABLE.'
   WHERE idx_extension = '.$page['extension_id'].'
 ;';
-  list($current_rank) = $db->fetch_array($db->query($query));
+    list($current_rank) = $db->fetch_array($db->query($query));
 
-  if (empty($current_rank))
-  {
-    $current_rank = 0;
+    if (empty($current_rank))
+    {
+      $current_rank = 0;
+    }
+
+    $insert = array(
+      'name'            => $db->escape($_POST['link_name']),
+      'url'             => $db->escape($_POST['link_url']),
+      'description'     => $db->escape($_POST['link_description']),
+      'rank'            => $current_rank + 1,
+      'idx_extension'   => $page['extension_id'],
+      );
+
+    if (!empty($_POST['link_language']))
+    {
+      $insert['idx_language'] = $db->escape($_POST['link_language']);
+    }
+
+    mass_inserts(
+      LINKS_TABLE,
+      array_keys($insert),
+      array($insert)
+      );
   }
-
-  $insert = array(
-    'name'            => $db->escape($_POST['link_name']),
-    'url'             => $db->escape($_POST['link_url']),
-    'description'     => $db->escape($_POST['link_description']),
-    'rank'            => $current_rank + 1,
-    'idx_extension'   => $page['extension_id'],
-    );
-
-  if (!empty($_POST['link_language'])) {
-    $insert['idx_language'] = $db->escape($_POST['link_language']);
-  }
-
-  mass_inserts(
-    LINKS_TABLE,
-    array_keys($insert),
-    array($insert)
-    );
 }
 
 if (isset($_POST['submit_order']))
 {
-  $links = $db->escape_array($_POST['linkRank']);
-  asort($links, SORT_NUMERIC);
-  save_order_links(array_keys($links));
+  asort($_POST['linkRank'], SORT_NUMERIC);
+  save_order_links(array_keys($_POST['linkRank']));
 }
 
 if (isset($_GET['delete']) and is_numeric($_GET['delete']))
@@ -190,6 +193,10 @@ $tpl->assign(
     'u_extension' => 'extension_view.php?eid='.$page['extension_id'],
     'f_action' => 'extension_links.php?eid='.$page['extension_id'],
     'extension_name' => $page['extension_name'],
+    'LINK_URL' => @$_POST['link_url'],
+    'LINK_NAME' => @$_POST['link_name'],
+    'LINK_DESC' => @$_POST['link_description'],
+    'LINK_LANG' => @$_POST['link_language'],
     )
   );
 
@@ -243,7 +250,7 @@ $tpl->assign('links', $tpl_links);
 // +-----------------------------------------------------------------------+
 // |                           html code display                           |
 // +-----------------------------------------------------------------------+
-
+flush_page_messages();
 $tpl->assign_var_from_handle('main_content', 'extension_links');
 include($root_path.'include/header.inc.php');
 include($root_path.'include/footer.inc.php');

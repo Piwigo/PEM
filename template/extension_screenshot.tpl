@@ -6,6 +6,8 @@
   <li><a href="{$u_extension}" title="{'See extension'|@translate}"><img src="template/images/see_extension.png" alt="{'See extension'|@translate}"></a></li>
 </ul>
 
+{include file='infos_errors.tpl'}
+
 <form method="post" action="{$f_action}" enctype="multipart/form-data">
   <fieldset>
     <legend>{'Add or replace screenshot'|@translate}</legend>

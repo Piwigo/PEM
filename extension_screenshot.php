@@ -183,76 +183,82 @@ if (isset($_POST['submit_add']))
 {
   if (!isset($_FILES['picture']))
   {
-    message_die('You did not upload anything!');
-  }
-
-  $extension_dir = get_extension_dir($page['extension_id']);
-  if (!is_dir($extension_dir)) {
-    umask(0000);
-    if (!mkdir($extension_dir, 0777)) {
-      die("problem during ".$extension_dir." creation");
-    }
-  }
-  
-  $temp_name = get_extension_dir($page['extension_id']).'/screenshot.tmp';
-  if (!move_uploaded_file($_FILES['picture']['tmp_name'], $temp_name))
-  {
-    message_die('Problem during upload');
-  }
-
-  list($width, $height, $type) = getimagesize($temp_name);
-  
-  // $type == 2 means JPG
-  // $type == 3 means PNG
-  if (!in_array($type, array(2, 3)))
-  {
-    unlink($temp_name);
-    message_die('You can only upload PNG and JPEG files as screenshot.');
-  }
-
-  $screenshot_filename = get_extension_screenshot_src($page['extension_id']);
-
-  // does the upload screenshot needs a resize?
-  $new_dimensions = get_picture_size(
-    $width,
-    $height,
-    $conf['screenshot_maxwidth'],
-    $conf['screenshot_maxheight']
-    );
-  
-  if ($width != $new_dimensions['width']
-      or $height > $new_dimensions['height'])
-  {
-    resize_picture(
-      $temp_name,
-      $screenshot_filename,
-      $new_dimensions
-      );
-    
-    $width  = $new_dimensions['width'];
-    $height = $new_dimensions['height'];
-
-    unlink($temp_name);
+    $page['errors'][] = l10n('You did not upload anything!');
   }
   else
   {
-    @unlink($screenshot_filename);
-    rename($temp_name, $screenshot_filename);
+    $extension_dir = get_extension_dir($page['extension_id']);
+    if (!is_dir($extension_dir)) {
+      umask(0000);
+      if (!mkdir($extension_dir, 0777)) {
+        die("problem during ".$extension_dir." creation");
+      }
+    }
+    
+    $temp_name = get_extension_dir($page['extension_id']).'/screenshot.tmp';
+    if (!move_uploaded_file($_FILES['picture']['tmp_name'], $temp_name))
+    {
+      $page['errors'][] = l10n('Problem during upload');
+    }
+    else
+    {
+      list($width, $height, $type) = getimagesize($temp_name);
+      
+      // $type == 2 means JPG
+      // $type == 3 means PNG
+      if (!in_array($type, array(2, 3)))
+      {
+        unlink($temp_name);
+        $page['errors'][] = l10n('You can only upload PNG and JPEG files as screenshot.');
+      }
+      else
+      {
+        $screenshot_filename = get_extension_screenshot_src($page['extension_id']);
+
+        // does the upload screenshot needs a resize?
+        $new_dimensions = get_picture_size(
+          $width,
+          $height,
+          $conf['screenshot_maxwidth'],
+          $conf['screenshot_maxheight']
+          );
+        
+        if ($width != $new_dimensions['width']
+            or $height > $new_dimensions['height'])
+        {
+          resize_picture(
+            $temp_name,
+            $screenshot_filename,
+            $new_dimensions
+            );
+          
+          $width  = $new_dimensions['width'];
+          $height = $new_dimensions['height'];
+
+          unlink($temp_name);
+        }
+        else
+        {
+          @unlink($screenshot_filename);
+          rename($temp_name, $screenshot_filename);
+        }
+
+        // create the thumbnail
+        $thumbnail_filename = get_extension_thumbnail_src($page['extension_id']);
+
+        resize_picture(
+          $screenshot_filename,
+          $thumbnail_filename,
+          get_picture_size(
+            $width,
+            $height,
+            $conf['thumbnail_maxwidth'],
+            $conf['thumbnail_maxheight']
+            )
+          );
+      }
+    }
   }
-
-  // create the thumbnail
-  $thumbnail_filename = get_extension_thumbnail_src($page['extension_id']);
-
-  resize_picture(
-    $screenshot_filename,
-    $thumbnail_filename,
-    get_picture_size(
-      $width,
-      $height,
-      $conf['thumbnail_maxwidth'],
-      $conf['thumbnail_maxheight']
-      )
-    );
 }
 
 if (isset($_POST['submit_delete']))
@@ -294,7 +300,7 @@ if ($screenshot_infos = get_extension_screenshot_infos($page['extension_id']))
 // +-----------------------------------------------------------------------+
 // |                           html code display                           |
 // +-----------------------------------------------------------------------+
-
+flush_page_messages();
 $tpl->assign_var_from_handle('main_content', 'extension_screenshot');
 include($root_path.'include/header.inc.php');
 include($root_path.'include/footer.inc.php');

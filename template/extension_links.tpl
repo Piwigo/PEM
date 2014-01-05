@@ -6,6 +6,8 @@
   <li><a href="{$u_extension}" title="{'See extension'|@translate}"><img src="template/images/see_extension.png" alt="{'See extension'|@translate}"></a></li>
 </ul>
 
+{include file='infos_errors.tpl'}
+
 <form method="post" action="{$f_action}" enctype="multipart/form-data">
   <fieldset>
     <legend>{'Add a link'|@translate}</legend>
@@ -14,24 +16,13 @@
       <tr>
         <th><strong>{'Name'|@translate} *</strong></th>
         <td>
-          <input
-            type="text"
-            name="link_name"
-            maxlength="50"
-            value="{if isset($f_link_name)}{$f_link_name}{/if}"
-          />
+          <input type="text" name="link_name" maxlength="50" value="{$LINK_NAME}">
         </td>
       </tr>
       <tr>
         <th><strong>{'URL'|@translate} *</strong></th>
         <td>
-          <input
-            type="text"
-            name="link_url"
-            size="50"
-            maxlength="255"
-            value="{if isset($f_link_url)}{$f_link_url}{/if}"
-          />
+          <input type="text" name="link_url" size="50" maxlength="255" value="{$LINK_URL}">
         </td>
       </tr>
       <tr><td>
@@ -39,7 +30,7 @@
       <tr>
         <th>{'Description'|@translate}</th>
         <td>
-          <textarea cols="80" rows="3" name="link_description">{if isset($f_link_description)}{$f_link_description}{/if}</textarea>
+          <textarea cols="80" rows="3" name="link_description">{$LINK_DESC}</textarea>
         </td>
       </tr>
       {if !empty($languages)}
@@ -49,7 +40,7 @@
           <select name="link_language">
             <option value="default">---------------</option>
             {foreach from=$languages item=language}
-            <option value="{$language.id}">{$language.name}</option>
+            <option value="{$language.id}" {if $LINK_LANG==$language.id}selected{/if}>{$language.name}</option>
             {/foreach}
           </select>
         </td>

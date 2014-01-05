@@ -84,18 +84,20 @@ SELECT '.$conf['user_fields']['id'].' AS id
 
   if (empty($author_id))
   {
-    message_die('This user does not exist in database.');
+    $page['errors'][] = l10n('This user does not exist in database.');
   }
-
-  $authors = get_extension_authors($page['extension_id']);
-
-  if (!in_array($author_id, $authors))
+  else
   {
-    $query = '
+    $authors = get_extension_authors($page['extension_id']);
+
+    if (!in_array($author_id, $authors))
+    {
+      $query = '
 INSERT INTO '.AUTHORS_TABLE.' (idx_extension, idx_user)
   VALUES ('.$page['extension_id'].', '.$author_id.')
 ;';
-    $db->query($query);
+      $db->query($query);
+    }
   }
 }
 
@@ -103,16 +105,19 @@ if (isset($_POST['submit_delete']))
 {
   if (!isset($_POST['author_id']))
   {
-    message_die('You must select at least one author.');
+    $page['errors'][] = l10n('You must select at least one author.');
   }
-  $author_delete = $db->escape(implode(',', $_POST['author_id']));
+  else
+  {
+    $author_delete = $db->escape(implode(',', $_POST['author_id']));
 
-  $query = '
+    $query = '
 DELETE FROM '.AUTHORS_TABLE.'
   WHERE idx_user IN ('.$author_delete.')
   AND idx_extension = '.$page['extension_id'].'
 ;';
-  $db->query($query);
+    $db->query($query);
+  }
 }
 
 // +-----------------------------------------------------------------------+
@@ -164,7 +169,7 @@ $tpl->assign(
 // +-----------------------------------------------------------------------+
 // |                           html code display                           |
 // +-----------------------------------------------------------------------+
-
+flush_page_messages();
 $tpl->assign_var_from_handle('main_content', 'extension_authors');
 include($root_path.'include/header.inc.php');
 include($root_path.'include/footer.inc.php');
