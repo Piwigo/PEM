@@ -685,7 +685,7 @@ if (basename($_SERVER['SCRIPT_FILENAME']) == 'revision_add.php' and $conf['allow
     array(
       'allow_svn_file_creation' => true,
       'SVN_URL' => isset($_POST['svn_url']) ? $_POST['svn_url'] : $svn_url,
-      'SVN_REVISON' => isset($_POST['svn_revision']) ? $_POST['svn_revision'] : 'HEAD',
+      'SVN_REVISION' => isset($_POST['svn_revision']) ? $_POST['svn_revision'] : 'HEAD',
     )
   );
 }
