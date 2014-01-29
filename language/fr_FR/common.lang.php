@@ -44,6 +44,7 @@ $lang['Compatibility'] = 'Compatibilité';
 $lang['Compatible with'] = 'Compatible avec';
 $lang['Connection settings'] = 'Connection';
 $lang['Deletion forbidden'] = 'Suppression impossible';
+$lang['Delete'] = 'Supprimer';
 $lang['Delete extension'] = 'Supprimer l\'extension';
 $lang['Delete link'] = 'Supprimer le lien';
 $lang['Delete revision'] = 'Supprimer la révision';
@@ -205,5 +206,7 @@ $lang['%d reviews'] = '%d avis';
 $lang['Show %d more reviews'] = 'Afficher %d avis de plus';
 $lang['Total :'] = 'Total :';
 $lang['(see)'] = '(voir)';
+$lang['Set as owner'] = 'Définir comme propriétaire';
+$lang['Owner'] = 'Propriétaire';
 
 ?>

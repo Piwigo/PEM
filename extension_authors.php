@@ -101,24 +101,51 @@ INSERT INTO '.AUTHORS_TABLE.' (idx_extension, idx_user)
   }
 }
 
-if (isset($_POST['submit_delete']))
+if (isset($_GET['delete']))
 {
-  if (!isset($_POST['author_id']))
-  {
-    $page['errors'][] = l10n('You must select at least one author.');
-  }
-  else
-  {
-    $author_delete = $db->escape(implode(',', $_POST['author_id']));
+  $author = intval($_GET['delete']);
 
+  if ($author > 0)
+  {
     $query = '
 DELETE FROM '.AUTHORS_TABLE.'
-  WHERE idx_user IN ('.$author_delete.')
+  WHERE idx_user = '.$author.'
   AND idx_extension = '.$page['extension_id'].'
 ;';
     $db->query($query);
   }
 }
+
+if (isset($_GET['owner']))
+{
+  $author = intval($_GET['owner']);
+
+  if ($author > 0)
+  {
+    $query = '
+UPDATE '.EXT_TABLE.'
+  SET idx_user = '.$author.'
+  WHERE id_extension = '.$page['extension_id'].'
+;';
+    $db->query($query);
+
+    $query = '
+DELETE FROM '.AUTHORS_TABLE.'
+  WHERE idx_user = '.$author.'
+  AND idx_extension = '.$page['extension_id'].'
+;';
+    $db->query($query);
+
+    $query = '
+INSERT INTO '.AUTHORS_TABLE.' (idx_extension, idx_user)
+  VALUES ('.$page['extension_id'].', '.$extension_infos['idx_user'].')
+;';
+    $db->query($query);
+
+    $extension_infos['idx_user'] = $author;
+  }
+}
+
 
 // +-----------------------------------------------------------------------+
 // |                            Form display                               |
@@ -128,15 +155,21 @@ $authors = get_extension_authors($page['extension_id']);
 
 foreach ($authors as $author_id)
 {
-  if ($author_id == $extension_infos['idx_user'])
-  {
-    continue;
-  }
-  $tpl->append('authors', array(
+  $author = array(
     'ID' => $author_id,
     'NAME' => get_author_name($author_id),
+    'OWNER' => $author_id == $extension_infos['idx_user'],
     'u_delete' => 'extension_authors.php?eid='.$page['extension_id'].
-                  '&amp;delete='.$author_id));
+                  '&amp;delete='.$author_id,
+    );
+
+  if (isAdmin($user['id']))
+  {
+    $author['u_owner'] = 'extension_authors.php?eid='.$page['extension_id'].
+                  '&amp;owner='.$author_id;
+  }
+
+  $tpl->append('authors', $author);
 }
 
 // Get all user list

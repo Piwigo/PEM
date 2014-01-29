@@ -17,16 +17,20 @@
     <input type="submit" value="{'Submit'|@translate}" name="submit_add" />
     <p>&nbsp;</p>
   </fieldset>
-<br>
-{if !empty($authors)}
+<p>&nbsp;</p>
   <fieldset>
     <legend>{'Manage authors'|@translate}</legend>
-    <br>
+    <p>&nbsp;</p>
     {foreach from=$authors item=author}
-      <input type="checkbox" name="author_id[]" value="{$author.ID}">&nbsp; <strong>{$author.NAME}</strong><br>
+      <strong>{$author.NAME}</strong>
+      {if not $author.OWNER}
+        <a href="{$author.u_delete}">{'Delete'|translate}</a>
+        {if isset($author.u_owner)}| <a href="{$author.u_owner}">{'Set as owner'|translate}</a>{/if}
+      {else}
+        <i>({'Owner'|translate})</i>
+      {/if}
+      <br>
     {/foreach}
     <p>&nbsp;</p>
-    <p><input type="submit" onclick="return confirm('{'Are you sure you want to remove selected authors?'|@translate|escape:javascript}');" value="{'Delete selected users'|@translate}" name="submit_delete" /></p>
   </fieldset>
-{/if}
 </form>
