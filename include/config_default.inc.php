@@ -164,6 +164,10 @@ $conf['allow_tag_creation'] = true;
 // Akismet key, leave blank to not use
 $conf['akismet_key'] = null;
 
+// revisions sort order on extension page ('date' or 'version')
+$conf['revisions_sort_order'] = 'version';
+
+
 // +-----------------------------------------------------------------------+
 // |                             SVN parameters                            |
 // +-----------------------------------------------------------------------+

@@ -329,25 +329,9 @@ SELECT id_revision,
       $last_date_set = true;
     }
 
-    $expanded = false;
-    
-    if (isset($_GET['rid']))
-    {
-      if ($row['id_revision'] == $_GET['rid'])
-      {
-        $expanded = true;
-      }
-    }
-    else if ($is_first_revision)
-    {
-      $expanded = true;
-    }
-
     $is_first_revision = false;
 
-    array_push(
-      $tpl_revisions,
-      array(
+    $tpl_revisions[] = array(
         'id' => $row['id_revision'],
         'version' => $row['version'],
         'versions_compatible' => implode(
@@ -368,11 +352,10 @@ SELECT id_revision,
         'can_modify' => $page['user_can_modify'],
         'u_modify' => 'revision_mod.php?rid='.$row['id_revision'],
         'u_delete' => 'revision_del.php?rid='.$row['id_revision'],
-        'expanded' => $expanded,
+        'expanded' => isset($_GET['rid']) && $row['id_revision'] == $_GET['rid'],
         'downloads' => isset($downloads_of_revision[$row['id_revision']]) ? 
                         $downloads_of_revision[$row['id_revision']] : 0,
-        )
-      );
+        );
 
     $first_date = $row['date'];
   }
@@ -384,7 +367,19 @@ SELECT id_revision,
       $first_date
       )
     );
-  
+
+  if ($conf['revisions_sort_order'] == 'version')
+  {
+    usort($tpl_revisions, function($a, $b) {
+      return safe_version_compare($b['version'], $a['version']);
+    });
+  }
+
+  if (!isset($_GET['rid']))
+  {
+    $tpl_revisions[0]['expanded'] = true;
+  }
+
   $tpl->assign('revisions', $tpl_revisions);
 }
 
