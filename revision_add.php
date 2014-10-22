@@ -63,6 +63,7 @@ SELECT
     name,
     idx_user,
     svn_url,
+    git_url,
     archive_root_dir,
     archive_name
   FROM '.EXT_TABLE.'
@@ -74,7 +75,7 @@ if ($db->num_rows($result) == 0)
 {
   message_die('Unknown extension');
 }
-list($page['extension_name'], $ext_user, $svn_url, $archive_root_dir, $archive_name) = $db->fetch_array($result);
+list($page['extension_name'], $ext_user, $svn_url, $git_url, $archive_root_dir, $archive_name) = $db->fetch_array($result);
 
 $authors = get_extension_authors($page['extension_id']);
 
@@ -167,7 +168,7 @@ UPDATE '.REV_TABLE.'
   $file_to_upload = null;
   if ('revision_add.php' == basename($_SERVER['SCRIPT_FILENAME']))
   {
-    if (isset($_POST['file_type']) and in_array($_POST['file_type'], array('upload', 'svn', 'url')))
+    if (isset($_POST['file_type']) and in_array($_POST['file_type'], array('upload', 'svn', 'git', 'url')))
     {
       $file_to_upload = $_POST['file_type'];
     }
@@ -213,24 +214,24 @@ UPDATE '.REV_TABLE.'
     }
     else
     {
-      $temp_svn_path = $conf['local_data_dir'] . '/svn_import';
-      if (!is_dir($temp_svn_path))
+      $temp_path = $conf['local_data_dir'] . '/svn_import';
+      if (!is_dir($temp_path))
       {
         umask(0000);
-        if (!mkdir($temp_svn_path, 0777))
+        if (!mkdir($temp_path, 0777))
         {
-          die("problem during ".$temp_svn_path." creation");
+          die("problem during ".$temp_path." creation");
         }
       }
 
       // Create random path
-      $temp_svn_path .= '/' . md5(uniqid(rand(), true));
+      $temp_path .= '/' . md5(uniqid(rand(), true));
 
       // SVN export
       $svn_command = $conf['svn_path'] . ' export';
       $svn_command .= is_numeric($_POST['svn_revision']) ? ' -r'.$_POST['svn_revision'] : '';
       $svn_command .= ' ' . escapeshellarg($svn_url);
-      $svn_command .= ' ' . $temp_svn_path;
+      $svn_command .= ' ' . $temp_path;
 
       exec($svn_command, $svn_infos);
 
@@ -243,11 +244,87 @@ UPDATE '.REV_TABLE.'
         $archive_name = str_replace('%', @$_POST['revision_version'], $archive_name);
         $svn_revision = preg_replace('/exported revision (\d+)\./i', '$1', end($svn_infos));
 
-        if (!empty($conf['archive_comment']) and !file_exists($temp_svn_path.'/'.$conf['archive_comment_filename']))
+        if (!empty($conf['archive_comment']) and !file_exists($temp_path.'/'.$conf['archive_comment_filename']))
         {
           file_put_contents(
-            $temp_svn_path.'/'.$conf['archive_comment_filename'],
+            $temp_path.'/'.$conf['archive_comment_filename'],
             sprintf($conf['archive_comment'], $svn_url, $svn_revision)
+          );
+        }
+      }
+    }
+  }
+
+  if ($file_to_upload == 'git')
+  {
+    $git_url = $_POST['git_url'];
+    if (empty($git_url))
+    {
+      $page['errors'][] = l10n('Some fields are missing');
+    }
+    else
+    {
+      $temp_path = $conf['local_data_dir'] . '/git_clone';
+      if (!is_dir($temp_path))
+      {
+        umask(0000);
+        if (!mkdir($temp_path, 0777))
+        {
+          die("problem during ".$temp_path." creation");
+        }
+      }
+
+      // Create random path
+      $temp_path .= '/' . md5(uniqid(rand(), true));
+
+      // SVN export
+      $git_command = $conf['git_path'] . ' clone --depth=1';
+      $git_command .= ' ' . escapeshellarg($git_url);
+      $git_command .= ' ' . $temp_path;
+
+      exec($git_command, $git_infos);
+
+      if (empty($git_infos))
+      {
+        $page['errors'][] = l10n('An error occured during Git clone.');
+      }
+      else
+      {
+        $archive_name = str_replace('%', @$_POST['revision_version'], $archive_name);
+
+        unset($git_infos);
+        
+        $working_dir = getcwd();
+        chdir($temp_path);
+        $git_command = $conf['git_path'].' log ';
+        exec($git_command, $git_infos);
+        chdir($working_dir);
+
+        exec('rm -rf '.$temp_path.'/.git');
+
+        $git_commit = '';
+        $git_date = '';
+        foreach ($git_infos as $line)
+        {
+          $line = trim($line);
+          if (preg_match('/commit\s+([a-f0-9]{40})/', $line, $matches))
+          {
+            $git_commit = $matches[1];
+          }
+
+          if (preg_match('/Date:\s*(.*)$/', $line, $matches))
+          {
+            $git_date = $matches[1];
+          }
+        }
+        
+        $revision = $git_commit.' ('.$git_date.')';
+
+        if (!empty($conf['archive_comment']) and !file_exists($temp_path.'/'.$conf['archive_comment_filename']))
+        {
+          file_put_contents(
+            $temp_path.'/'.$conf['archive_comment_filename'],
+            sprintf($conf['archive_comment'], $git_url, $revision)
           );
         }
       }
@@ -292,14 +369,14 @@ UPDATE '.REV_TABLE.'
   {
     if (empty($_POST[$field]))
     {
-      @deltree($temp_svn_path);
+      @deltree($temp_path);
       $page['errors'][] = l10n('Some fields are missing');
       break;
     }
   }
   if (empty($_POST['revision_descriptions'][@$_POST['default_description']]))
   {
-    @deltree($temp_svn_path);
+    @deltree($temp_path);
     $page['errors'][] = l10n('Default description can not be empty');
   }
   
@@ -385,13 +462,13 @@ DELETE
           $revision_dir.'/'.$_FILES['revision_file']['name']
         );
       }
-      elseif ('svn' == $file_to_upload)
+      elseif (in_array($file_to_upload, array('svn', 'git')))
       {
         // Create zip archive
         include_once($root_path.'include/pclzip.lib.php');
         $zip = new PclZip($revision_dir.'/'.$archive_name);
-        $zip->create($temp_svn_path,
-          PCLZIP_OPT_REMOVE_PATH, $temp_svn_path,
+        $zip->create($temp_path,
+          PCLZIP_OPT_REMOVE_PATH, $temp_path,
           PCLZIP_OPT_ADD_PATH, $archive_root_dir);
       }
       elseif ('url' == $file_to_upload)
@@ -685,12 +762,19 @@ if (basename($_SERVER['SCRIPT_FILENAME']) == 'revision_add.php' and $conf['allow
     array(
       'allow_svn_file_creation' => true,
       'SVN_URL' => isset($_POST['svn_url']) ? $_POST['svn_url'] : $svn_url,
+      'GIT_URL' => isset($_POST['git_url']) ? $_POST['git_url'] : $git_url,
       'SVN_REVISION' => isset($_POST['svn_revision']) ? $_POST['svn_revision'] : 'HEAD',
     )
   );
 }
 
-$upload_methods = array('upload');
+$tpl->assign(
+  array(
+    'GIT_URL' => isset($_POST['git_url']) ? $_POST['git_url'] : $git_url,
+    )
+  );
+
+$upload_methods = array('upload', 'git');
 if ($conf['allow_download_url'])
 {
   array_push($upload_methods, 'url');
@@ -705,11 +789,20 @@ if ($conf['allow_svn_file_creation'])
   array_push($upload_methods, 'svn');
 }
 
+$file_type = 'upload';
+if (!empty($svn_url))
+{
+  $file_type = 'svn';
+}
+elseif (!empty($git_url))
+{
+  $file_type = 'git';
+}
 
 $tpl->assign(
   array(
     'upload_methods' => $upload_methods,
-    'FILE_TYPE' => isset($_POST['file_type']) ? $_POST['file_type'] : '',
+    'FILE_TYPE' => isset($_POST['file_type']) ? $_POST['file_type'] : $file_type,
     )
   );
 

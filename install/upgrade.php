@@ -547,6 +547,19 @@ if (!in_array('idx_language', $columns[TAG_TABLE]))
 }
 
 // +-----------------------------------------------------------------------+
+// |                   New column extensions.git_url                       |
+// +-----------------------------------------------------------------------+
+
+$columns = get_columns_of(array(EXT_TABLE));
+if (!in_array('git_url', $columns[EXT_TABLE]))
+{
+  $query = 'ALTER TABLE '.EXT_TABLE.' add column git_url varchar(255) default null after svn_url';
+  $db->query($query);
+
+  array_push($upgrade_infos, '- new column '.EXT_TABLE.'.git_url');
+}
+
+// +-----------------------------------------------------------------------+
 // |                       Display upgrade result                          |
 // +-----------------------------------------------------------------------+
 

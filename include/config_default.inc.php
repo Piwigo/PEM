@@ -169,7 +169,7 @@ $conf['revisions_sort_order'] = 'version';
 
 
 // +-----------------------------------------------------------------------+
-// |                             SVN parameters                            |
+// |                           SVN/GIT parameters                          |
 // +-----------------------------------------------------------------------+
 
 // If true, allow users to configure an SVN reposity URL
@@ -179,12 +179,14 @@ $conf['allow_svn_file_creation'] = false;
 // You can configure path to svn command on your server
 $conf['svn_path'] = 'svn';
 
+$conf['git_path'] = 'git';
+
 // Filename for archive comment.
 $conf['archive_comment_filename'] = 'pem_metadata.txt';
 
 // Comment automaticaly inserted into archive
 // If $conf['archive_comment'] is empty, no file will be added to archive
-$conf['archive_comment'] = "File automatically created from SVN repository.\n\nURL: %s \nRevision: %s";
+$conf['archive_comment'] = "File automatically created from SVN or Git repository.\n\nURL: %s \nRevision: %s";
 
 // +-----------------------------------------------------------------------+
 // |                            Archive from URL                           |

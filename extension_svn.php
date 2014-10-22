@@ -57,7 +57,7 @@ if ($user['id'] != $extension_infos['idx_user'] and !isAdmin($user['id']))
 }
 
 $query = '
-SELECT name, svn_url, archive_root_dir, archive_name
+SELECT name, svn_url, git_url, archive_root_dir, archive_name
   FROM '.EXT_TABLE.'
   WHERE id_extension = '.$page['extension_id'].'
 ;';
@@ -67,7 +67,7 @@ if ($db->num_rows($result) == 0)
 {
   message_die('Incorrect extension identifier');
 }
-list($page['extension_name'], $svn_url, $root_dir, $archive_name) = $db->fetch_array($result);
+list($page['extension_name'], $svn_url, $git_url, $root_dir, $archive_name) = $db->fetch_array($result);
 
 // +-----------------------------------------------------------------------+
 // |                           Form submission                             |
@@ -75,10 +75,16 @@ list($page['extension_name'], $svn_url, $root_dir, $archive_name) = $db->fetch_a
 
 if (isset($_POST['submit']))
 {
-  if (empty($svn_url))
+  if (!in_array($_POST['type'], array('svn', 'git')))
   {
-    $svn_url = $db->escape($_POST['url']);
-    $root_dir = ltrim(strrchr(rtrim($svn_url, '/\\'), '/'), '/\\');
+    die("unexpected repository type, either svn or git");
+  }
+  
+  $url = $db->escape($_POST['url']);
+  
+  if (empty($svn_url) and empty($git_url))
+  {
+    $root_dir = ltrim(strrchr(rtrim($url, '/\\'), '/'), '/\\');
     $archive_name = $root_dir . '_%.zip';
   }
   else
@@ -92,7 +98,6 @@ if (isset($_POST['submit']))
       message_die('Characters not allowed in archive name.');
     }
 
-    $svn_url = $db->escape($_POST['url']);
     $root_dir = $db->escape($_POST['root_dir']);
     $archive_name = $db->escape($_POST['archive_name']);
 
@@ -103,23 +108,44 @@ if (isset($_POST['submit']))
     }
   }
 
+  // first we reset both URLs
   $query = '
 UPDATE '.EXT_TABLE.'
-SET svn_url = "'.$svn_url.'",
+  SET svn_url = NULL
+    , git_url = NULL
+  WHERE id_extension = '.$page['extension_id'].'
+;';
+  $db->query($query);
+
+  $query = '
+UPDATE '.EXT_TABLE.'
+SET '.$_POST['type'].'_url = "'.$url.'",
     archive_root_dir = "'.$root_dir.'",
     archive_name = "'.$archive_name.'"
 WHERE id_extension = '.$page['extension_id'].';';
 
   $db->query($query);
+
+
+  list($svn_url, $git_url) = array(null,null);
+  if ('svn' == $_POST['type'])
+  {
+    $svn_url = $url;
+  }
+  elseif ('git' == $_POST['type'])
+  {
+    $git_url = $url;
+  }
 }
 
 if (isset($_POST['delete']))
 {
-  unset($svn_url, $root_dir, $archive_name);
+  unset($svn_url, $git_url, $root_dir, $archive_name);
 
   $query = '
 UPDATE '.EXT_TABLE.'
 SET svn_url = NULL,
+    git_url = NULL,
     archive_root_dir = NULL,
     archive_name = NULL
 WHERE id_extension = '.$page['extension_id'].';';
@@ -131,9 +157,21 @@ WHERE id_extension = '.$page['extension_id'].';';
 // |                            Form display                               |
 // +-----------------------------------------------------------------------+
 
+$show_repo_infos = false;
 if (!empty($svn_url))
 {
-  exec($conf['svn_path'].' info '.escapeshellarg($svn_url), $svn_infos);
+  $show_repo_infos = true;
+  $url = $svn_url;
+}
+elseif (!empty($git_url) and preg_match('/github/', $git_url))
+{
+  $show_repo_infos = true;
+  $url = $git_url;
+}
+
+if ($show_repo_infos)
+{
+  exec($conf['svn_path'].' info '.escapeshellarg($url), $svn_infos);
 
   if (empty($svn_infos))
   {
@@ -143,20 +181,38 @@ if (!empty($svn_url))
   $tpl->assign(
     array(
       'SVN_INFOS' => $svn_infos,
-      'ROOT_DIR' => $root_dir,
-      'ARCHIVE_NAME' => $archive_name,
     )
   );
 }
 
 $tpl->assign(
   array(
+    'ROOT_DIR' => @$root_dir,
+    'ARCHIVE_NAME' => @$archive_name,
     'extension_name' => $page['extension_name'],
     'u_extension' => 'extension_view.php?eid='.$page['extension_id'],
     'f_action' => 'extension_svn.php?eid='.$page['extension_id'],
-    'SVN_URL' => (!empty($svn_url) ? $svn_url : ''),
   )
 );
+
+if (!empty($git_url))
+{
+  $tpl->assign(
+    array(
+      'TYPE' => 'git',
+      'URL' => $git_url,
+      )
+    );
+}
+else
+{
+  $tpl->assign(
+    array(
+      'TYPE' => 'svn',
+      'URL' => @$svn_url,
+      )
+    );
+}
 
 // +-----------------------------------------------------------------------+
 // |                           html code display                           |

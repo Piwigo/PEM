@@ -9,11 +9,16 @@
 <form method="post" action="{$f_action}" enctype="multipart/form-data">
   <fieldset>
     <legend>{'SVN configuration'|@translate}</legend>
-      <p>{'Repository URL'|@translate} <input type="text" name="url" value="{$SVN_URL}" size="70"/><br><br>
+      <p>
+        <label><input type="radio" name="type" value="svn"{if $TYPE eq 'svn'} checked="checked"{/if}> SVN</label>
+        <label><input type="radio" name="type" value="git"{if $TYPE eq 'git'} checked="checked"{/if}> Git</label>
+      </p>
+
+      <p>{'Repository URL'|@translate} <input type="text" name="url" value="{$URL}" size="70"/><br><br>
       {if isset($ROOT_DIR)}{'Archive root directory'|@translate} <input type="text" name="root_dir" value="{$ROOT_DIR}" size="30"/><br><br>{/if}
       {if isset($ARCHIVE_NAME)}{'Archive name'|@translate} <input type="text" name="archive_name" value="{$ARCHIVE_NAME}" size="30"/> <i>({'% will be replaced by version number'|@translate})</i><br><br>{/if}
       <input type="submit" value="{'Submit'|@translate}" name="submit" />
-      {if isset($SVN_INFOS)}<input type="submit" value="{'Delete SVN data'|@translate}" name="delete" onclick="return confirm('{'Are you sure you want to remove SVN data?'|@translate|escape:javascript}');"/>{/if}
+      {if isset($URL)}<input type="submit" value="{'Delete SVN data'|@translate}" name="delete" onclick="return confirm('{'Are you sure you want to remove SVN data?'|@translate|escape:javascript}');"/>{/if}
       </p>
   </fieldset>
 </form>
