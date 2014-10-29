@@ -279,6 +279,12 @@ UPDATE '.REV_TABLE.'
 
       // SVN export
       $git_command = $conf['git_path'] . ' clone --depth=1';
+      
+      if (isset($_POST['git_branch']) and 'master' != $_POST['git_branch'])
+      {
+        $git_command .= ' -b '.escapeshellarg($_POST['git_branch']);
+      }
+      
       $git_command .= ' ' . escapeshellarg($git_url);
       $git_command .= ' ' . $temp_path;
 
@@ -771,6 +777,7 @@ if (basename($_SERVER['SCRIPT_FILENAME']) == 'revision_add.php' and $conf['allow
 $tpl->assign(
   array(
     'GIT_URL' => isset($_POST['git_url']) ? $_POST['git_url'] : $git_url,
+    'GIT_BRANCH' => isset($_POST['git_branch']) ? $_POST['git_branch'] : 'master',
     )
   );
 

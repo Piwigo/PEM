@@ -208,5 +208,5 @@ $lang['Total :'] = 'Total :';
 $lang['(see)'] = '(see)';
 $lang['Set as owner'] = 'Set as owner';
 $lang['Owner'] = 'Owner';
-
+$lang['Branch'] = 'Branch';
 ?>

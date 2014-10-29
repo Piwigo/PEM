@@ -66,6 +66,7 @@
           {if in_array('git', $upload_methods)}
             <div id="git_type"{if $FILE_TYPE ne 'git'} style="display: none;"{/if}>
               {'URL'|@translate} <input type="text" name="git_url" value="{$GIT_URL}" size="65"> &nbsp;
+              {'Branch'|@translate} <input type="text" name="git_branch" value="{$GIT_BRANCH}" size="10">
             </div>
           {/if}
 
