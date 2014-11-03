@@ -290,7 +290,7 @@ UPDATE '.REV_TABLE.'
 
       exec($git_command, $git_infos);
 
-      if (empty($git_infos))
+      if (!file_exists($temp_path.'/.git'))
       {
         $page['errors'][] = l10n('An error occured during Git clone.');
       }
