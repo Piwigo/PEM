@@ -476,6 +476,8 @@ DELETE
         $zip->create($temp_path,
           PCLZIP_OPT_REMOVE_PATH, $temp_path,
           PCLZIP_OPT_ADD_PATH, $archive_root_dir);
+
+        @deltree($temp_path);
       }
       elseif ('url' == $file_to_upload)
       {
