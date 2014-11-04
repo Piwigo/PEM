@@ -143,21 +143,19 @@ $lang['This user does not exist in database.'] = 'Denne bruger findes ikke i dat
 $lang['Added by']  = 'Tilføjet af';
 $lang['Other extensions'] = 'Andre udvidelser';
 
-$lang['SVN configuration'] = 'SVN-opsætning';
+$lang['SVN/Git configuration'] = 'SVN/Git-opsætning';
 $lang['Repository URL'] = 'Arkiv-URL';
 $lang['Archive root directory'] = 'Arkivs rodmappe';
 $lang['Archive name'] = 'Arkivnavn';
 $lang['% will be replaced by version number'] = '% vil blive erstattet af versionsnummer';
-$lang['Delete SVN data'] = 'Slet SVN-data';
-$lang['Are you sure you want to remove SVN data?'] = 'Er du sikker på, at du ønsker at fjerne SVN-data?';
-$lang['SVN informations'] = 'SVN-oplysninger';
-$lang['Unable to retrieve SVN data!'] = 'Kan ikke hente SVN-data!';
+$lang['Delete SVN/Git data'] = 'Slet SVN/Git-data';
+$lang['Are you sure you want to remove SVN/Git data?'] = 'Er du sikker på, at du ønsker at fjerne SVN/Git-data?';
+$lang['SVN/Git informations'] = 'SVN/Git-oplysninger';
+$lang['Unable to retrieve SVN/Git data!'] = 'Kan ikke hente SVN/Git-data!';
 $lang['Characters not allowed in archive root directory.'] = 'Tegn ikke tilladt i arkivets rodmappe.';
 $lang['Characters not allowed in archive name.'] = 'Tegn ikke tillad i arkivnavn.';
 $lang['Upload a file'] = 'Upload en file';
-$lang['Use SVN file creation'] = 'Benyt SVN-filoprettelse';
-$lang['SVN revision'] = 'SVN-revision';
-$lang['An error occured during SVN export.'] = 'En fejl opstod under SVN-eksport.';
+$lang['An error occured during SVN/Git export.'] = 'En fejl opstod under SVN/Git-eksport.';
 
 $lang['Available languages'] = 'Tilgængelige sprog';
 $lang['Default description'] = 'Standardbeskrivelse';

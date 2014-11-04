@@ -142,21 +142,19 @@ $lang['This user does not exist in database.'] = 'Ez a felhasználó nincs az ad
 $lang['Added by']  = 'Hozzáadta';
 $lang['Other extensions'] = 'Egyéb bővítmények';
 
-$lang['SVN configuration'] = 'SVN beállítások';
+$lang['SVN/Git configuration'] = 'SVN/Git beállítások';
 $lang['Repository URL'] = 'Repository URL';
 $lang['Archive root directory'] = 'Archívum gyökér könyvtár';
 $lang['Archive name'] = 'Archívum neve';
 $lang['% will be replaced by version number'] = '% váltja fel a verziószámot';
-$lang['Delete SVN data'] = 'SVN adatok törlése';
-$lang['Are you sure you want to remove SVN data?'] = 'Biztos, hogy törölni akarja az SVN adatokat?';
-$lang['SVN informations'] = 'SVN információk';
-$lang['Unable to retrieve SVN data!'] = 'Nem lehet letölteni az SVN adatokat!';
+$lang['Delete SVN/Git data'] = 'SVN/Git adatok törlése';
+$lang['Are you sure you want to remove SVN/Git data?'] = 'Biztos, hogy törölni akarja az SVN/Git adatokat?';
+$lang['SVN/Git informations'] = 'SVN/Git információk';
+$lang['Unable to retrieve SVN/Git data!'] = 'Nem lehet letölteni az SVN/Git adatokat!';
 $lang['Characters not allowed in archive root directory.'] = 'Nem engedélyezett karakterek az archívum gyökérkönyvtárában.';
 $lang['Characters not allowed in archive name.'] = 'Nem engedélyezett katakterek az archívum nevében.';
 $lang['Upload a file'] = 'Fájl feltöltés';
-$lang['Use SVN file creation'] = 'SVN fájl';
-$lang['SVN revision'] = 'SVN változat';
-$lang['An error occured during SVN export.'] = 'Hiba történt az SVN exportálása közben.';
+$lang['An error occured during SVN/Git export.'] = 'Hiba történt az SVN/Git exportálása közben.';
 
 $lang['Available languages'] = 'Rendelkezésre álló nyelvek';
 $lang['Default description'] = 'Leírás alapértelmezett nyelve';

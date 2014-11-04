@@ -143,21 +143,19 @@ $lang['This user does not exist in database.'] = 'Αυτός ο χρήστης �
 $lang['Added by']  = 'Προστέθηκε από τον';
 $lang['Other extensions'] = 'Άλλες επεκτάσεις';
 
-$lang['SVN configuration'] = 'SVN διαμόρφωση';
+$lang['SVN/Git configuration'] = 'SVN/Git διαμόρφωση';
 $lang['Repository URL'] = 'URL Αποθετήριου';
 $lang['Archive root directory'] = 'Φάκελλος ριζικού Αρχείου';
 $lang['Archive name'] = 'Όνομα Αρχείου';
 $lang['% will be replaced by version number'] = '% Θα αντικατασταθεί από τον αριθμό έκδοσης';
-$lang['Delete SVN data'] = 'Διαγραφή δεδομένων SVN';
-$lang['Are you sure you want to remove SVN data?'] = 'Είστε βέβαιοι ότι θέλετε να αφαιρέσετε SVN δεδομένα?';
-$lang['SVN informations'] = 'πληροφορίες SVN';
-$lang['Unable to retrieve SVN data!'] = 'Δεν είναι δυνατή η ανάκτηση δεδομένων SVN!';
+$lang['Delete SVN/Git data'] = 'Διαγραφή δεδομένων SVN/Git';
+$lang['Are you sure you want to remove SVN/Git data?'] = 'Είστε βέβαιοι ότι θέλετε να αφαιρέσετε SVN/Git δεδομένα?';
+$lang['SVN/Git informations'] = 'πληροφορίες SVN/Git';
+$lang['Unable to retrieve SVN/Git data!'] = 'Δεν είναι δυνατή η ανάκτηση δεδομένων SVN/Git!';
 $lang['Characters not allowed in archive root directory.'] = 'Χαρακτήρες που δεν επιτρέπεται σε Φάκελλος ριζικού Αρχείου.';
 $lang['Characters not allowed in archive name.'] = 'Χαρακτήρες που δεν επιτρέπεται στο όνομα αρχείου.';
 $lang['Upload a file'] = 'Ανεβάστε ένα αρχείο';
-$lang['Use SVN file creation'] = 'Χρησιμοποιήστε δημιουργία αρχείων SVN';
-$lang['SVN revision'] = 'SVN αναθεώρηση';
-$lang['An error occured during SVN export.'] = 'Ένα σφάλμα συνέβη κατά την εξαγωγή SVN.';
+$lang['An error occured during SVN/Git export.'] = 'Ένα σφάλμα συνέβη κατά την εξαγωγή SVN/Git.';
 
 $lang['Available languages'] = 'Διαθέσιμες γλώσσες';
 $lang['Default description'] = 'Προεπιλεγμένη περιγραφή';

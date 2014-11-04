@@ -142,21 +142,19 @@ $lang['This user does not exist in database.'] = 'Utente inesistente nella base 
 $lang['Added by']  = 'Aggiunto da';
 $lang['Other extensions'] = 'Altre estensioni';
 
-$lang['SVN configuration'] = 'Configurazione SVN';
+$lang['SVN/Git configuration'] = 'Configurazione SVN/Git';
 $lang['Repository URL'] = 'URL per deposito';
 $lang['Archive root directory'] = 'Directory alla radice dell\'archivio';
 $lang['Archive name'] = 'Nome dell\'archivio';
 $lang['% will be replaced by version number'] = '% sarà rimpiazzato dal numero della versione';
-$lang['Delete SVN data'] = 'Cancellare i dati SVN';
-$lang['Are you sure you want to remove SVN data?'] = 'Siete sicuri di volere cancellare i dati SVN?';
-$lang['SVN informations'] = 'Informazioni SVN';
-$lang['Unable to retrieve SVN data!'] = 'Non è possibile recuperare i dati SVN!';
+$lang['Delete SVN/Git data'] = 'Cancellare i dati SVN/Git';
+$lang['Are you sure you want to remove SVN/Git data?'] = 'Siete sicuri di volere cancellare i dati SVN/Git?';
+$lang['SVN/Git informations'] = 'Informazioni SVN/Git';
+$lang['Unable to retrieve SVN/Git data!'] = 'Non è possibile recuperare i dati SVN/Git!';
 $lang['Characters not allowed in archive root directory.'] = 'Caratteri non autorizzati nella directory radice dell\'archivio.';
 $lang['Characters not allowed in archive name.'] = 'Caratteri non autorizzati nel nome dell\'archivio';
 $lang['Upload a file'] = 'Caricare un file';
-$lang['Use SVN file creation'] = 'Creare un\'archivio con SVN';
-$lang['SVN revision'] = 'Revisione SVN';
-$lang['An error occured during SVN export.'] = 'È sorto un\'errore durante il trasferimento SVN';
+$lang['An error occured during SVN/Git export.'] = 'È sorto un\'errore durante il trasferimento SVN/Git';
 
 $lang['Available languages'] = 'Lingue disponibili';
 $lang['Default description'] = 'Descrizione di default';

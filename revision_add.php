@@ -237,7 +237,7 @@ UPDATE '.REV_TABLE.'
 
       if (empty($svn_infos))
       {
-        $page['errors'][] = l10n('An error occured during SVN export.');
+        $page['errors'][] = l10n('An error occured during SVN/Git export.');
       }
       else
       {
@@ -292,7 +292,7 @@ UPDATE '.REV_TABLE.'
 
       if (!file_exists($temp_path.'/.git'))
       {
-        $page['errors'][] = l10n('An error occured during Git clone.');
+        $page['errors'][] = l10n('An error occured during SVN/Git export.');
       }
       else
       {

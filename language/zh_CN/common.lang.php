@@ -142,21 +142,19 @@ $lang['This user does not exist in database.'] = '此用户并不存在于数据
 $lang['Added by']  = '新增自';
 $lang['Other extensions'] = '其他扩充组件';
 
-$lang['SVN configuration'] = 'SVN 设定';
+$lang['SVN/Git configuration'] = 'SVN/Git 设定';
 $lang['Repository URL'] = 'URL储存处';
 $lang['Archive root directory'] = '备存根目录';
 $lang['Archive name'] = '备存名称';
 $lang['% will be replaced by version number'] = '%将由版本编号取代';
-$lang['Delete SVN data'] = '删除 SVN 数据';
-$lang['Are you sure you want to remove SVN data?'] = '你是否确认需要移除SVN数据?';
-$lang['SVN informations'] = 'SVN 资料';
-$lang['Unable to retrieve SVN data!'] = '未能重新开启SVN数据!';
+$lang['Delete SVN/Git data'] = '删除 SVN/Git 数据';
+$lang['Are you sure you want to remove SVN/Git data?'] = '你是否确认需要移除SVN/Git数据?';
+$lang['SVN/Git informations'] = 'SVN/Git 资料';
+$lang['Unable to retrieve SVN/Git data!'] = '未能重新开启SVN/Git数据!';
 $lang['Characters not allowed in archive root directory.'] = '备存根目录不允许使用的字符。';
 $lang['Characters not allowed in archive name.'] = '备存名称不允许使用的字符。';
 $lang['Upload a file'] = '上载档案';
-$lang['Use SVN file creation'] = '使用SVN档案创建';
-$lang['SVN revision'] = 'SVN 版本';
-$lang['An error occured during SVN export.'] = '汇出SVN时发生错误。';
+$lang['An error occured during SVN/Git export.'] = '汇出SVN/Git时发生错误。';
 
 $lang['Available languages'] = '可用语言';
 $lang['Default description'] = '预设描述';

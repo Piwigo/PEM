@@ -82,7 +82,7 @@ jQuery(function(){ldelim}
     <li><a href="{$u_authors}" title="{'Manage authors'|@translate}"><img src="template/images/authors.png" alt="{'Manage authors'|@translate}"></a></li>
   {/if}
   {if isset($u_svn)}
-    <li><a href="{$u_svn}" title="{'SVN configuration'|@translate}"><img src="template/images/svn.png" alt="{'SVN configuration'|@translate}"></a></li>
+    <li><a href="{$u_svn}" title="{'SVN/Git configuration'|@translate}"><img src="template/images/scm.png" alt="{'SVN/Git configuration'|@translate}"></a></li>
   {/if}
 {/if}
 </ul>

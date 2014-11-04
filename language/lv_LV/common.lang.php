@@ -142,21 +142,19 @@ $lang['This user does not exist in database.'] = 'Šā lietotāja datu bāzē na
 $lang['Added by']  = 'Pievienojis';
 $lang['Other extensions'] = 'Citi paplašinājumi';
 
-$lang['SVN configuration'] = 'SVN konfigurācija';
+$lang['SVN/Git configuration'] = 'SVN/Git konfigurācija';
 $lang['Repository URL'] = 'Glabātuves URL';
 $lang['Archive root directory'] = 'Arhīva saknes mape';
 $lang['Archive name'] = 'Arhīva nosaukums';
 $lang['% will be replaced by version number'] = '% tiks nomainīts ar ar versijas numuru';
-$lang['Delete SVN data'] = 'Dzēst SVN datus';
-$lang['Are you sure you want to remove SVN data?'] = 'Vai esat pārliecināti, ka gribat dzēst SVN datus?';
-$lang['SVN informations'] = 'SVN informācija';
-$lang['Unable to retrieve SVN data!'] = 'Nav iespējams iegūt SVN datus!';
+$lang['Delete SVN/Git data'] = 'Dzēst SVN/Git datus';
+$lang['Are you sure you want to remove SVN/Git data?'] = 'Vai esat pārliecināti, ka gribat dzēst SVN/Git datus?';
+$lang['SVN/Git informations'] = 'SVN/Git informācija';
+$lang['Unable to retrieve SVN/Git data!'] = 'Nav iespējams iegūt SVN/Git datus!';
 $lang['Characters not allowed in archive root directory.'] = 'Rakstzīmes nav atļautas arhīva saknes mapē.';
 $lang['Characters not allowed in archive name.'] = 'Rakstzīmes nav atļautas arhīva nosaukumā.';
 $lang['Upload a file'] = 'Augšuplādēt failu';
-$lang['Use SVN file creation'] = 'Izmantot SVN failu izveidi';
-$lang['SVN revision'] = 'SVN revīzija';
-$lang['An error occured during SVN export.'] = 'Radās kļūda SVN eksporta laikā.';
+$lang['An error occured during SVN/Git export.'] = 'Radās kļūda SVN/Git eksporta laikā.';
 
 $lang['Available languages'] = 'Pieejamās valodas';
 $lang['Default description'] = 'Apraksts pēc noklusējuma';

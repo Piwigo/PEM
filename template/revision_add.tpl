@@ -39,10 +39,10 @@
               <label><input type="radio" name="file_type" value="upload" onClick="javascript:showOnlyThisChild('upload_types', 'upload_type');" {if $FILE_TYPE=='upload'}checked{/if}> {'Upload a file'|@translate}</label>
             {/if}
             {if in_array('svn', $upload_methods)}
-              <label><input type="radio" name="file_type" value="svn" onClick="javascript:showOnlyThisChild('upload_types', 'svn_type');" {if $FILE_TYPE=='svn'}checked{/if}> {'Use SVN file creation'|@translate}</label>
+              <label><input type="radio" name="file_type" value="svn" onClick="javascript:showOnlyThisChild('upload_types', 'svn_type');" {if $FILE_TYPE=='svn'}checked{/if}> SVN</label>
             {/if}
             {if in_array('git', $upload_methods)}
-              <label><input type="radio" name="file_type" value="git" onClick="javascript:showOnlyThisChild('upload_types', 'git_type');" {if $FILE_TYPE=='git'}checked{/if}> {'Git'|@translate}</label>
+              <label><input type="radio" name="file_type" value="git" onClick="javascript:showOnlyThisChild('upload_types', 'git_type');" {if $FILE_TYPE=='git'}checked{/if}> Git</label>
             {/if}
             {if in_array('url', $upload_methods)}
               <label><input type="radio" name="file_type" value="url" onClick="javascript:showOnlyThisChild('upload_types', 'url_type');" {if $FILE_TYPE=='url'}checked{/if}> {'Download from URL'|@translate}</label>

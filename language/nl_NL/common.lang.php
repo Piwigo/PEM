@@ -142,21 +142,19 @@ $lang['This user does not exist in database.'] = 'Deze gebruiker bestaat niet in
 $lang['Added by']  = 'Toegevoegd door';
 $lang['Other extensions'] = 'Andere uitbreidingen';
 
-$lang['SVN configuration'] = 'SVN configuratie';
+$lang['SVN/Git configuration'] = 'SVN/Git configuratie';
 $lang['Repository URL'] = 'Repository URL';
 $lang['Archive root directory'] = 'Archief root directory';
 $lang['Archive name'] = 'Archiefnaam';
 $lang['% will be replaced by version number'] = '% wordt vervangen door het versie nummer';
-$lang['Delete SVN data'] = 'Verwijder SVN gegevens';
-$lang['Are you sure you want to remove SVN data?'] = 'Weet u zeker dat de SVN gegevens verwijderd kunnen worden?';
-$lang['SVN informations'] = 'SVN informatie';
-$lang['Unable to retrieve SVN data!'] = 'Niet mogelijk om SVN gegevens op te halen';
+$lang['Delete SVN/Git data'] = 'Verwijder SVN/Git gegevens';
+$lang['Are you sure you want to remove SVN/Git data?'] = 'Weet u zeker dat de SVN/Git gegevens verwijderd kunnen worden?';
+$lang['SVN/Git informations'] = 'SVN/Git informatie';
+$lang['Unable to retrieve SVN/Git data!'] = 'Niet mogelijk om SVN/Git gegevens op te halen';
 $lang['Characters not allowed in archive root directory.'] = 'Lettertekens niet toegestaan in de archief root directory.';
 $lang['Characters not allowed in archive name.'] = 'Lettertekens niet toegestaan in de archiefnaam.';
 $lang['Upload a file'] = 'Upload een bestand';
-$lang['Use SVN file creation'] = 'Gebruik SVN-bestandsaanmaak';
-$lang['SVN revision'] = 'SVN-aanpassing';
-$lang['An error occured during SVN export.'] = 'Er is iets fout gegaan tijdens de SVN export.';
+$lang['An error occured during SVN/Git export.'] = 'Er is iets fout gegaan tijdens de SVN/Git export.';
 
 $lang['Available languages'] = 'Beschikbare talen';
 $lang['Default description'] = 'Standaard beschrijving';

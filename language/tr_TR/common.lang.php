@@ -143,21 +143,19 @@ $lang['This user does not exist in database.'] = 'Bu kullanıcı veritabanında 
 $lang['Added by']  = 'Ekleyen';
 $lang['Other extensions'] = 'Diğer eklentiler';
 
-$lang['SVN configuration'] = 'SVN yapılandırma';
+$lang['SVN/Git configuration'] = 'SVN/Git yapılandırma';
 $lang['Repository URL'] = 'Depo URL\'si';
 $lang['Archive root directory'] = 'Arşiv kök dizini';
 $lang['Archive name'] = 'Arşiv adı';
 $lang['% will be replaced by version number'] = '% versiyonu ile değiştirilecektir';
-$lang['Delete SVN data'] = 'SVN verilerini sil';
-$lang['Are you sure you want to remove SVN data?'] = 'SVN verilerini silmek istediğinizden emin misiniz?';
-$lang['SVN informations'] = 'SVN verileri';
-$lang['Unable to retrieve SVN data!'] = 'SVN verileri geri alınamadı!';
+$lang['Delete SVN/Git data'] = 'SVN/Git verilerini sil';
+$lang['Are you sure you want to remove SVN/Git data?'] = 'SVN/Git verilerini silmek istediğinizden emin misiniz?';
+$lang['SVN/Git informations'] = 'SVN/Git verileri';
+$lang['Unable to retrieve SVN/Git data!'] = 'SVN/Git verileri geri alınamadı!';
 $lang['Characters not allowed in archive root directory.'] = 'Karakterlere arşiv kök dizin adında izin verilmiyor.';
 $lang['Characters not allowed in archive name.'] = 'Karakterlere arşiv adında izin verilmiyor.';
 $lang['Upload a file'] = 'Bir dosya yükle';
-$lang['Use SVN file creation'] = 'SVN dosya oluşturmayı kullan';
-$lang['SVN revision'] = 'SVN değişiklik';
-$lang['An error occured during SVN export.'] = 'SVN dışa aktarma sırasında hata oluştu.';
+$lang['An error occured during SVN/Git export.'] = 'SVN/Git dışa aktarma sırasında hata oluştu.';
 
 $lang['Available languages'] = 'Mevcut diller';
 $lang['Default description'] = 'Varsayılan açıklama';

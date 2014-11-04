@@ -144,21 +144,19 @@ $lang['This user does not exist in database.'] = 'This user does not exist in da
 $lang['Added by']  = 'Added by';
 $lang['Other extensions'] = 'Other extensions';
 
-$lang['SVN configuration'] = 'SVN configuration';
+$lang['SVN/Git configuration'] = 'SVN/Git configuration';
 $lang['Repository URL'] = 'Repository URL';
 $lang['Archive root directory'] = 'Archive root directory';
 $lang['Archive name'] = 'Archive name';
 $lang['% will be replaced by version number'] = '% will be replaced by version number';
-$lang['Delete SVN data'] = 'Delete SVN data';
-$lang['Are you sure you want to remove SVN data?'] = 'Are you sure you want to remove SVN data?';
-$lang['SVN informations'] = 'SVN informations';
-$lang['Unable to retrieve SVN data!'] = 'Unable to retrieve SVN data!';
+$lang['Delete SVN/Git data'] = 'Delete SVN/Git data';
+$lang['Are you sure you want to remove SVN/Git data?'] = 'Are you sure you want to remove SVN/Git data?';
+$lang['SVN/Git informations'] = 'SVN/Git informations';
+$lang['Unable to retrieve SVN/Git data!'] = 'Unable to retrieve SVN/Git data!';
 $lang['Characters not allowed in archive root directory.'] = 'Characters not allowed in archive root directory.';
 $lang['Characters not allowed in archive name.'] = 'Characters not allowed in archive name.';
 $lang['Upload a file'] = 'Upload a file';
-$lang['Use SVN file creation'] = 'Use SVN file creation';
-$lang['SVN revision'] = 'SVN revision';
-$lang['An error occured during SVN export.'] = 'An error occured during SVN export.';
+$lang['An error occured during SVN/Git export.'] = 'An error occured during SVN/Git export.';
 
 $lang['Available languages'] = 'Available languages';
 $lang['New languages'] = 'New languages';
