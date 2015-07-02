@@ -207,4 +207,6 @@ $lang['(see)'] = '(see)';
 $lang['Set as owner'] = 'Set as owner';
 $lang['Owner'] = 'Owner';
 $lang['Branch'] = 'Branch';
+$lang['Github page'] = 'Github page';
+$lang['source code, bug/request tracker'] = 'source code, bug/request tracker';
 ?>

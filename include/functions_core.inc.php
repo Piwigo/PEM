@@ -282,6 +282,7 @@ SELECT id_extension,
        rating_score,
        idx_user,
        svn_url,
+       git_url,
        e.description AS default_description,
        et.description
   FROM '.EXT_TABLE.' AS e

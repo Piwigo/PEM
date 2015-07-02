@@ -235,6 +235,21 @@ if ($screenshot_infos = get_extension_screenshot_infos($page['extension_id']))
 }
 
 // Links associated to the current extension
+$tpl_links = array();
+
+// if the extension is hosted on github, add a link to the Github page
+if (isset($data['git_url']) and preg_match('/github/', $data['git_url']))
+{
+  array_push(
+    $tpl_links,
+    array(
+      'name' => l10n('Github page'),
+      'url' => $data['git_url'],
+      'description' => l10n('source code, bug/request tracker'),
+      )
+    );
+}
+
 $query = '
 SELECT name,
        url,
@@ -245,8 +260,6 @@ SELECT name,
   ORDER BY rank ASC
 ;';
 $result = $db->query($query);
-
-$tpl_links = array();
 
 while ($row = $db->fetch_array($result))
 {
