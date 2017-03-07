@@ -165,10 +165,15 @@ if (!@is_readable($file)) {
 
 $gmt_mtime = gmdate('D, d M Y H:i:s', filemtime($file)).' GMT';
 
+$content_types = array(
+  'zip' => 'application/zip',
+  'jar' => 'application/java-archive',
+);
+
 $http_headers = array(
   'Content-Length: '.@filesize($file),
   'Last-Modified: '.$gmt_mtime,
-  'Content-Type: application/zip',
+  'Content-Type: '.$content_types[ pathinfo($file, PATHINFO_EXTENSION) ],
   'Content-Disposition: attachment; filename="'.basename($file).'";',
   'Content-Transfer-Encoding: binary',
   );

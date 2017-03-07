@@ -186,9 +186,11 @@ UPDATE '.REV_TABLE.'
   if ($file_to_upload == 'upload')
   {
     // Check file extension
-    if (strtolower(substr($_FILES['revision_file']['name'], -3)) != 'zip')
+    $file_ext = pathinfo($_FILES['revision_file']['name'], PATHINFO_EXTENSION);
+    $allowed_extensions = array('zip', 'jar');
+    if (!in_array($file_ext, $allowed_extensions))
     {
-      $page['errors'][] = l10n('Only *.zip files are allowed');
+      $page['errors'][] = l10n('Only *.{'.implode(', ', $allowed_extensions).'} files are allowed');
     }
   
     // Check file size
