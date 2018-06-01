@@ -30,11 +30,9 @@ $page_title = array();
 $query = '
 SELECT
     idx_category,
-    COUNT(1) AS counter
-  FROM '.EXT_CAT_TABLE.'
-  WHERE idx_extension IN (
-    SELECT DISTINCT(idx_extension) FROM '.REV_TABLE.'
-  )
+    COUNT(DISTINCT(ec.idx_extension)) AS counter
+  FROM '.EXT_CAT_TABLE.' AS ec
+    JOIN '.REV_TABLE.' AS r ON r.idx_extension = ec.idx_extension
   GROUP BY idx_category
 ;';
 $nb_ext_of_category = query2array($query, 'idx_category', 'counter');
@@ -90,11 +88,10 @@ foreach($categories as $cat)
 $tpl->assign('categories', $tpl_categories);
 
 $query = '
-SELECT COUNT(1)
+SELECT
+    COUNT(DISTINCT(id_extension))
   FROM '.EXT_TABLE.'
-  WHERE id_extension IN (
-    SELECT DISTINCT(idx_extension) FROM '.REV_TABLE.'
-  )
+    JOIN '.REV_TABLE.' ON idx_extension=id_extension
 ;';
 list($total_extensions) = $db->fetch_row($db->query($query));
 
@@ -220,19 +217,17 @@ $tpl->assign('filter_users', $tpl_filter_users);*/
 // most used tags
 $query = '
 SELECT
-    COUNT(1) AS count,
+    COUNT(DISTINCT(et.idx_extension)) AS count,
     id_tag,
     t.name AS default_name,
     tt.name
   FROM '.EXT_TAG_TABLE.' AS et
+    JOIN pwg_revisions AS r ON r.idx_extension = et.idx_extension
     LEFT JOIN '.TAG_TABLE.' AS t
       ON t.id_tag = et.idx_tag
     LEFT JOIN '.TAG_TRANS_TABLE.' AS tt
       ON t.id_tag = tt.idx_tag
       AND tt.idx_language = \''.get_current_language_id().'\'
-  WHERE idx_extension IN (
-    SELECT DISTINCT(idx_extension) FROM '.REV_TABLE.'
-  )
   GROUP BY id_tag
   ORDER BY count DESC
   LIMIT 30

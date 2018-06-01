@@ -137,7 +137,8 @@ CREATE TABLE `pem_revisions` (
   `accept_agreement` enum('true','false') default NULL,
   `author` int(11) NOT NULL default '0',
   `nb_downloads` int(11),
-  PRIMARY KEY  (`id_revision`)
+  PRIMARY KEY  (`id_revision`),
+  KEY `revisions_i1` (`idx_extension`)
 )   DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `pem_revisions_compatibilities`;
